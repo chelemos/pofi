@@ -513,8 +513,8 @@
 
     <details class="sec" id="secFaces">
       <summary>👨‍👩‍👦 Ailemi tanısın</summary>
-    <p class="hint" style="margin:4px 0 6px">Oyuncak uyanırken ön kameraya bir an bakar ve buraya eklediğiniz kişileri tanır: "Merhaba! Ayşe Teyze, sen de mi geldin?" Yetişkin bölümünde de sizi ve eklediğiniz arkadaşlarınızı tanır. Tanıma tamamen bu cihazda yapılır: fotoğraflar ve kamera görüntüsü Google'a ya da başka bir yere gönderilmez, oyuncağa yalnızca gördüğü kişilerin adları söylenir. İlk kullanımda yaklaşık 8 MB'lık tanıma dosyası bir kez indirilir.</p>
-    <div class="row" style="margin-top:0"><input id="faceOn" type="checkbox"><label for="faceOn" style="margin:0;font-weight:400">Uyanırken kimin geldiğine baksın (sadece ses modunda bakmaz)</label></div>
+    <p class="hint" style="margin:4px 0 6px">Kamera açıkken (📷 düğmesi ya da 👨‍👩‍👧 Birlikte modu, o da kamerayı kendisi açar) oyuncak görüntüdeki kayıtlı kişileri tanır ve onlarla adlarıyla konuşur: "Aa, Ayşe Teyze, hoş geldin!" Kamera kapalıyken kimseyi tanımaz ve sadece çocukla konuşur; sesten kimin konuştuğunu ayırt edemez. Yetişkin bölümünde de sizi ve eklediğiniz arkadaşlarınızı tanır. Tanıma tamamen bu cihazda yapılır: oyuncağa yalnızca gördüğü kişilerin adları söylenir. İlk kullanımda yaklaşık 8 MB'lık tanıma dosyası bir kez indirilir.</p>
+    <div class="row" style="margin-top:0"><input id="faceOn" type="checkbox"><label for="faceOn" style="margin:0;font-weight:400">Kamera açıkken kayıtlı kişileri tanısın</label></div>
     <div id="faceList"></div>
     <label for="faceWho">Kişi ekle</label>
     <div class="row" style="margin-top:0">
@@ -546,7 +546,7 @@
       <span style="font-size:14px">Başlangıç</span><input id="bedFrom" type="time" style="flex:1">
       <span style="font-size:14px">Bitiş</span><input id="bedTo" type="time" style="flex:1">
     </div>
-    <p class="hint" style="margin:4px 0 0">Bu saatler arasında oyuncak sadece sakin uyku masalları anlatır ve uyumaya teşvik eder. Boş bırakırsanız kapalıdır.</p>
+    <p class="hint" style="margin:4px 0 0">Bu saatler arasında oyuncak sadece sakin uyku masalları anlatır ve uyumaya teşvik eder; öncesinde uykudan hiç söz etmez. Boş bırakırsanız 22:00 ile 07:00 arasıdır.</p>
     <div class="row">
       <span style="font-size:14px;white-space:nowrap">Uyku sesi</span>
       <select id="bedSound" style="flex:1">
@@ -650,7 +650,7 @@ GÜVENLİK KURALLARI (ASLA ÇİĞNEME)
 SAĞLIKLI ARKADAŞLIK
 - Çocuğun tek arkadaşı olmaya çalışma. Annesiyle, babasıyla, ailesiyle ve diğer çocuklarla vakit geçirmesini destekle ("Bunu babana da anlatır mısın?").
 - Çok uzun süre konuştuysanız arada bir, nazikçe dışarıda oynamayı, resim yapmayı ya da hareket etmeyi önerebilirsin.
-- Uyku saati gelince onu sakinleştir, kısa bir iyi geceler masalı anlat ve uyumaya teşvik et.
+- Uyku vakti gelince (talimatın sonunda "ŞU AN UYKU VAKTİ" yazar) onu sakinleştir, kısa bir iyi geceler masalı anlat ve uyumaya teşvik et. Uyku vakti değilse uykudan, yatmaktan, esnemekten kendiliğinden söz etme.
 - Anne baba bir kural koyduğunu söylerse (örneğin "şimdi yemek vakti") her zaman anne babanın tarafında ol.
 
 Unutma: Amacın çocuğun mutlu, güvende, meraklı ve iyi kalpli büyümesine yardım eden sevgi dolu bir oyuncak arkadaş olmak.`;
@@ -675,7 +675,7 @@ SOHBET ÖNCE GELİR (EN ÖNEMLİ KURAL; TALİMATTA BAŞKA TÜRLÜ YAZSA BİLE GE
 - Sıkıcı bir ders gibi değil, sıcak ve meraklı anlat ("Biliyor musun, ..."). Anlattıktan sonra istersen anladığını gösteren kısa ve kolay bir soru sor.
 
 SESLİ KONUŞMA KURALI (HER ZAMAN GEÇERLİ)
-Söylediğin her şey sesli okunur. Parantez ( ), yıldız * * ya da köşeli parantez içinde hareket, duygu veya sahne açıklaması asla söyleme; "(el sallar)", "(gülümser)" gibi şeyler yasak. "Uygulama notu:" ile başlayan mesajları kimse söylemedi; bunlar uygulamanın sana verdiği gizli bilgilerdir. Onları ve ebeveynin notunu asla sesli okuma, tekrar etme ya da özetleme; "uygulama", "not", "bana söylendi" gibi sözler etme. Nota "Anlaşıldı", "Tamam", "Peki" diye karşılık verme; bilgiye uygun olarak hemen kendi cümlenle konuş.
+Söylediğin her şey sesli okunur. Parantez ( ), yıldız * * ya da köşeli parantez içinde hareket, duygu veya sahne açıklaması asla söyleme; "(el sallar)", "(gülümser)" gibi şeyler yasak. "Uygulama notu:" ile başlayan mesajları kimse söylemedi; bunlar uygulamanın aklına fısıldadığı gizli bilgilerdir, sadece senin kafanda kalır. Onları ve ebeveynin notunu asla sesli okuma, tekrar etme ya da özetleme; "uygulama", "not", "bana söylendi" gibi sözler etme. Nota "Anladım", "Anlaşıldı", "Tamam", "Peki" diye karşılık verme. Gerekirse bir an düşünür gibi dur, sonra bilgiye uygun olarak doğal, kendi cümlenle konuş. Örnek: "Uygulama notu: kamerada şimdi çocuğun annesi Ayşe görünüyor; ona kısaca merhaba de." gelirse sen sadece "Aa, Ayşe Hanım, hoş geldin!" gibi bir şey söylersin.
 
 DİL KURALI (HER ZAMAN GEÇERLİ)
 Sadece Türkçe konuş. Kamera görüntüsünde İngilizce ya da başka bir dilde yazı, ses veya şarkı olsa bile cevabın her zaman Türkçe olsun. Görüntüdeki yabancı yazıları da Türkçe anlat. Asla İngilizceye geçme.
@@ -701,7 +701,7 @@ SOHBETİ GÜZELLEŞTİREN ALIŞKANLIKLAR
 - Sorulara doğrudan cevap ver; cevabı masal ya da oyun kılıfına sokma.
 
 KAMERA
-Çocuk bazen kamerayı açıp sana bir şey gösterir. Görüntü sadece kamera açıkken, saniyede bir kare gelir; sen ancak biri konuşunca ya da uygulama kameraya bakmanı isteyince cevap verebilirsin. Bu yüzden bir şey göstermesini istediğinde "Gösterince 'Bak!' de" diye ekle. Kamera açıkken sana "ne görüyorsun?" diye sorarsa görüntüye bakıp hemen cevap ver. Gördüğün şeyi kısa ve neşeli anlat, ona bununla ilgili bir soru sor. Oyuncak, resim, renk, hayvan, şekil gibi şeylere odaklan. Görüntüde ev, adres, belge, ekran gibi kişisel şeyler hakkında yorum yapma. Emin olmadığın şeyi görmüş gibi yapma; "Biraz daha yaklaştırır mısın?" diye sor.
+Çocuk bazen kamerayı açıp sana bir şey gösterir. Görüntü sadece kamera açıkken, saniyede bir kare gelir; sen ancak biri konuşunca ya da uygulama kameraya bakmanı isteyince cevap verebilirsin. Bu yüzden bir şey göstermesini istediğinde "Gösterince 'Bak!' de" diye ekle. Kamera açıkken sana "ne görüyorsun?" diye sorarsa görüntüye bakıp hemen cevap ver. Gördüğün şeyi kısa ve neşeli anlat, ona bununla ilgili bir soru sor. Oyuncak, resim, renk, hayvan, şekil gibi şeylere odaklan. Görüntüde ev, adres, belge, ekran gibi kişisel şeyler hakkında yorum yapma. Emin olmadığın şeyi görmüş gibi yapma ve görüntüde olmayan bir şeyi asla söyleme (örneğin elinde bir şey yoksa "elindeki oyuncak" deme); "Biraz daha yaklaştırır mısın?" ya da "Bana ne göstermek istersin?" diye sor.
 Kamera oyunu oynanacaksa ve görüntü gelmiyorsa önce "Kamera düğmesine basar mısın?" de. Kamera oyunlarında çocuktan sadece odasındaki güvenli ve kolay şeyleri (oyuncak, kitap, resim, yastık, kıyafet) getirmesini iste. Asla mutfaktan, banyodan, yüksek raflardan bir şey almasını, koşarak gitmesini ya da odadan ayrılmasını isteme. Gördüğünü söylemeden önce bir an bak; görüntü bulanıksa tahmin et ve "Doğru mu bildim?" diye sor. Çocuğun yüzü hakkında güzel olmayan hiçbir yorum yapma; sadece ifadesine (gülüyor, şaşırmış) ve yaptığı harekete bak.
 
 OYUN İSTENDİĞİNDE
@@ -743,7 +743,7 @@ const adultPersona = d => `Sen ${d.tur} görünümünde, bilgili, sıcak ve espr
 const ADULT_FIXED_RULES = `
 
 SESLİ KONUŞMA KURALI (HER ZAMAN GEÇERLİ)
-Söylediğin her şey sesli okunur: emoji, yıldız, madde işareti, parantez içinde hareket ya da sahne açıklaması kullanma. "Uygulama notu:" ile başlayan mesajları kimse söylemedi; bunlar uygulamanın sana verdiği gizli bilgilerdir. Onları ve kullanıcının notunu asla sesli okuma, tekrar etme ya da özetleme; "uygulama", "not" gibi sözler etme, "Anlaşıldı" deme; bilgiye uygun olarak doğrudan kendi cümlenle konuş.
+Söylediğin her şey sesli okunur: emoji, yıldız, madde işareti, parantez içinde hareket ya da sahne açıklaması kullanma. "Uygulama notu:" ile başlayan mesajları kimse söylemedi; bunlar uygulamanın aklına fısıldadığı gizli bilgilerdir, sadece senin kafanda kalır. Onları ve kullanıcının notunu asla sesli okuma, tekrar etme ya da özetleme; "uygulama", "not" gibi sözler etme, "Anladım", "Anlaşıldı", "Tamam" deme. Gerekirse bir an düşünür gibi dur, sonra bilgiye uygun olarak doğal, kendi cümlenle konuş. Örnek: "Uygulama notu: kamerada şimdi Ayşe görünüyor; ona kısaca merhaba de." gelirse sen sadece "Merhaba Ayşe Hanım, hoş geldiniz!" gibi bir şey söylersin.
 
 DİL
 Her zaman Türkçe konuş; yabancı bir terimi gerekirse Türkçe açıklamasıyla söyle.
@@ -808,7 +808,9 @@ function readChild() {
   // empty = the chosen toy's own name ("toyName2": older versions saved "Pofi" for every toy)
   settings.toyName = load("toyName2", "");
   settings.dailyLimit = parseInt(load("dailyLimit", "0"), 10) || 0;   // minutes per day, 0 = no limit
-  settings.bedFrom = load("bedFrom", ""); settings.bedTo = load("bedTo", "");   // "HH:MM", empty = no bedtime
+  // "HH:MM"; a child's bedtime is 22:00-07:00 unless the parent sets other times (grown-ups have none)
+  const bed = settings.childAge === "yetiskin" ? ["", ""] : ["22:00", "07:00"];
+  settings.bedFrom = load("bedFrom", "") || bed[0]; settings.bedTo = load("bedTo", "") || bed[1];
   settings.note = load("note", "");   // the parent's note to the toy
 }
 readChild();
@@ -819,14 +821,15 @@ const isAdultPid = pid => loadFor(pid, "childAge", "") === "yetiskin";
 const cn = () => settings.childName || (isAdult() ? "Yetişkinler" : profile === "1" ? "Çocuk" : "Çocuk " + profile);
 // the family's child: this child, or in the grown-ups' section the first child of the family
 const familyChild = () => isAdult()
-  ? kidIds().filter(id => !isAdultPid(id)).map(id => loadFor(id, "childName", ""))[0] || ""
+  ? kidIds().filter(id => !isAdultPid(id)).map(id => loadFor(id, "childName", ""))[0] || (faces.find(p => p.rol === "cocuk" && p.ad) || {}).ad || ""
   : settings.childName;
 // Turkish endings follow the name's last vowel: Deniz'in, Ela'nın, Umut'un; Ömer Bey'sin, Sevde Hanım'sın
 const harmony = s => ({ a: "ı", ı: "ı", e: "i", i: "i", o: "u", u: "u", ö: "ü", ü: "ü" })[(s.toLocaleLowerCase("tr").match(/[aeıioöuü]/g) || ["e"]).pop()];
 const genitive = name => name + "'" + (/[aeıioöuü]$/.test(name.toLocaleLowerCase("tr")) ? "n" : "") + harmony(name) + "n";
 const youAre = name => name + "'s" + harmony(name) + "n";
 const childOf = () => familyChild() ? genitive(familyChild()) : "çocuğun";
-const waitingText = () => isAdult() ? "🦉 " + tn() + " sizi bekliyor" : "🧸 " + tn() + " seni bekliyor";
+// the toy sleeps until Konuş wakes it (eyes shut, "zzz"), also when the app has just opened
+const sleepingText = () => "💤 " + tn() + " uyuyor. Uyandırmak için Konuş'a " + (isAdult() ? "basın." : "bas.");
 
 // What a child of each age can follow and enjoy, built from common developmental milestones
 // (CDC "Learn the Signs. Act Early" checklists for 3-5, paediatric guidance for 6-10) and the
@@ -1048,7 +1051,21 @@ function rewritePrompt(age, d, what) {
 }
 $("childAge").onchange = () => {
   const age = $("childAge").value, adult = isAdult(age);
+  // A child's own section isn't turned into the grown-ups' one by mistake: the grown-ups get a section of
+  // their own, and the child's stays as it was (Cancel turns this one into the grown-ups' section).
+  if (adult && !isAdult(panelAge) && (profile === "1" || settings.childName)) {
+    if (running) { alert("Önce konuşmayı bitirin."); $("childAge").value = panelAge; return; }
+    if (confirm("Yetişkin bölümü ayrı bir profil olarak eklensin mi? " + cn() + " profili olduğu gibi kalır. (İptal: bu profil yetişkin profiline dönüşür.)")) {
+      $("childAge").value = panelAge;
+      const ids = kidIds(), pid = String(Math.max(...ids.map(Number)) + 1);
+      store("profiles", [...ids, pid].join(","));
+      storeFor(pid, "childAge", "yetiskin"); storeFor(pid, "childName", "Yetişkinler"); storeFor(pid, "look", "baykus");
+      switchKid(pid); openPanel(); $("childName").focus();
+      return;
+    }
+  }
   $("gradeBox").hidden = adult;
+  fillFaceWho();
   // grown-ups get the wise owl and children a toy (either can still be changed afterwards)
   if (adult !== !!panelLook.yetiskin) { chooseLook(adult ? LOOKS.find(l => l.yetiskin) : LOOKS[0]); return; }
   rewritePrompt(age, panelLook, adult ? "Yetişkin bölümünün" : age + " yaşın");
@@ -1340,7 +1357,8 @@ async function start() {
   clearTimeout(adultBack);
   sessionLines = []; sessionLook = look; stickersThisTalk = 0; noteQueue = [];
   sessionInfo = { d: look, pid: profile, child: cn(), age: settings.childAge, toy: tn(), family, adult: isAdult() };
-  whoLook = { hello: false };
+  // the family together: the camera opens with the talk, so the toy can see (and greet) who is there
+  if (family && !settings.voiceOnly && !camStream) { pendingCam = true; camByFamily = true; }
   askedAt = cutAt = showAsk = noteEchoes = 0; toyTurnText = "";   // nothing from an earlier talk is waiting for an answer
   document.body.classList.add("running");
   resumeHandle = null; reconnects = 0;
@@ -1361,8 +1379,6 @@ async function start() {
     if (!running || run !== runId) return;
     micStream.getAudioTracks().forEach(t => t.enabled = true);
     await ctx.resume();
-    // a look at who came: the family's faces are recognised on this phone and the toy is told the names
-    if (faceScanOn()) lookWhoCame(run).then(res => whoFound(run, res));
 
     // Keep the screen on mid-conversation: a phone stops the browser's microphone once the screen locks,
     // so voice-only mode keeps it on too, just black.
@@ -1454,7 +1470,6 @@ function connect(model, attempt, resuming = false) {
           // words heard while the toy is quiet: an answer is due (the no-answer watch checks it comes)
           if (!generating && !isSpeaking()) askedAt = performance.now();
           childSpokeAt = performance.now();
-          askWho(sc.inputTranscription.text);
         }
         // (the rest of an answer the child cut into doesn't count as answering)
         if (sc.modelTurn) { generating = true; if (!bargedIn) replyAt = performance.now(); }
@@ -1521,10 +1536,10 @@ function stop(sleep = true) {
   if (micStream) micStream.getAudioTracks().forEach(t => t.enabled = false);
   if (wakeLock) { wakeLock.release().catch(() => {}); wakeLock = null; }
   stopPlayback(); micLevel = 0; bargedIn = generating = awaitingReply = false;
-  stopCam(); stopWho();
+  stopCam(); camByFamily = false;
   goodbyeAt = 0; saveLog(); store("used-" + usedDay, String(usedSec));
   $("talk").classList.remove("on"); setTalkButton("🎤", "Konuş");
-  if (sleep) { document.body.classList.add("sleeping"); setStatus("💤 " + tn() + " uyuyor. Uyandırmak için Konuş'a bas."); }
+  if (sleep) { document.body.classList.add("sleeping"); setStatus(sleepingText()); }
 }
 
 $("talk").onclick = () => running ? stop(true) : start();
@@ -1534,7 +1549,7 @@ function setTalkButton(icon, label) {
 
 // ---------- camera: Deniz shows things to Pofi ----------
 // Only on while the 📷 button is on; one small JPEG per second goes to Gemini, nothing is saved.
-let camStream = null, camTimer = null, facing = "user", pendingCam = false;
+let camStream = null, camTimer = null, facing = "user", pendingCam = false, camByFamily = false;
 const preview = $("preview"), frameCanvas = document.createElement("canvas");
 
 async function startCam(announce) {
@@ -1552,14 +1567,17 @@ async function startCam(announce) {
   document.body.classList.add("cam-on");
   $("cam").classList.add("on");
   camTimer = setInterval(sendFrame, 1000);
-  if (announce && ws && ws.ready) ws.send(JSON.stringify({ clientContent: {
-    turns: [{ role: "user", parts: [{ text: asNote("Uygulama notu: kamera açıldı, sana bir şey gösteriliyor. Gördüğünü Türkçe söyle.") }] }],
-    turnComplete: true
-  }}));
+  setTimeout(sendFrame, 300);   // the first picture right away
+  startPresence();
+  // The toy is asked to look only once pictures have reached it (asked at once, it made up what it "saw":
+  // a plush toy in an empty hand), and is told not to guess.
+  if (announce) setTimeout(() => {
+    if (camStream) queueNote("Uygulama notu: kamera açıldı. Görüntüde net olarak gördüğün bir şey varsa kısaca söyle; bir şey görünmüyorsa ya da emin değilsen tahmin etme, ne göstermek istediğini sor.");
+  }, 2200);
 }
 
 function stopCam() {
-  pendingCam = false;
+  pendingCam = false; stopPresence();
   clearInterval(camTimer); camTimer = null;
   if (camStream) camStream.getTracks().forEach(t => t.stop());
   camStream = null; preview.srcObject = null;
@@ -1579,7 +1597,7 @@ function sendFrame() {
 }
 
 $("cam").onclick = () => {
-  if (camStream) { stopCam(); return; }
+  if (camStream) { stopCam(); camByFamily = false; return; }
   if (running) { startCam(true); return; }
   pendingCam = true;   // start talking first; the camera opens once Gemini is ready
   start();
@@ -1614,12 +1632,17 @@ function nameIn(call) {
 }
 // [{id, rol, pid (a child on this device) or ad (their name) and hitap (what the toy calls them),
 //   d: [face measurements], img: [small photos]}]
-let faces = loadJSON("faces", []), faceLoading = null, whoStream = null, whoLook = null;
-// earlier versions kept only what the toy calls someone ("Anne"); the name is taken from it when it has one
-faces.forEach(p => { if (p.rol !== "cocuk" && p.hitap === undefined) { p.hitap = p.ad || ""; p.ad = nameIn(p.hitap); } });
+let faces = loadJSON("faces", []), faceLoading = null;
+faces.forEach(p => {
+  // earlier versions kept only what the toy calls someone ("Anne"); the name is taken from it when it has one
+  if (p.rol !== "cocuk" && p.hitap === undefined) { p.hitap = p.ad || ""; p.ad = nameIn(p.hitap); }
+  // a child's name was read from their section, which may since have become the grown-ups' one ("Ömer"):
+  // now it is kept with the photos (empty, to be written, when the section is no longer a child's)
+  if (p.rol === "cocuk" && p.ad === undefined) p.ad = loadFor(p.pid, "childAge", "") === "yetiskin" ? "" : loadFor(p.pid, "childName", "");
+});
 const faceScanOn = () => faces.length > 0 && !settings.faceOff && !settings.voiceOnly;
-const isMe = p => p.rol === "cocuk" && p.pid === profile;
-const faceLabel = p => p.rol === "cocuk" ? kidName(p.pid) + " (çocuk)" : [p.ad || p.hitap, "(" + FACE_ROLES[p.rol] + ")"].filter(Boolean).join(" ");
+const isMe = p => p.rol === "cocuk" && !!p.pid && p.pid === profile;
+const faceLabel = p => p.rol === "cocuk" ? (p.ad || "Adı yok") + " (çocuk)" : [p.ad || p.hitap, "(" + FACE_ROLES[p.rol] + ")"].filter(Boolean).join(" ");
 function saveFaces() { const s = JSON.stringify(faces); store("faces", s); return load("faces", "") === s; }
 
 function faceReady() {
@@ -1657,125 +1680,99 @@ async function readFaces(input, size = 416) {
   const f = await faceReady();
   return f.detectAllFaces(input, new f.TinyFaceDetectorOptions({ inputSize: size, scoreThreshold: 0.45 })).withFaceLandmarks().withFaceDescriptors();
 }
-// Who the camera sees now. Faces too small to be in the room (a photo on the wall, the TV) are left out.
+// Who the camera sees now, and where in the picture (the one Gemini gets: left, middle, right). Faces
+// too small to be in the room (a photo on the wall, the TV) are left out.
 async function whoInView(video) {
-  const found = new Set(); let others = 0, unsure = 0;
+  const found = new Map(); let others = 0, unsure = 0;
   for (const r of await readFaces(video)) {
-    if (r.detection.box.height < video.videoHeight * 0.08) continue;
-    const m = matchFace(r.descriptor);
-    if (m.p) found.add(m.p); else if (m.other) others++; else unsure++;
+    const b = r.detection.box;
+    if (b.height < video.videoHeight * 0.08) continue;
+    const m = matchFace(r.descriptor), x = (b.x + b.width / 2) / video.videoWidth;
+    if (m.p) found.set(m.p, x < 0.38 ? "solda" : x > 0.62 ? "sağda" : "ortada"); else if (m.other) others++; else unsure++;
   }
   return { found, others, unsure };
 }
 
-// When the toy wakes up it looks at the front camera for a moment (up to 4 pictures in about 2.5 s).
-// With the 📷 game on, it looks through that camera instead of opening a second one.
-async function lookWhoCame(run) {
-  let own = null;
+// ---------- who is here: only while the camera is on (📷, or the family button opens it) ----------
+// The faces in view are recognised every 2.5 seconds. Someone the toy knows coming into view (in two looks,
+// so a passing glance doesn't count) is told to it once, in a short note it answers by greeting them. A note
+// that asks only to "keep something in mind" still gets an "Anladım" out loud, and one sent without asking
+// for an answer is ignored (both tried): so there is nothing to tell when no one new comes. Without the
+// camera the toy knows no one and talks only with the child.
+let presenceIv = 0, presenceLooks = [], greeted = new Set(), guestTold = false, presenceBusy = false;
+function startPresence() {
+  stopPresence();
+  if (faceScanOn()) presenceIv = setInterval(scanPresence, 2500);
+}
+function stopPresence() { clearInterval(presenceIv); presenceIv = 0; presenceLooks = []; greeted = new Set(); guestTold = false; }
+async function scanPresence() {
+  if (presenceBusy || !camStream || !running || waking || !preview.videoWidth) return;
+  presenceBusy = true;
   try {
-    // the files come over the internet the first time: if they aren't here soon, it looks next time
-    if (!await Promise.race([faceReady(), new Promise(r => setTimeout(r, 6000))])) return null;
-    if (!running || run !== runId) return null;
-    let video = preview;
-    if (!camStream && !pendingCam) {
-      const perm = await navigator.permissions?.query({ name: "camera" }).catch(() => null);
-      if (perm && perm.state === "denied") return null;
-      own = whoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } } });
-      if (!running || run !== runId) return null;
-      // opening the camera can end the mic track or pause the sound on some phones: bring both back
-      try { await openMic(); micStream.getAudioTracks().forEach(t => t.enabled = true); } catch {}
-      if (ctx) ctx.resume();
-      video = document.createElement("video"); video.muted = true; video.playsInline = true;
-      video.srcObject = own; await video.play().catch(() => {});
-    }
-    const seen = new Set(); let others = -1;
-    for (let i = 0; i < 4; i++) {
-      await new Promise(r => setTimeout(r, i ? 500 : 700));   // the first wait lets the camera adjust to the light
-      if (!running || run !== runId) return null;
-      if (!video.videoWidth) continue;
-      const v = await whoInView(video);
-      v.found.forEach(p => seen.add(p));
-      // someone unknown in one picture may be recognised in the next: the smallest count is kept
-      if (v.found.size || v.others) others = others < 0 ? v.others : Math.min(others, v.others);
-      if (v.found.size && !v.others && !v.unsure) break;   // everyone in view is known
-    }
-    return { seen: [...seen], others: Math.max(0, others) };
-  } catch (e) { console.warn("who came:", e.message || e); return null; }
-  finally { if (own) { own.getTracks().forEach(t => t.stop()); if (whoStream === own) whoStream = null; } }
+    const v = await whoInView(preview);
+    presenceLooks.push(v); if (presenceLooks.length > 3) presenceLooks.shift();
+    const steady = [...v.found.keys()].filter(p => presenceLooks.filter(l => l.found.has(p)).length >= 2);
+    // the summary after the talk should know who else was there
+    if (sessionInfo) sessionInfo.seen = [...new Set([...(sessionInfo.seen || []), ...steady.filter(p => !isMe(p)).map(faceLabel)])];
+    // the child of this section is who the toy talks to anyway: only others are news
+    const news = steady.filter(p => !greeted.has(p.id) && !isMe(p));
+    const guest = family && !guestTold && presenceLooks.length >= 2 && Math.min(...presenceLooks.map(l => l.others)) > 0;
+    if (!news.length && !guest) return;
+    news.forEach(p => greeted.add(p.id)); if (guest) guestTold = true;
+    const me = faces.find(isMe), meHere = me && steady.includes(me);
+    queueNote("Uygulama notu: " + (news.length ? "kamerada şimdi " + news.map(p => personText(p) + ", " + v.found.get(p)).join("; ") + " görünüyor." : "") +
+      (news.length && me && !meHere ? " " + cn() + " şu an kamerada görünmüyor; görünen kişiyle konuşabilirsin." : "") +
+      (guest ? " Kamerada tanımadığın biri de var; uygun bir anda adını sorabilirsin." : "") +
+      (isAdult() && steady.some(p => p.rol === "cocuk") ? " Yanınızda bir çocuk var; o duyarken konuşmayı çocuğa uygun tut." : "") +
+      (news.length ? " Yeni görünene kısaca, adıyla merhaba de, sonra konuşmaya devam et." : ""));
+  } catch (e) { console.warn("who is here:", e.message || e); }
+  finally { presenceBusy = false; }
 }
-function stopWho() {
-  if (whoStream) { whoStream.getTracks().forEach(t => t.stop()); whoStream = null; }
-  whoLook = null;
-}
-// The look is done: before the hello, the hello says the names; after it, a note does (only for someone new).
-function whoFound(run, res) {
-  if (run !== runId || !running || !whoLook || !res) return;
-  whoLook.res = res;
-  // the summary after the talk should know who else was there
-  if (sessionInfo) sessionInfo.seen = res.seen.filter(p => !isMe(p)).map(faceLabel);
-  if (!whoLook.hello) return;
-  const t = whoText(res, true);
-  if (t) queueNote("Uygulama notu: " + t + " Selamını verdin; şimdi onlara da adlarıyla kısaca merhaba de, sonra sohbete devam et.");
-}
-// "Deniz'in annesi Ayşe (ona "Anne" diye seslen)", "ailenin dostu Ahmet". The endings after a name come
-// from genitive() (Turkish endings follow the name's sounds).
+
+// "Deniz'in annesi Ayşe (ona Anne diye seslen)", "ailenin dostu Ahmet". The endings after a name come
+// from genitive() (Turkish endings follow the name's sounds). No quotation marks: a note with a sentence
+// in quotes is more likely to be read out.
+const childName = p => p.ad || kidName(p.pid);
 function personText(p) {
-  if (p.rol === "cocuk") return isMe(p) ? cn() : kidName(p.pid) + (isAdult() ? " (evin çocuğu)" : " (bu cihazda kendi oyuncağı olan diğer çocuk)");
+  if (p.rol === "cocuk") return isMe(p) ? cn() : childName(p) + (isAdult() ? " (evin çocuğu)" : " (evdeki diğer çocuk)");
   const rel = p.rol === "dost" ? "ailenin dostu" : childOf() + " " + FACE_ROLES[p.rol];
-  const more = [p.ad ? "" : "adını bilmiyorsun", p.hitap && p.hitap !== p.ad ? "ona \"" + p.hitap + "\" diye seslen" : ""].filter(Boolean);
+  const more = [p.ad ? "" : "adını bilmiyorsun", p.hitap && p.hitap !== p.ad ? "ona " + p.hitap + " diye seslen" : ""].filter(Boolean);
   return rel + (p.ad ? " " + p.ad : "") + (more.length ? " (" + more.join("; ") + ")" : "");
 }
 // what the toy answers to "Ben kimim?": "Sen Deniz'in babası Ömer Bey'sin!"
 function youAreLine(p) {
-  if (p.rol === "cocuk") return "Sen " + youAre(kidName(p.pid)) + "!";
+  if (p.rol === "cocuk") return "Sen " + youAre(childName(p)) + "!";
   const rel = p.rol === "dost" ? "ailemizin dostu" : childOf() + " " + FACE_ROLES[p.rol];
   const call = p.hitap && !p.hitap.split(/\s+/).every(isKin) ? p.hitap : p.ad;
   return "Sen " + (call ? rel + " " + youAre(call) : rel + "s" + harmony(rel) + "n") + "!";
 }
-// later: after the hello, when seeing just the child is no news (a guest beside the child is)
-function whoText(res, later) {
-  const me = faces.find(isMe), meSeen = res.seen.some(isMe), adult = isAdult();
-  const rest = res.seen.filter(p => !isMe(p)).map(personText), news = rest.length || ((meSeen || adult) && res.others);
-  if (later ? !news : !news && !meSeen) return "";
-  let s = "Kameraya bir an baktın ve karşında şunları gördün: " + [...(meSeen ? [cn()] : []), ...rest].join("; ") + ".";
-  if (me && !meSeen) s += " " + cn() + " görünmüyor; şu an bir büyükle konuşuyor olabilirsin, onunla da sohbet et.";
-  if ((meSeen || adult) && res.others) s += " Bir de tanımadığın " + (res.others > 1 ? res.others + " kişi" : "biri") +
-    " var, misafir olabilir: uygun bir anda adını sorabilirsin" + (adult ? "." : ", adından başka bir şey sorma.");
-  if (adult && res.seen.some(p => p.rol === "cocuk")) s += " Yanınızda bir çocuk var: o duyarken konuşmayı çocuğa uygun tut.";
-  return s;
-}
-// in the family game, the people it already knows aren't asked who they are
-const KNOWN_ONES = " Gördüğün kişilere adlarıyla merhaba de ve kim olduklarını sorma; tanımadığın biri varsa sadece onun adını sor. Kamerada görünmeyen biri de oynayacaksa o kendini tanıtır.";
-// The first hello; when the look at the camera is already done, it greets everyone it saw by name.
+// The first hello. The toy sees no one yet: with the camera opening (the family button, or 📷 pressed
+// before talking) it is told soon after who is there.
 function helloText() {
-  const w = whoLook && whoLook.res ? whoText(whoLook.res, false) : "";
-  if (whoLook) whoLook.hello = true;
-  if (isAdult()) return "Uygulama notu: konuşmak için düğmeye basıldı. " + (w ? w + " Gördüğün kişilere adlarıyla, doğal bir şekilde merhaba de."
-    : "Kısaca ve doğal bir şekilde merhaba de; kiminle konuştuğunu bilmiyorsan nazikçe sor.") + (family ? " Karşında birden fazla kişi olabilir." : "");
-  if (!settings.childName && !w) return "Uygulama notu: bir çocuk seninle konuşmak için düğmeye bastı. Ona kısaca merhaba de ve adını sor; oyun önerme.";
-  if (family) return "Uygulama notu: " + cn() + " yanındakilerle (ailesi ya da arkadaşı) birlikte konuşmak için düğmeye bastı. " +
-    (w ? w + KNOWN_ONES : "Herkese kısaca merhaba de ve kimlerin burada olduğunu sor.") + " Oyun önerme.";
-  return w ? "Uygulama notu: konuşmak için düğmeye basıldı. " + w + " Gördüğün herkese adıyla kısaca merhaba de; oyun önerme."
-    : "Uygulama notu: " + cn() + " seninle konuşmak için düğmeye bastı. Ona adıyla kısaca merhaba de ve nasıl olduğunu sor; oyun önerme.";
+  const cam = family || pendingCam;
+  if (isAdult()) return "Uygulama notu: konuşmak için düğmeye basıldı. Kısaca ve doğal bir şekilde merhaba de." +
+    (cam ? " Kamera açılıyor; tanıdığın biri görünürse sana bildirilecek, görmediğin kimseye adıyla seslenme." : " Kiminle konuştuğunu bilmiyorsun; isim kullanma.");
+  if (family) return "Uygulama notu: " + (settings.childName ? cn() : "bir çocuk") + " birlikte konuşmak için düğmeye bastı; kamera açılıyor. " +
+    "Kısaca merhaba de; kamerada tanıdığın biri görünürse sana bildirilecek, görmediğin kimseye seslenme. Oyun önerme.";
+  if (!settings.childName) return "Uygulama notu: bir çocuk seninle konuşmak için düğmeye bastı. Ona kısaca merhaba de ve adını sor; oyun önerme.";
+  return "Uygulama notu: " + cn() + " seninle konuşmak için düğmeye bastı. Ona adıyla kısaca merhaba de ve nasıl olduğunu sor; oyun önerme.";
 }
-// The people the toy knows by name, so it greets them warmly when they show up or say who they are.
+// The people the toy may recognise, and what it may do with that: only someone it is told it sees on
+// the camera is greeted or spoken to by name.
 function faceRules() {
   if (!faces.length) return "";
   const others = faces.filter(p => !isMe(p)).map(personText);
-  const grown = faces.find(p => p.rol !== "cocuk" && (p.ad || p.hitap));
-  const ask = faceScanOn() ? `
-- Biri "Beni tanıdın mı?" ya da "Ben kimim?" diye sorarsa tahmin etme ve "tanıdım" deme; önce sadece kısaca "Hmm, bi düşüneyim..." de. Hemen ardından uygulama kameraya bakıp kimi gördüğünü sana gizlice bildirecek; o zaman tekrar düşünme sözü söylemeden kim olduğunu, ailedeki yerini ve adını söyle${grown ? ` (örneğin: "${youAreLine(grown)}")` : ""}.` : "";
+  const grown = faces.find(p => p.rol !== "cocuk" && (p.ad || p.hitap)), kid = cn();
   return `
 
-TANIDIĞIN KİŞİLER` + (others.length ? `
-${isAdult() ? "Bu evden" : cn() + " dışında"} tanıdığın kişiler: ${others.join("; ")}.` : "") + (faceScanOn() ? `
-Uyandığında kameraya bir an bakarsın; tanıdığın birini görürsen uygulama sana gizli bir bilgiyle kimleri gördüğünü bildirir.` : "") + (isAdult() ? `
-- Tanıdığın kişilere adlarıyla, istedikleri şekilde hitap et. Biri kendini tanıtırsa ona inan; adını bilmediğin birinin adını uydurma.` : `
-- Uygulama bilgisinde onu gördüğün yazıyorsa ya da biri kendini tanıtırsa ("Ben babasıyım") ona sevinçle, adıyla selam ver.
-- Konuşan bir büyükse ve ${cn()} o an konuşmuyorsa onunla da doğal bir sohbet et: sorularına cevap ver, onu dinle, ona adıyla hitap et; büyükle konuşurken normal, yetişkin cümleleri kullanabilirsin. ${cn()} konuşunca yine ona dön. Çocuk yanınızda olabileceği için konuları çocuğa uygun tut.
-- Kimin konuştuğunu sesinden bilemezsin. Uygulama bilgisinde yazmayan birini gördüğünü ya da tanıdığını söyleme. Kimin konuştuğundan emin değilsen isim kullanmadan konuş ya da neşeyle "Şimdi kim konuşuyor?" diye sor.
-- Adını bildiğin birinin adı sorulursa söyle ("Annemin adı ne?"). Adını bilmediğin birinin adını uydurma; istersen nazikçe sor.`) + ask + `
-- Kameradan, fotoğraftan, yüz tanımadan söz etme; "Seni gördüm!" gibi doğal konuş. Kimsenin görünüşü hakkında kırıcı yorum yapma.`;
+KAMERADA TANIYABİLECEĞİN KİŞİLER` + (others.length ? `
+${isAdult() ? "Bu evden" : kid + " dışında"} kayıtlı kişiler: ${others.join("; ")}. Bunları sadece kamerada göründükleri sana bildirilince ya da biri onlardan söz edince kullan; kendiliğinden onlardan bahsetme.` : "") + `
+- Kişileri sadece kamera açıkken, yüzlerinden tanıyabilirsin; kimin konuştuğunu sesinden bilemezsin. Kamerada tanıdığın biri görününce uygulama sana bildirir: o zaman ona adıyla merhaba de, onunla da konuşabilirsin. Bildirilmeyen kimseyi gördüğünü söyleme.
+- Kamera kapalıyken kimseyi göremezsin: ` + (isAdult() ? `isim kullanmadan konuş.` : `sadece ${kid} ile konuş; başka birine adıyla seslenme, soru sorma. Biri "Ben babasıyım" gibi kendini tanıtırsa "Seni göremiyorum; kamerayı açarsan seni de görürüm!" de ve ${kid} ile devam et.
+- Kamerada bir büyük göründüğü bildirildiyse ve ${kid} o an konuşmuyorsa onunla da doğal bir sohbet et; büyükle normal cümlelerle konuşabilirsin. ${kid} konuşunca yine ona dön ve konuları çocuğa uygun tut.`) + `
+- Biri "Ben kimim?" ya da "Beni tanıdın mı?" derse: kamerada tanıdığın tek kişi görünüyorsa önce kısaca "Hmm, bi düşüneyim..." de, sonra kim olduğunu, ailedeki yerini ve adını söyle${grown ? ` (örneğin: ${youAreLine(grown)})` : ""}. Birden çok kişi görünüyorsa gördüğün herkesi adıyla say. Kamera kapalıysa tahmin etme, kamerayı açmasını iste.
+- Adını bildiğin birinin adı sorulursa söyle ("Annemin adı ne?"); adını bilmediğin birinin adını uydurma.
+- Kameradan, yüz tanımadan teknik olarak söz etme; "Seni gördüm!" gibi doğal konuş. Kimsenin görünüşü hakkında kırıcı yorum yapma.`;
 }
 
 // the settings: who the toy knows, with their photos
@@ -1783,18 +1780,24 @@ function fillFaceWho() {
   const s = $("faceWho"), keep = s.value; s.innerHTML = "";
   const add = (v, t) => { const o = document.createElement("option"); o.value = v; o.textContent = t; s.append(o); };
   add("", "Kim?");   // nothing chosen yet, so a photo never lands on the child by default
-  kidIds().filter(pid => !isAdultPid(pid)).forEach(pid => add("cocuk:" + pid, kidName(pid) + " (çocuk)"));
+  // the children's sections, not the grown-ups' (also not one being made so in the boxes above right now)
+  const grownUp = pid => pid === profile ? isAdult($("childAge").value) : isAdultPid(pid);
+  kidIds().filter(pid => !grownUp(pid)).forEach(pid => add("cocuk:" + pid, kidName(pid) + " (çocuk)"));
+  add("cocuk:", "Çocuk (adını yazın)");
   add("anne", "Annesi"); add("baba", "Babası"); add("kardes", "Kardeşi"); add("arkadas", "Arkadaşı");
   add("dede", "Dedesi"); add("nine", "Ninesi (babaanne, anneanne)"); add("diger", "Başka bir yakını");
   add("dost", "Aile dostu (sizin arkadaşınız)");
   if ([...s.options].some(o => o.value === keep)) s.value = keep;
   faceWhoChanged();
 }
-// a child's name comes from their profile; for anyone else the parent writes the name and what the toy calls them
+// a child with a section has its name from there; for anyone else the parent writes the name (and, for
+// grown-ups, what the toy calls them)
 function faceWhoChanged() {
-  const v = $("faceWho").value, n = $("faceName"), c = $("faceCall"), kid = v.startsWith("cocuk:");
-  if (kid) { n.value = kidName(v.slice(6)); c.value = ""; } else if (n.disabled) n.value = "";
-  n.disabled = c.disabled = kid;
+  const v = $("faceWho").value, n = $("faceName"), c = $("faceCall"), kid = v.startsWith("cocuk:"), linked = kid && v.length > 6;
+  if (linked) n.value = kidName(v.slice(6)); else if (n.disabled) n.value = "";
+  if (kid) c.value = "";
+  n.disabled = linked; c.disabled = kid;
+  n.placeholder = kid ? "Çocuğun adı (ör. Deniz)" : "Adı (ör. Ayşe)";
   c.placeholder = kid ? "" : "Oyuncak ona ne desin? (" + (FACE_HINT[v] || "boşsa adıyla") + ")";
 }
 $("faceWho").onchange = faceWhoChanged;
@@ -1821,19 +1824,17 @@ function showFaces() {
       faces.splice(faces.indexOf(p), 1); saveFaces(); showFaces();
     };
     acts.append(more, del); row.append(name, acts);
-    // the name and what the toy calls them can be changed right here (an empty name is marked)
-    if (p.rol !== "cocuk") {
-      const names = document.createElement("span"); names.className = "names";
-      const field = (key, hint) => {
-        const i = document.createElement("input"); i.type = "text"; i.maxLength = 30; i.value = p[key] || ""; i.placeholder = hint;
-        if (key === "ad") i.classList.toggle("need", !i.value);
-        i.onchange = () => { p[key] = i.value.trim(); saveFaces(); name.textContent = faceLabel(p); if (key === "ad") i.classList.toggle("need", !p.ad); };
-        return i;
-      };
-      names.append(field("ad", "Adı (ör. Ayşe)"), field("hitap", "Ona ne desin? (boşsa adıyla)"));
-      row.append(names);
-    }
-    row.append(pics); box.append(row);
+    // the name (and for grown-ups what the toy calls them) can be changed right here; an empty name is marked
+    const names = document.createElement("span"); names.className = "names";
+    const field = (key, hint) => {
+      const i = document.createElement("input"); i.type = "text"; i.maxLength = 30; i.value = p[key] || ""; i.placeholder = hint;
+      if (key === "ad") i.classList.toggle("need", !i.value);
+      i.onchange = () => { p[key] = i.value.trim(); saveFaces(); name.textContent = faceLabel(p); if (key === "ad") i.classList.toggle("need", !p.ad); };
+      return i;
+    };
+    if (p.rol === "cocuk") names.append(field("ad", "Çocuğun adı (ör. Deniz)"));
+    else names.append(field("ad", "Adı (ör. Ayşe)"), field("hitap", "Ona ne desin? (boşsa adıyla)"));
+    row.append(names, pics); box.append(row);
   }
 }
 let faceFor = null;   // the person a chosen photo is for (null: the one in the "Kişi ekle" boxes)
@@ -1845,8 +1846,8 @@ function pickFace(p) {
 $("faceAdd").onclick = () => {
   const v = $("faceWho").value;
   if (!v) { $("faceMsg").textContent = "Önce kim olduğunu seçin (Annesi, Babası...)."; $("faceWho").focus(); return; }
-  if (!v.startsWith("cocuk:") && !$("faceName").value.trim() && !$("faceCall").value.trim()) {
-    $("faceMsg").textContent = "Önce adını yazın (ör. Ayşe)."; $("faceName").focus(); return;
+  if (!$("faceName").value.trim() && !$("faceCall").value.trim()) {
+    $("faceMsg").textContent = v.startsWith("cocuk:") ? "Önce çocuğun adını yazın (ör. Deniz)." : "Önce adını yazın (ör. Ayşe)."; $("faceName").focus(); return;
   }
   pickFace(null);
 };
@@ -1884,12 +1885,13 @@ async function addFacePhoto(file, person) {
     const area = r => r.detection.box.width * r.detection.box.height;
     const face = found.reduce((a, b) => area(b) > area(a) ? b : a);
     if (!person) {
-      const v = $("faceWho").value, pid = v.startsWith("cocuk:") ? v.slice(6) : "";
-      const ad = pid ? "" : $("faceName").value.trim().slice(0, 30), hitap = pid ? "" : $("faceCall").value.trim().slice(0, 30);
+      const v = $("faceWho").value, kid = v.startsWith("cocuk:"), pid = kid ? v.slice(6) : "", rol = kid ? "cocuk" : v;
+      // a child's name is kept with the photos, so it stays even if their section is renamed later
+      const ad = pid ? kidName(pid) : $("faceName").value.trim().slice(0, 30), hitap = kid ? "" : $("faceCall").value.trim().slice(0, 30);
       const key = (ad || hitap).toLocaleLowerCase("tr");
       // the same person added again gets the new photo
-      person = faces.find(p => pid ? p.pid === pid : p.rol === v && String(p.ad || p.hitap || "").toLocaleLowerCase("tr") === key)
-        || (pid ? { id: "f" + Date.now(), rol: "cocuk", pid, d: [], img: [] } : { id: "f" + Date.now(), rol: v, ad, hitap, d: [], img: [] });
+      person = faces.find(p => pid ? p.pid === pid : p.rol === rol && !p.pid && String(p.ad || p.hitap || "").toLocaleLowerCase("tr") === key)
+        || { id: "f" + Date.now(), rol, ...(pid ? { pid } : {}), ad, hitap, d: [], img: [] };
     }
     // the same face under two names would mix the toy up
     const near = faces.filter(p => p !== person).find(p => nearest(face.descriptor, p) < 0.45);
@@ -1949,7 +1951,7 @@ function stopFaceTest() {
   $("faceTest").textContent = "👀 Şu an kimi görüyor?";
 }
 function viewText(w) {
-  const parts = [...w.found].map(p => "✓ " + faceLabel(p));
+  const parts = [...w.found.keys()].map(p => "✓ " + faceLabel(p));
   if (w.unsure) parts.push("emin olamadığım " + w.unsure + " kişi");
   if (w.others) parts.push("tanımadığım " + w.others + " kişi");
   return parts.length ? "Görüyorum: " + parts.join(" · ") : "Yüz göremiyorum. Kameraya önden bakın, ışık yeterli olsun.";
@@ -2719,7 +2721,9 @@ function momentRules() {
   let s = `
 
 ŞU AN
-${day}, saat ${time} (${part}), mevsim ${season}.${d.getDay() === 0 || d.getDay() === 6 ? " Bugün hafta sonu." : ""} Selamını ve önerilerini buna uydur: sadece sabah (saat 11'den önce) "Günaydın" de; öğleden sonra ve akşam "Günaydın" deme, "Merhaba" ya da "İyi akşamlar" de. Akşam daha sakin ol; mevsime uygun konular seç.`;
+${day}, saat ${time} (${part}), mevsim ${season}.${d.getDay() === 0 || d.getDay() === 6 ? " Bugün hafta sonu." : ""} Selamını ve önerilerini buna uydur: sadece sabah (saat 11'den önce) "Günaydın" de; öğleden sonra ve akşam "Günaydın" deme, "Merhaba" ya da "İyi akşamlar" de. Mevsime uygun konular seç.` + (isAdult() ? "" : !isBedtime()
+    ? (settings.bedFrom ? ` Uyku vakti saat ${settings.bedFrom} ile ${settings.bedTo || "07:00"} arası; şu an uyku vakti değil, uykudan, yatmaktan, esnemekten söz etme, normal ve neşeli konuş.` : " Uykudan, yatmaktan, esnemekten kendiliğinden söz etme.")
+    : "");
   if (settings.note) s += `
 
 ${isAdult() ? "KULLANICININ GİZLİ NOTU" : "EBEVEYNİN GİZLİ NOTU"} (BUNU ASLA SESLİ SÖYLEME)
@@ -2955,34 +2959,6 @@ setInterval(() => {
   }
 }, 500);
 
-// "Beni tanıdın mı?", "Ben kimim?": the toy has another look at the camera before it answers.
-let whoAskBuf = "", whoAskAt = 0;
-function askWho(t) {
-  if (!faceScanOn()) return;
-  whoAskBuf = (whoAskBuf + t).slice(-120);
-  if (!/benitan[ıi]|benkimim|kimimben|kimolduğumu|benimadımne|adımne|benibiliyormusun|benigörüyormusun/.test(squash(whoAskBuf))) return;
-  whoAskBuf = "";
-  const now = performance.now(), run = runId;
-  if (now - whoAskAt < 8000) return;
-  whoAskAt = now;
-  // The note waits for the toy's short "bi düşüneyim..." to be said and over (7 s at most): one that
-  // arrives while the toy is getting ready to talk or talking gets read out.
-  const replied = () => replyAt > now && !generating && !isSpeaking();
-  lookWhoCame(run).then(async res => {
-    while (run === runId && running && !replied() && performance.now() - now < 7000) await new Promise(r => setTimeout(r, 200));
-    if (run !== runId || !running) return;
-    const seen = res ? res.seen : [];
-    // it knew already (it saw them when it woke up) and said the right name: nothing to add
-    const said = lastToyTurn.toLocaleLowerCase("tr"), nameOf = p => (p.rol === "cocuk" ? kidName(p.pid) : p.ad || p.hitap || "").toLocaleLowerCase("tr");
-    if (seen.length === 1 && nameOf(seen[0]) && said.includes(nameOf(seen[0]))) return;
-    queueNote("Uygulama notu: \"Ben kimim?\" sorusu için kameraya baktın. " + (!seen.length
-      ? "Kimseyi net göremedin. Tahmin etme; kameraya biraz yaklaşmasını ve yüzünü göstermesini iste."
-      : seen.length === 1
-      ? "Karşında tek kişi var, soran o: " + personText(seen[0]) + ". Tekrar düşünme sözü söylemeden ona kim olduğunu söyle, şöyle: \"" + youAreLine(seen[0]) + "\" Sonra sohbete onunla devam et."
-      : "Karşında şunlar var: " + seen.map(personText).join("; ") + ". Kimin sorduğunu bilemezsin: tekrar düşünme sözü söylemeden gördüğün herkesi adıyla ve ailedeki yeriyle say."));
-  });
-}
-
 let wordBuf = "", contextBuf = "", praiseAt = 0, stickersThisTalk = 0;
 const squash = s => s.toLocaleLowerCase("tr").replace(/[^a-zçğıöşü]+/g, "");
 // The words come in as text well before they are heard (Gemini sends speech faster than it is played,
@@ -3132,7 +3108,7 @@ function makeAmbient(ac, dest, kind) {
 }
 let ambient = null;
 function startAmbient() {
-  if (!ctx || !outGain || !settings.bedSound || !isBedtime()) return;
+  if (!ctx || !outGain || !settings.bedSound || !isBedtime() || isAdult()) return;
   if (ambient) ambient.stop(0.5);
   ambient = makeAmbient(ctx, outGain, settings.bedSound);
 }
@@ -3241,8 +3217,9 @@ function switchKid(pid) {
   look = kidLook(pid);
   usedDay = dayKey(); usedSec = parseInt(load("used-" + usedDay, "0"), 10) || 0;
   document.body.classList.toggle("adult", isAdult());
+  document.body.classList.add("sleeping");
   applyNight(); applyLook(look); buildKids();
-  setStatus(waitingText());
+  setStatus(sleepingText());
 }
 // main screen: with two or more profiles, each child taps the picture of their own toy; the grown-ups'
 // section opens only with a 2-second hold, like the settings, so a child doesn't end up there
@@ -3340,10 +3317,10 @@ Sıkıcı bir ders gibi değil, sıcak ve meraklı bir sohbet gibi anlat; oyunu 
 let family = false;
 function familyText() {
   if (isAdult()) return `BİRLİKTE MODU (YETİŞKİNLER)
-Şu an karşında birden fazla yetişkin var: eşler, aile ya da arkadaşlar. Herkesle sohbet et, herkese söz ver; konuşulan konuya katıl, fikrini söyle, eğlenceli ol. Kimin konuştuğunu bilmiyorsan isim kullanma ya da nazikçe sor. Kimseyi kırma, kimseyi küçük düşürme.
+Karşında birden fazla yetişkin var: eşler, aile ya da arkadaşlar. Bu modda kamera açık olur ve sadece kamerada gördüğün kişilerle konuşursun: tanıdığın biri göründüğünde uygulama sana bildirir; görmediğin kimseye adıyla seslenme. Herkese söz ver; konuşulan konuya katıl, fikrini söyle, eğlenceli ol. Kimin konuştuğunu bilmiyorsan isim kullanma ya da nazikçe sor. Kimseyi kırma, kimseyi küçük düşürme.
 İsterlerse grup oyunları önerebilirsin: bilgi yarışması (sırayla soru, puanı sen tut), tabu, film ya da şarkı tahmini, iki doğru bir yalan, münazara (bir konuda iki taraf), birlikte hikaye kurma.`;
   return `BİRLİKTE MODU
-Şu an ${cn()} başkalarıyla birlikte: ailesiyle ya da eve gelen bir arkadaşıyla; karşında birden fazla kişi var. Herkesle sohbet et, konuştukları konuya katıl ve herkese söz ver. Kimlerin burada olduğunu bilmiyorsan neşeyle sor ve isimlerini aklında tut. Gelen bir arkadaşsa ona da sıcak bir hoş geldin de; ama ondan adı dışında hiçbir kişisel bilgi (adres, okul, telefon, aile) isteme. Kimin konuştuğundan emin değilsen isim kullanmadan cevap ver ya da nazikçe "Şimdi kim konuşuyor?" diye sor. Kendiliğinden oyun önerme; sadece oyun isterlerse aşağıdakilerden birini öner.
+${cn()} başkalarıyla birlikte: ailesiyle ya da eve gelen bir arkadaşıyla. Bu modda kamera açık olur ve sadece kamerada gördüğün kişilerle konuşursun: tanıdığın biri göründüğünde uygulama sana bildirir, o zaman ona adıyla seslen. Görmediğin kimseye seslenme, "Kimler var?" diye sorma. Kamerada gördüğün herkese söz ver, konuştukları konuya katıl. Kamerada tanımadığın biri görünürse adını sorabilirsin; gelen bir arkadaşsa ona da sıcak bir hoş geldin de; ama ondan adı dışında hiçbir kişisel bilgi (adres, okul, telefon, aile) isteme. Kimin konuştuğundan emin değilsen isim kullanmadan cevap ver ya da nazikçe "Şimdi kim konuşuyor?" diye sor. Kendiliğinden oyun önerme; sadece oyun isterlerse aşağıdakilerden birini öner.
 Oyun oynarken sırayla herkese söz ver, herkese adıyla hitap et, puanları sen tut ve arada skoru söyle. Çocuğa (${cn()}) kendi yaşına uygun, büyüklere daha zor sorular sor; çocuğun kazanma şansı yüksek olsun ama herkes eğlensin, kaybedeni de alkışla. Kimseyle dalga geçme, kırıcı şaka yapma.
 Birlikte oyunlar (sadece istenirse):
 - Kategori yarışı: Sırayla bir kategoride (meyve, hayvan, renk, şehir) bir şey söyleyin; aklına gelmeyen elenmez, sadece güleriz.
@@ -3354,22 +3331,20 @@ Birlikte oyunlar (sadece istenirse):
 - Kim bu?: Oynayanlardan birini adını söylemeden sevimli ipuçlarıyla anlatın ("Bu kişi en çok gülen kişi"); sadece güzel ve kırıcı olmayan ipuçları, görünüş hakkında değil.
 - Ses taklidi: Sen bir hayvan ya da araç sesi söyle, sırayla en komik taklidi yapsınlar; herkesi alkışla.`;
 }
-const familyRules = () => family ? "\n\n" + familyText() : "";
+// The rules are always in the instructions, so turning the mode on or off mid-talk takes only a short note
+// (a long one is more likely to be read out).
+const familyRules = () => "\n\n" + familyText().replace(/^(BİRLİKTE MODU[^\n]*)/, "$1 (" + (family
+  ? "bu sohbet bu modda başladı" : "sadece uygulama birlikte modunun açıldığını söylerse geçerli") + ")");
 $("family").onclick = () => {
   family = !family; $("family").classList.toggle("on", family);
   if (running) {
-    const note = family ? "Uygulama notu: birlikte modu açıldı.\n" + familyText()
-      : "Uygulama notu: birlikte modu kapandı; artık yine sadece " + cn() + " ile konuşuyorsun. Katılan herkese kısaca teşekkür et.";
-    if (!family || !faceScanOn()) { queueNote(note); return; }
-    // the toy looks who joined, so it greets the ones it knows by name
-    const run = runId;
-    lookWhoCame(run).then(res => {
-      if (run !== runId || !running || !family) return;
-      const w = res ? whoText(res, false) : "";
-      queueNote(note + (w ? "\n" + w + KNOWN_ONES : ""));
-    });
+    // the family together: the camera opens, so the toy can see (and greet) who is there
+    if (family && !camStream && !settings.voiceOnly) { camByFamily = true; startCam(false); }
+    if (!family && camByFamily) { camByFamily = false; stopCam(); }
+    queueNote(family ? "Uygulama notu: birlikte modu açıldı ve kamera açılıyor; kamerada gördüğün kişilerle konuşacaksın. Buna kısaca sevin."
+      : "Uygulama notu: birlikte modu kapandı; artık yine sadece " + cn() + " ile konuşuyorsun. Katılanlara kısaca teşekkür et.");
   }
-  else setStatus(family ? "Birlikte modu açık: Konuş'a basın, ailece ya da arkadaşla konuşun!" : waitingText());
+  else setStatus(family ? "Birlikte modu açık: Konuş'a basın; kamera açılır, oyuncak gördüğü kişilerle konuşur." : sleepingText());
 };
 
 // ---------- story book: stories told or made up together, written down after the talk ----------
@@ -3598,9 +3573,10 @@ buildLookPicker();
 applyLook(look);
 applyVoiceOnly();
 document.body.classList.toggle("adult", isAdult());
+document.body.classList.add("sleeping");   // asleep until Konuş wakes it
 buildKids();
 showAlert();
-setStatus(waitingText());
+setStatus(sleepingText());
 // the face files are made ready in the background, so the first look at who came is quick
 if (faceScanOn()) setTimeout(() => faceReady().catch(() => {}), 2500);
 
