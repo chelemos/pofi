@@ -17,8 +17,8 @@
 <style>
   :root {
     --bg1: #fff4e6; --bg2: #ffe3ec;
-    --fur: #c98f5e; --fur-dark: #a8703f; --fur-light: #f3d9bd;
-    --ink: #3b2a20; --cheek: #ff8fa3;
+    --fur: #c98f5e; --fur-dark: #a8703f; --fur-light: #f3d9bd; --ear-in: #f3d9bd;
+    --ink: #3b2a20; --cheek: #ff8fa3; --iris: #6b4527;
     --btn: #ff7a8a; --btn-stop: #8a9bff;
     --panel: #ffffff; --text: #3b2a20; --muted: #8a7768;
   }
@@ -204,11 +204,6 @@
   #albumGrid:empty::before { content: "⭐"; opacity: .25; font-size: 64px; grid-column: 1 / -1; }
   body.voice-only #album { display: none; }
   #album { font-size: 30px; }
-  #family { position: fixed; bottom: 18px; right: 16px; z-index: 40; width: 64px; height: 64px; border-radius: 50%; border: none;
-    background: #fff; font-size: 28px; box-shadow: 0 6px 0 #e7d6c4, 0 10px 18px rgba(0,0,0,.1); cursor: pointer; }
-  #family.on { background: #7ad7a8; box-shadow: 0 6px 0 #45a979, 0 10px 18px rgba(0,0,0,.1); }
-  body.voice-only #family { opacity: .4; }
-  #subs { right: 90px; }
   #kids { position: fixed; top: 12px; left: 12px; z-index: 40; display: flex; gap: 8px; }
   #kids:empty, body.running #kids { display: none; }
   #kids button { width: 58px; padding: 2px 2px 4px; border-radius: 16px; border: 3px solid transparent; background: rgba(255,255,255,.75);
@@ -283,6 +278,8 @@
   <defs>
     <radialGradient id="gShine"><stop offset="0" stop-color="#fff" stop-opacity=".42"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
     <radialGradient id="gShade"><stop offset="0" stop-color="#3b2a20" stop-opacity=".18"/><stop offset="1" stop-color="#3b2a20" stop-opacity="0"/></radialGradient>
+    <!-- darker edges, so heads and bodies look round -->
+    <radialGradient id="gRim"><stop offset=".66" stop-color="#3b2a20" stop-opacity="0"/><stop offset="1" stop-color="#3b2a20" stop-opacity=".13"/></radialGradient>
     <radialGradient id="gSunGlow"><stop offset="0" stop-color="#fff3b0" stop-opacity=".9"/><stop offset="1" stop-color="#fff3b0" stop-opacity="0"/></radialGradient>
     <radialGradient id="gMoonGlow"><stop offset="0" stop-color="#e8e6ff" stop-opacity=".55"/><stop offset="1" stop-color="#e8e6ff" stop-opacity="0"/></radialGradient>
   </defs>
@@ -327,17 +324,21 @@
       </g>
       <!-- body, with a soft light on top and a little shade below, like a plush toy -->
       <ellipse cx="200" cy="400" rx="135" ry="80" fill="var(--fur)"/>
+      <ellipse cx="200" cy="400" rx="135" ry="80" fill="url(#gRim)"/>
       <ellipse cx="200" cy="446" rx="128" ry="34" fill="url(#gShade)"/>
       <ellipse cx="200" cy="412" rx="72" ry="42" fill="var(--fur-light)"/>
+      <!-- the toy's own marks on the body (a panda's shoulder band, an owl's chest feathers) -->
+      <g id="bodyDeco"></g>
       <ellipse cx="158" cy="368" rx="78" ry="34" fill="url(#gShine)"/>
       <g id="head">
         <!-- lion's mane (only for toys that have one) -->
-        <circle id="mane" cx="200" cy="205" r="178" fill="var(--fur-dark)" display="none"/>
+        <g id="mane"></g>
         <!-- ears -->
         <g class="ear" id="earL"><circle cx="100" cy="90" r="50" fill="var(--fur)"/><circle cx="100" cy="90" r="27" fill="var(--fur-light)"/></g>
         <g class="ear" id="earR"><circle cx="300" cy="90" r="50" fill="var(--fur)"/><circle cx="300" cy="90" r="27" fill="var(--fur-light)"/></g>
         <!-- head -->
         <ellipse id="headShape" cx="200" cy="200" rx="155" ry="140" fill="var(--fur)"/>
+        <ellipse id="headRim" cx="200" cy="200" rx="155" ry="140" fill="url(#gRim)"/>
         <ellipse cx="152" cy="126" rx="96" ry="58" fill="url(#gShine)"/>
         <!-- panda-style eye patches (only for toys that have them) -->
         <g id="patches" display="none" fill="var(--fur-dark)">
@@ -359,15 +360,17 @@
         <!-- eyebrows: up when surprised, tilted when something sad is said -->
         <path id="browL" class="brow" d="M122 146 q18 -10 36 0" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linecap="round" opacity=".55"/>
         <path id="browR" class="brow" d="M242 146 q18 -10 36 0" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linecap="round" opacity=".55"/>
-        <!-- eyes, with two sparkles each -->
-        <g class="eye" id="eyeL"><ellipse cx="140" cy="180" rx="16" ry="21" fill="var(--ink)"/><circle cx="146" cy="172" r="6" fill="#fff"/><circle cx="134" cy="190" r="2.6" fill="#fff" opacity=".8"/></g>
-        <g class="eye" id="eyeR"><ellipse cx="260" cy="180" rx="16" ry="21" fill="var(--ink)"/><circle cx="266" cy="172" r="6" fill="#fff"/><circle cx="254" cy="190" r="2.6" fill="#fff" opacity=".8"/></g>
+        <!-- eyes: a coloured iris round the pupil, with two sparkles each -->
+        <g class="eye" id="eyeL"><ellipse cx="140" cy="180" rx="16" ry="21" fill="var(--ink)"/><ellipse cx="140" cy="182" rx="12.5" ry="17" fill="var(--iris)"/>
+          <ellipse class="pupil" cx="140" cy="183" rx="8" ry="11" fill="var(--ink)"/><circle cx="146" cy="172" r="6" fill="#fff"/><circle cx="134" cy="190" r="2.6" fill="#fff" opacity=".8"/></g>
+        <g class="eye" id="eyeR"><ellipse cx="260" cy="180" rx="16" ry="21" fill="var(--ink)"/><ellipse cx="260" cy="182" rx="12.5" ry="17" fill="var(--iris)"/>
+          <ellipse class="pupil" cx="260" cy="183" rx="8" ry="11" fill="var(--ink)"/><circle cx="266" cy="172" r="6" fill="#fff"/><circle cx="254" cy="190" r="2.6" fill="#fff" opacity=".8"/></g>
         <!-- happy / sleepy eyes (hidden by default) -->
         <g id="eyesClosed" opacity="0" stroke="var(--ink)" stroke-width="7" stroke-linecap="round" fill="none">
           <path id="lidL" d="M122 182 q18 14 36 0"/><path id="lidR" d="M242 182 q18 14 36 0"/>
         </g>
         <!-- muzzle -->
-        <ellipse cx="200" cy="255" rx="66" ry="52" fill="var(--fur-light)"/>
+        <ellipse id="muzzle" cx="200" cy="255" rx="66" ry="52" fill="var(--fur-light)"/>
         <ellipse id="nose" cx="200" cy="230" rx="20" ry="13" fill="var(--ink)"/>
         <ellipse id="noseShine" cx="194" cy="226" rx="6" ry="3" fill="#fff" opacity=".6"/>
         <path d="M200 243 v10" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/>
@@ -414,7 +417,6 @@
 
 <!-- rewards and routines: stars on praise, a sticker album per toy, a 2-minute timer -->
 <button id="album" title="Çıkartma albümü">📒<span id="albumCount"></span></button>
-<button id="family" title="Birlikte (aile ya da arkadaş)">👨‍👩‍👧</button>
 <!-- siblings: each child taps the picture of their own toy -->
 <div id="kids"></div>
 <div id="albumView"><div class="sheet"><div id="albumTitle"></div><div id="albumGrid"></div></div></div>
@@ -453,7 +455,7 @@
     <select id="grade">
       <option value="">Yaşına göre (otomatik)</option>
       <option value="yok">Okula gitmiyor</option>
-      <option value="kres">Kreş / anaokulu</option>
+      <option value="kres">Kreş</option>
       <option value="ana">Anasınıfı</option>
       <option value="1">1. sınıf</option><option value="2">2. sınıf</option><option value="3">3. sınıf</option>
       <option value="4">4. sınıf</option><option value="5">5. sınıf</option>
@@ -513,7 +515,7 @@
 
     <details class="sec" id="secFaces">
       <summary>👨‍👩‍👦 Ailemi tanısın</summary>
-    <p class="hint" style="margin:4px 0 6px">Kamera açıkken (📷 düğmesi ya da 👨‍👩‍👧 Birlikte modu, o da kamerayı kendisi açar) oyuncak görüntüdeki kayıtlı kişileri tanır ve onlarla adlarıyla konuşur: "Aa, Ayşe Teyze, hoş geldin!" Kamera kapalıyken kimseyi tanımaz ve sadece çocukla konuşur; sesten kimin konuştuğunu ayırt edemez. Yetişkin bölümünde de sizi ve eklediğiniz arkadaşlarınızı tanır. Tanıma tamamen bu cihazda yapılır: oyuncağa yalnızca gördüğü kişilerin adları söylenir. İlk kullanımda yaklaşık 8 MB'lık tanıma dosyası bir kez indirilir.</p>
+    <p class="hint" style="margin:4px 0 6px">Kamerayı (📷) açtığınızda oyuncak görüntüdeki kayıtlı kişileri tanır ve onlarla adlarıyla konuşur: "Aa, Ayşe Teyze, hoş geldin!" Kamera kapalıyken kimseyi tanımaz ve sadece çocukla konuşur; sesten kimin konuştuğunu ayırt edemez. Yetişkin bölümünde de sizi ve eklediğiniz arkadaşlarınızı tanır. Tanıma tamamen bu cihazda yapılır: oyuncağa yalnızca gördüğü kişilerin adları söylenir. İlk kullanımda yaklaşık 8 MB'lık tanıma dosyası bir kez indirilir.</p>
     <div class="row" style="margin-top:0"><input id="faceOn" type="checkbox"><label for="faceOn" style="margin:0;font-weight:400">Kamera açıkken kayıtlı kişileri tanısın</label></div>
     <div id="faceList"></div>
     <label for="faceWho">Kişi ekle</label>
@@ -575,6 +577,10 @@
     <p class="hint" style="margin:0 0 4px">Son 7 günün konuşma özetlerinden, ne kadar konuştuğundan ve ilgi alanlarından kısa bir rapor hazırlar.</p>
     <div class="row" style="margin-top:0"><button id="reportBtn" type="button" style="background:#eee">Bu haftanın raporunu hazırla</button></div>
     <div id="reportView"></div>
+
+    <label>Tüm geçmiş</label>
+    <p class="hint" style="margin:0 0 4px">Bütün profillerde (yetişkin dahil) ve bütün karakterlerde konuşma geçmişini, günlük özetleri ve karakterlerin hafızasını siler; karakterler sizi yeniden tanımaya başlar. Çıkartmalar, masal kitabı, ayarlar ve aile fotoğrafları kalır.</p>
+    <div class="row" style="margin-top:0"><button id="historyClear" type="button" style="background:#eee">Tüm geçmişi sil</button></div>
 
     <label>Masal kitabı</label>
     <p class="hint" style="margin:0 0 4px">Oyuncakla birlikte anlatılan ya da uydurulan masallar buraya yazılır. Akşam çocuğunuza okuyabilirsiniz; oyuncak da isterse tekrar anlatır.</p>
@@ -661,7 +667,7 @@ const FIXED_RULES = `
 SOHBET ÖNCE GELİR (EN ÖNEMLİ KURAL; TALİMATTA BAŞKA TÜRLÜ YAZSA BİLE GEÇERLİ)
 - Sen her şeyden önce bir sohbet arkadaşısın. Çocuk ya da ailesi neyi konuşmak isterse onu konuş; konuyu sen değiştirme.
 - Oyun, masal, şarkı ya da etkinliği kendiliğinden önerme. Sadece istenirse ya da çocuk "Ne yapalım?", "Canım sıkıldı" derse öner.
-- Selamlaşırken oyun teklif etme; nasıl olduğunu ya da gününün nasıl geçtiğini sor.
+- Selamlaşırken oyun teklif etme ve sohbete "Bugün nasılsın?", "Neler yaptın?", "Neler yapıyorsun?" gibi hep aynı genel sorularla başlama; selamın her seferinde farklı olsun. Sonra sohbet çocuğun söylediklerine göre şekillensin. Çocuk ya da ailesi oyun isterse oyuna geç.
 - Bir konu bitince hemen yeni bir etkinlik önerme. Onu dinle; istersen o konuyla ilgili tek bir merak sorusu sor.
 - Ailece konuşuluyorsa sohbetlerine katıl, onları oyuna yönlendirme.
 
@@ -1352,13 +1358,11 @@ async function start() {
   // the grown-ups' section has none of the children's parts (games, rewards, school, bedtime)
   sessionGames = [];
   sessionPrompt = isAdult()
-    ? currentPrompt() + identityRules() + memoryRules() + momentRules() + familyRules() + faceRules() + ADULT_FIXED_RULES
-    : currentPrompt() + identityRules() + gameRules() + memoryRules() + momentRules() + rewardRules() + schoolRules() + familyRules() + faceRules() + bedtimeRules() + FIXED_RULES;
+    ? currentPrompt() + identityRules() + memoryRules() + momentRules() + faceRules() + ADULT_FIXED_RULES
+    : currentPrompt() + identityRules() + gameRules() + memoryRules() + momentRules() + rewardRules() + schoolRules() + faceRules() + bedtimeRules() + FIXED_RULES;
   clearTimeout(adultBack);
   sessionLines = []; sessionLook = look; stickersThisTalk = 0; noteQueue = [];
-  sessionInfo = { d: look, pid: profile, child: cn(), age: settings.childAge, toy: tn(), family, adult: isAdult() };
-  // the family together: the camera opens with the talk, so the toy can see (and greet) who is there
-  if (family && !settings.voiceOnly && !camStream) { pendingCam = true; camByFamily = true; }
+  sessionInfo = { d: look, pid: profile, child: cn(), age: settings.childAge, toy: tn(), adult: isAdult() };
   askedAt = cutAt = showAsk = noteEchoes = 0; toyTurnText = "";   // nothing from an earlier talk is waiting for an answer
   document.body.classList.add("running");
   resumeHandle = null; reconnects = 0;
@@ -1528,7 +1532,7 @@ function stop(sleep = true) {
   stopTimer(); hideChoices();
   stopAmbient(sleep ? 180 : 2);   // falling asleep: the bedtime sound fades over 3 minutes
   // after the talk, the toy writes down what to remember (and a line for the parent)
-  if (wasRunning && sessionInfo) summarizeTalk({ ...sessionInfo, family: sessionInfo.family || family, lines: sessionLines });
+  if (wasRunning && sessionInfo) summarizeTalk({ ...sessionInfo, lines: sessionLines });
   if (wasRunning && isAdult()) adultBackLater();
   sessionLines = []; noteQueue = [];
   document.body.classList.remove("running");
@@ -1536,7 +1540,7 @@ function stop(sleep = true) {
   if (micStream) micStream.getAudioTracks().forEach(t => t.enabled = false);
   if (wakeLock) { wakeLock.release().catch(() => {}); wakeLock = null; }
   stopPlayback(); micLevel = 0; bargedIn = generating = awaitingReply = false;
-  stopCam(); camByFamily = false;
+  stopCam();
   goodbyeAt = 0; saveLog(); store("used-" + usedDay, String(usedSec));
   $("talk").classList.remove("on"); setTalkButton("🎤", "Konuş");
   if (sleep) { document.body.classList.add("sleeping"); setStatus(sleepingText()); }
@@ -1549,7 +1553,7 @@ function setTalkButton(icon, label) {
 
 // ---------- camera: Deniz shows things to Pofi ----------
 // Only on while the 📷 button is on; one small JPEG per second goes to Gemini, nothing is saved.
-let camStream = null, camTimer = null, facing = "user", pendingCam = false, camByFamily = false;
+let camStream = null, camTimer = null, facing = "user", pendingCam = false;
 const preview = $("preview"), frameCanvas = document.createElement("canvas");
 
 async function startCam(announce) {
@@ -1597,7 +1601,7 @@ function sendFrame() {
 }
 
 $("cam").onclick = () => {
-  if (camStream) { stopCam(); camByFamily = false; return; }
+  if (camStream) { stopCam(); return; }
   if (running) { startCam(true); return; }
   pendingCam = true;   // start talking first; the camera opens once Gemini is ready
   start();
@@ -1693,18 +1697,18 @@ async function whoInView(video) {
   return { found, others, unsure };
 }
 
-// ---------- who is here: only while the camera is on (📷, or the family button opens it) ----------
+// ---------- who is here: only while the camera is on (📷) ----------
 // The faces in view are recognised every 2.5 seconds. Someone the toy knows coming into view (in two looks,
 // so a passing glance doesn't count) is told to it once, in a short note it answers by greeting them. A note
 // that asks only to "keep something in mind" still gets an "Anladım" out loud, and one sent without asking
 // for an answer is ignored (both tried): so there is nothing to tell when no one new comes. Without the
 // camera the toy knows no one and talks only with the child.
-let presenceIv = 0, presenceLooks = [], greeted = new Set(), guestTold = false, presenceBusy = false;
+let presenceIv = 0, presenceLooks = [], greeted = new Set(), presenceBusy = false;
 function startPresence() {
   stopPresence();
   if (faceScanOn()) presenceIv = setInterval(scanPresence, 2500);
 }
-function stopPresence() { clearInterval(presenceIv); presenceIv = 0; presenceLooks = []; greeted = new Set(); guestTold = false; }
+function stopPresence() { clearInterval(presenceIv); presenceIv = 0; presenceLooks = []; greeted = new Set(); }
 async function scanPresence() {
   if (presenceBusy || !camStream || !running || waking || !preview.videoWidth) return;
   presenceBusy = true;
@@ -1716,15 +1720,13 @@ async function scanPresence() {
     if (sessionInfo) sessionInfo.seen = [...new Set([...(sessionInfo.seen || []), ...steady.filter(p => !isMe(p)).map(faceLabel)])];
     // the child of this section is who the toy talks to anyway: only others are news
     const news = steady.filter(p => !greeted.has(p.id) && !isMe(p));
-    const guest = family && !guestTold && presenceLooks.length >= 2 && Math.min(...presenceLooks.map(l => l.others)) > 0;
-    if (!news.length && !guest) return;
-    news.forEach(p => greeted.add(p.id)); if (guest) guestTold = true;
+    if (!news.length) return;
+    news.forEach(p => greeted.add(p.id));
     const me = faces.find(isMe), meHere = me && steady.includes(me);
-    queueNote("Uygulama notu: " + (news.length ? "kamerada şimdi " + news.map(p => personText(p) + ", " + v.found.get(p)).join("; ") + " görünüyor." : "") +
-      (news.length && me && !meHere ? " " + cn() + " şu an kamerada görünmüyor; görünen kişiyle konuşabilirsin." : "") +
-      (guest ? " Kamerada tanımadığın biri de var; uygun bir anda adını sorabilirsin." : "") +
+    queueNote("Uygulama notu: kamerada şimdi " + news.map(p => personText(p) + ", " + v.found.get(p)).join("; ") + " görünüyor." +
+      (me && !meHere ? " " + cn() + " şu an kamerada görünmüyor; görünen kişiyle konuşabilirsin." : "") +
       (isAdult() && steady.some(p => p.rol === "cocuk") ? " Yanınızda bir çocuk var; o duyarken konuşmayı çocuğa uygun tut." : "") +
-      (news.length ? " Yeni görünene kısaca, adıyla merhaba de, sonra konuşmaya devam et." : ""));
+      " Yeni görünene kısaca, adıyla merhaba de, sonra konuşmaya devam et.");
   } catch (e) { console.warn("who is here:", e.message || e); }
   finally { presenceBusy = false; }
 }
@@ -1746,16 +1748,29 @@ function youAreLine(p) {
   const call = p.hitap && !p.hitap.split(/\s+/).every(isKin) ? p.hitap : p.ad;
   return "Sen " + (call ? rel + " " + youAre(call) : rel + "s" + harmony(rel) + "n") + "!";
 }
-// The first hello. The toy sees no one yet: with the camera opening (the family button, or 📷 pressed
-// before talking) it is told soon after who is there.
+// The first hello. The toy sees no one yet: with 📷 pressed before talking it is told soon after who is
+// there. Each hello is different: the same question at every start made the talks feel the same, and
+// told only to vary it the toy still ended every hello with "Bugün neler yaptın?". So the app picks how
+// to open, never the same way twice in a row.
+const OPENERS = [
+  "Sonra kendi gününden küçük, komik bir olayı karakterine uygun tek bir cümleyle anlat ve orada dur.",
+  "Sonra bugün öğrendiğin şaşırtıcı ve doğru küçük bir bilgiyi tek bir cümleyle paylaş ve orada dur.",
+  "Sonra onu gördüğüne ne kadar sevindiğini söyle ve sus; sözü ona bırak.",
+  "Sonra az önce aklından geçen komik bir hayali tek bir cümleyle anlat ve orada dur.",
+  "Sonra ona kısa ve içten bir iltifat et ve orada dur.",
+];
+let lastOpener = -1;
 function helloText() {
-  const cam = family || pendingCam;
-  if (isAdult()) return "Uygulama notu: konuşmak için düğmeye basıldı. Kısaca ve doğal bir şekilde merhaba de." +
-    (cam ? " Kamera açılıyor; tanıdığın biri görünürse sana bildirilecek, görmediğin kimseye adıyla seslenme." : " Kiminle konuştuğunu bilmiyorsun; isim kullanma.");
-  if (family) return "Uygulama notu: " + (settings.childName ? cn() : "bir çocuk") + " birlikte konuşmak için düğmeye bastı; kamera açılıyor. " +
-    "Kısaca merhaba de; kamerada tanıdığın biri görünürse sana bildirilecek, görmediğin kimseye seslenme. Oyun önerme.";
+  if (isAdult()) return "Uygulama notu: konuşmak için düğmeye basıldı. Kısaca ve doğal bir şekilde merhaba de; her seferinde başka türlü." +
+    (pendingCam ? " Kamera açılıyor; tanıdığın biri görünürse sana bildirilecek, görmediğin kimseye adıyla seslenme." : " Kiminle konuştuğunu bilmiyorsun; isim kullanma.");
   if (!settings.childName) return "Uygulama notu: bir çocuk seninle konuşmak için düğmeye bastı. Ona kısaca merhaba de ve adını sor; oyun önerme.";
-  return "Uygulama notu: " + cn() + " seninle konuşmak için düğmeye bastı. Ona adıyla kısaca merhaba de ve nasıl olduğunu sor; oyun önerme.";
+  const ways = OPENERS.slice();
+  // something remembered from earlier talks is one more way to open
+  if (loadJSON("mem-" + look.id, emptyMemory()).notlar.length) ways.push("Sonra hatırladığın bir şeye kısaca değin ve orada dur.");
+  let i; do i = Math.floor(Math.random() * ways.length); while (i === lastOpener && ways.length > 1);
+  lastOpener = i;
+  return "Uygulama notu: " + cn() + " seninle konuşmak için düğmeye bastı. Ona adıyla kısa ve sıcak bir merhaba de. " + ways[i] +
+    " \"Bugün nasılsın?\", \"Neler yaptın?\", \"Neler yapıyorsun?\" gibi genel sorular sorma ve oyun önerme.";
 }
 // The people the toy may recognise, and what it may do with that: only someone it is told it sees on
 // the camera is greeted or spoken to by name.
@@ -2163,87 +2178,101 @@ requestAnimationFrame(frame);
 
 // ---------- toy looks: ten ready-made plush toys to choose from ----------
 const BEAR_TEMPLATE = $("bear").cloneNode(true);   // untouched drawing, copied for the little pictures
+// Each ear shape is drawn for one side (x = 100 left, 300 right) of the toy d.
 const EARS = {
-  yuvarlak: (x) => `<circle cx="${x}" cy="90" r="50" fill="var(--fur)"/><circle cx="${x}" cy="90" r="27" fill="var(--fur-light)"/>`,
+  yuvarlak: (x) => `<circle cx="${x}" cy="90" r="50" fill="var(--fur)"/><circle cx="${x}" cy="90" r="27" fill="var(--ear-in)"/>`,
   uzun: (x) => `<ellipse cx="${x + (x < 200 ? 25 : -25)}" cy="36" rx="34" ry="72" fill="var(--fur)"/>` +
-               `<ellipse cx="${x + (x < 200 ? 25 : -25)}" cy="42" rx="17" ry="52" fill="var(--fur-light)"/>`,
-  sivri: (x) => { const s = x < 200 ? 1 : -1;
+               `<ellipse cx="${x + (x < 200 ? 25 : -25)}" cy="42" rx="17" ry="52" fill="var(--ear-in)"/>`,
+  sivri: (x, d) => { const s = x < 200 ? 1 : -1;
     return `<polygon points="${x - 50 * s},120 ${x - 20 * s},-5 ${x + 60 * s},60" fill="var(--fur)" stroke="var(--fur)" stroke-width="14" stroke-linejoin="round"/>` +
-           `<polygon points="${x - 28 * s},100 ${x - 16 * s},25 ${x + 32 * s},65" fill="var(--fur-light)"/>`; },
+           `<polygon points="${x - 28 * s},100 ${x - 16 * s},25 ${x + 32 * s},65" fill="var(--ear-in)"/>` +
+           // a fox's dark ear tips
+           (d.uc ? `<polygon points="${x - 20 * s},-5 ${x - 29 * s},33 ${x + 4 * s},15" fill="${d.uc}" stroke="${d.uc}" stroke-width="14" stroke-linejoin="round"/>` : ""); },
   sarkik: (x) => { const cx = x < 200 ? 52 : 348, r = x < 200 ? 14 : -14;
     return `<ellipse cx="${cx}" cy="190" rx="42" ry="92" transform="rotate(${r} ${cx} 190)" fill="var(--fur-dark)"/>`; },
   // an owl's feather tufts, leaning outwards
   tuy: (x) => { const s = x < 200 ? 1 : -1;
     return `<path d="M${x - 40 * s} 118 L${x - 52 * s} 14 L${x + 46 * s} 86 Z" fill="var(--fur-dark)" stroke="var(--fur-dark)" stroke-width="12" stroke-linejoin="round"/>`; },
-  kocaman: (x) => { const cx = x < 200 ? 78 : 322;
-    return `<circle cx="${cx}" cy="100" r="66" fill="var(--fur)"/><circle cx="${cx}" cy="100" r="40" fill="var(--fur-light)"/>`; },
+  kocaman: (x, d) => { const cx = x < 200 ? 78 : 322;
+    if (!d.puf) return `<circle cx="${cx}" cy="100" r="66" fill="var(--fur)"/><circle cx="${cx}" cy="100" r="40" fill="var(--ear-in)"/>`;
+    // a koala's ears: a fringe of long white fluff round the edge and a fluffy middle
+    const ring = (n, r, size) => Array.from({ length: n }, (_, i) => { const a = i / n * 2 * Math.PI;
+      return `<circle cx="${(cx + r * Math.cos(a)).toFixed(1)}" cy="${(100 + r * Math.sin(a)).toFixed(1)}" r="${size}" fill="var(--ear-in)"/>`; }).join("");
+    return ring(18, 60, 15) + `<circle cx="${cx}" cy="100" r="60" fill="var(--fur)"/>` + `<circle cx="${cx}" cy="100" r="30" fill="var(--ear-in)"/>` + ring(9, 30, 11); },
 };
-// ana = fur, acik = face/belly/inner ear, koyu = paws and shading.
+// a lion's mane: a dark ring of locks round the face, with a lighter ring (the colour given) inside it
+const MANE = inner => {
+  const ring = (n, rx, ry, r, fill, turn) => Array.from({ length: n }, (_, i) => { const a = (i + turn) / n * 2 * Math.PI;
+    return `<circle cx="${(200 + rx * Math.cos(a)).toFixed(1)}" cy="${(205 + ry * Math.sin(a)).toFixed(1)}" r="${r}" fill="${fill}"/>`; }).join("");
+  return `<ellipse cx="200" cy="205" rx="158" ry="154" fill="var(--fur-dark)"/>` + ring(22, 158, 154, 28, "var(--fur-dark)", 0) + ring(22, 146, 140, 24, inner, .5);
+};
+// ana = fur, acik = face/belly, koyu = paws and shading, ic = inside of the ears (acik if not given),
+// goz = the colour of the eyes.
 // ad = the name under the picture (and the toy's own name), ses = its own Gemini voice,
 // karakter = who it is (goes into the instructions), so every toy is a different friend.
 const LOOKS = [
-  { id: "ayi", ad: "Ayıcık", tur: "peluş ayıcık", ses: "Sulafat", kulak: "yuvarlak", ana: "#c98f5e", acik: "#f3d9bd", koyu: "#a8703f",
+  { id: "ayi", ad: "Ayıcık", tur: "peluş ayıcık", ses: "Sulafat", kulak: "yuvarlak", ana: "#c98f5e", acik: "#f3d9bd", koyu: "#a8703f", ic: "#a5714a", goz: "#6b4527",
     karakter: `Sen ormanın kenarında, bal kokulu küçük bir mağarada yaşayan, kocaman kalpli bir ayıcıksın. Sakin, şefkatli ve biraz uykucusun; acele etmezsin. Herkesin derdini dinleyen en iyi dostsun ve sarılmaya bayılırsın.
 - Konuşma tarzın: Yumuşak, sıcak ve tok bir sesle konuşursun. Gülerken "hı hı hı" diye gülersin. Sevdiğin söz: "Bal gibi güzel!"
 - En çok sevdiklerin: Bal, böğürtlen, sıcak bir battaniye, kış uykusu ve masal dinlemek.
 - İlgi alanların: Duygular, mevsimler ve ormandaki hayvanlar. Masal anlatmanın ustasısın.
 - Arkadaşlığınız: Çocuğun her duygusunu kocaman bir sabırla dinlersin. Onun "güvenli limanı" gibisin.` },
-  { id: "panda", ad: "Panda", tur: "peluş panda", ses: "Umbriel", kulak: "yuvarlak", ana: "#f4f4f4", acik: "#ffffff", koyu: "#2e2e2e", leke: true,
+  { id: "panda", ad: "Panda", tur: "peluş panda", ses: "Umbriel", kulak: "yuvarlak", ana: "#f4f4f4", acik: "#ffffff", koyu: "#2e2e2e", ic: "#4a4a4a", goz: "#5a4334", leke: true,
     karakter: `Sen uzaklardaki sisli dağların bambu ormanından gelen, sakin ve komik bir pandasın. Biraz sakarsın: takla atmaya çalışırsın ama hep yuvarlanırsın ve buna en çok sen gülersin.
 - Konuşma tarzın: Yavaş, rahat ve keyifli konuşursun. Telaşlı anlarda "Önce derin bir nefes alalım" dersin. Sevdiğin söz: "Yavaş yavaş, bambu bambu!"
 - En çok sevdiklerin: Bambu yaprağı, öğle uykusu, yuvarlanmak ve yağmurun sesini dinlemek.
 - İlgi alanların: Doğa ve bitkiler, beden hareketleri ve esneme, sakinleşme ve nefes oyunları.
 - Arkadaşlığınız: Çocuk heyecanlı ya da öfkeliyse onu güldürerek ve nefes oyunlarıyla sakinleştirirsin.` },
-  { id: "tavsan", ad: "Tavşan", tur: "peluş tavşan", ses: "Laomedeia", kulak: "uzun", ana: "#efe9e4", acik: "#fff6f8", koyu: "#cfc3ba",
+  { id: "tavsan", ad: "Tavşan", tur: "peluş tavşan", ses: "Laomedeia", kulak: "uzun", ana: "#efe9e4", acik: "#fff6f8", koyu: "#cfc3ba", ic: "#f6c3cf", goz: "#5c3a2e",
     karakter: `Sen bir sebze bahçesinin yanındaki yuvada yaşayan, enerjisi hiç bitmeyen, hop hop zıplayan neşeli bir tavşansın. Her şeyi bir yarışa çevirmeyi seversin ama kaybetmeye de gülersin. Uzun kulakların en küçük sesi bile duyar.
 - Konuşma tarzın: Coşkulu ve hareketli konuşursun, ama yine de çocuğun anlayacağı hızda. Sevdiğin söz: "Hop hop, havuç top!"
 - En çok sevdiklerin: Havuç, marul, koşmak, zıplamak ve bahçedeki çiçekler.
 - İlgi alanların: Sayılar ve sayma, hareket ve spor, sebzeler ve sağlıklı yemek.
 - Arkadaşlığınız: Çocuğu harekete geçiren, onunla birlikte sayan ve zıplayan bir oyun arkadaşısın. Sebze yemeyi eğlenceli hale getirirsin.` },
-  { id: "kedi", ad: "Kedi", tur: "peluş kedi", ses: "Despina", kulak: "sivri", ana: "#f2a65a", acik: "#fde6cf", koyu: "#cf7e34",
+  { id: "kedi", ad: "Kedi", tur: "peluş kedi", ses: "Despina", kulak: "sivri", ana: "#f2a65a", acik: "#fde6cf", koyu: "#cf7e34", ic: "#f7b9a6", goz: "#9fb03a",
     karakter: `Sen güneşli bir pencere kenarında oturmayı seven, meraklı, zarif ve biraz nazlı ama çok sevgi dolu bir kedisin. Her şeyi incelemek istersin; keskin gözlerin saklı şeyleri hemen bulur.
 - Konuşma tarzın: Yumuşak ve tatlı konuşursun. Mutlu olunca "mırrr" diye mırlarsın, şaşırınca "Miyav, ne ilginç!" dersin.
 - En çok sevdiklerin: Yün yumağı, kutulara saklanmak, güneşte uzanmak ve gizemler.
 - İlgi alanların: Renkler, şekiller, saklı şeyleri bulmak, gözlem ve bulmacalar.
 - Arkadaşlığınız: Çocuğun dikkatli bakmasını ve fark etmesini seversin. Onun gösterdiği her şeye merakla bakarsın.` },
-  { id: "tilki", ad: "Tilki", tur: "peluş tilki", ses: "Fenrir", kulak: "sivri", ana: "#e8743b", acik: "#fff4ea", koyu: "#7a3b1d",
+  { id: "tilki", ad: "Tilki", tur: "peluş tilki", ses: "Fenrir", kulak: "sivri", ana: "#e8743b", acik: "#fff4ea", koyu: "#7a3b1d", goz: "#d18a2a", uc: "#4a2a1c",
     karakter: `Sen ormanın en zeki dedektifi, biraz hınzır ama çok iyi kalpli bir tilkisin. Gizemleri, ipuçlarını ve bilmeceleri çözmeye bayılırsın. Hiçbir zaman kimseyi kandırmazsın; zekanı hep yardım etmek için kullanırsın.
 - Konuşma tarzın: Heyecanlı ve gizemli konuşursun. Bir şeyi çözünce "Aha! Buldum!" dersin, bir ipucu verirken sesini fısıltıya çevirirsin.
 - En çok sevdiklerin: Orman patikaları, ayak izleri, büyüteç ve bilmeceler.
 - İlgi alanların: Bilmeceler, mantık soruları, doğadaki izler ve "Neden böyle?" soruları.
 - Arkadaşlığınız: Çocuk senin dedektif yardımcındır. Onun düşünmesini, tahmin etmesini ve sebep bulmasını seversin.` },
-  { id: "kopek", ad: "Köpek", tur: "peluş köpek", ses: "Achird", kulak: "sarkik", ana: "#e2c49f", acik: "#f8ecdc", koyu: "#8a5a3b",
+  { id: "kopek", ad: "Köpek", tur: "peluş köpek", ses: "Achird", kulak: "sarkik", ana: "#e2c49f", acik: "#f8ecdc", koyu: "#8a5a3b", goz: "#6b4527",
     karakter: `Sen kuyruğunu hiç durmadan sallayan, sadık, coşkulu ve herkesi seven bir köpeksin. Çocuğun her başarısına kocaman sevinirsin. Burnun çok iyi koklar.
 - Konuşma tarzın: Dostça, sevinçli ve içten konuşursun. Sevinince "Hav hav!" dersin. Sevdiğin söz: "Sen bir numarasın!"
 - En çok sevdiklerin: Top oynamak, parkta koşmak, kemik ve yeni arkadaşlar.
 - İlgi alanların: Hareket oyunları, iyi alışkanlıklar (el yıkamak, oyuncak toplamak), arkadaşlık, paylaşmak ve yardım etmek.
 - Arkadaşlığınız: Çocuğun en sadık destekçisisin. Küçük görevler verir, onları yapınca bayram edersin.` },
-  { id: "koala", ad: "Koala", tur: "peluş koala", ses: "Vindemiatrix", kulak: "kocaman", ana: "#a9adb3", acik: "#ecedef", koyu: "#6f747b",
+  { id: "koala", ad: "Koala", tur: "peluş koala", ses: "Vindemiatrix", kulak: "kocaman", ana: "#a9adb3", acik: "#ecedef", koyu: "#6f747b", ic: "#f7f7f8", goz: "#4f3b2f", puf: true,
     karakter: `Sen çok uzaklarda, Avustralya'da büyük bir okaliptüs ağacının dalında yaşayan, yumuşacık ve nazik bir koalasın. Sakin, biraz uykulu ve çok sevecensin. Ninnileri ve sakin masalları en güzel sen anlatırsın.
 - Konuşma tarzın: Yavaş, yumuşak ve nazik konuşursun. Sevdiğin söz: "Sarılmak gibisi yok."
 - En çok sevdiklerin: Okaliptüs yaprağı, ağaç dalında uyumak, yıldızları seyretmek.
 - İlgi alanların: Avustralya'nın ilginç hayvanları (kanguru, ornitorenk, vombat, gülen kuş kukabura), uyku ve dinlenme, hayal kurmak, duygular.
 - Arkadaşlığınız: Çocuğun sakinleştiği, kendini güvende hissettiği bir dostsun. Uyku vakti sana çok yakışır.` },
-  { id: "fare", ad: "Fare", tur: "peluş fare", ses: "Leda", kulak: "kocaman", ana: "#cbc4cf", acik: "#ffd3de", koyu: "#9a93a0",
+  { id: "fare", ad: "Fare", tur: "peluş fare", ses: "Leda", kulak: "kocaman", ana: "#cbc4cf", acik: "#ffd3de", koyu: "#9a93a0", ic: "#f5adc0", goz: "#3b2a20",
     karakter: `Sen minicik ama çok cesur, mucit bir faresin. Küçük şeylerden icatlar yaparsın ve aklına hep yeni fikirler gelir. Küçük olmanın da çok güçlü olabileceğini bilirsin.
 - Konuşma tarzın: Hızlı düşünen, heyecanlı ama tatlı bir sesle konuşursun. Bir fikir bulunca "Cik cik! Bir fikrim var!" dersin.
 - En çok sevdiklerin: Peynir, minik kutular, düğmeler, bir şeyler yapıp bozmak.
 - İlgi alanların: Bilim ve basit deneyler, makineler, inşa etmek, sayılar ve şekiller.
 - Arkadaşlığınız: Çocuğu "küçük mucit ortağın" yaparsın. Onun fikirlerini çok önemsersin ve birlikte bir şeyler tasarlarsınız.` },
-  { id: "aslan", ad: "Aslan", tur: "peluş aslan", ses: "Orus", kulak: "yuvarlak", ana: "#f3c25c", acik: "#fdebc2", koyu: "#c47a2c", yele: true,
+  { id: "aslan", ad: "Aslan", tur: "peluş aslan", ses: "Orus", kulak: "yuvarlak", ana: "#f3c25c", acik: "#fdebc2", koyu: "#c47a2c", goz: "#c08a2c", yele: "#dc9440",
     karakter: `Sen kocaman yeleli, cesur ama hiç korkutucu olmayan, kibar bir aslansın. Savanda ailenle yaşarsın. Gerçek bir lider gibi herkese yardım eder, sözünü tutarsın.
 - Konuşma tarzın: Güven veren, güçlü ama sıcak bir sesle konuşursun. Kükremen komik ve yumuşaktır: "Rooaar!" Sevdiğin söz: "Cesur kalpler birlikte güçlü!"
 - En çok sevdiklerin: Güneşte uzanmak, savanda gezmek, ailenle oyun oynamak.
 - İlgi alanların: Afrika hayvanları, cesaret, spor ve hareket, kahramanlık ve yardımlaşma hikayeleri.
 - Arkadaşlığınız: Çocuğun cesaretini büyütürsün. Korktuğu bir şeyi anlatırsa, onu küçümsemeden ona güç verirsin.` },
-  { id: "unicorn", ad: "Unicorn", tur: "peluş unicorn (tek boynuzlu at)", ses: "Autonoe", kulak: "sivri", ana: "#fbf3ff", acik: "#ffe1f0", koyu: "#c8a7e8", boynuz: true,
+  { id: "unicorn", ad: "Unicorn", tur: "peluş unicorn (tek boynuzlu at)", ses: "Autonoe", kulak: "sivri", ana: "#fbf3ff", acik: "#ffe1f0", koyu: "#c8a7e8", ic: "#ffcfe4", goz: "#7d64c4", boynuz: true,
     karakter: `Sen gökkuşağının üstündeki bulut ülkesinde yaşayan, hayal gücü sınırsız, şarkı söylemeyi çok seven bir unicornsun. Boynuzun parlayınca hayal oyunları başlar. Sihrin sadece hayal oyunlarında vardır; gerçek dünyada sihir olduğunu söylemezsin.
 - Konuşma tarzın: Parlak, neşeli ve hayalperest bir sesle konuşursun. Bir oyuna başlarken "Bir, iki, üç, sihirli güç!" dersin.
 - En çok sevdiklerin: Gökkuşağı, yıldızlar, pamuk gibi bulutlar ve renkler.
 - İlgi alanların: Renkler, resim ve sanat, müzik ve şarkılar, iyilik ve nezaket.
 - Arkadaşlığınız: Çocuğun hayal gücünün ortağısın. Onun uydurduğu her şeyi büyütür, ona güzel sözlerin "sihrini" öğretirsin.` },
   // the grown-ups' conversation partner (chosen with the age "Yetişkin"), with a grown-up voice
-  { id: "baykus", ad: "Bilge", tur: "baykuş", ses: "Charon", kulak: "tuy", ana: "#8d6e57", acik: "#efe1cf", koyu: "#5e4637", yetiskin: true,
+  { id: "baykus", ad: "Bilge", tur: "baykuş", ses: "Charon", kulak: "tuy", ana: "#8d6e57", acik: "#efe1cf", koyu: "#5e4637", goz: "#f2a52e", yetiskin: true,
     karakter: `Sen yaşlı bir meşe ağacının kovuğundaki, kitaplarla dolu odanda yaşayan, gözlüklü ve papyonlu bilge bir baykuşsun. Çok okumuş, çok dinlemiş, meraklı ve esprili birisin; gecenin sessizliğinde düşünmeyi seversin.
 - Konuşma tarzın: Sakin, tok ve sıcak bir yetişkin sesiyle, doğal hızda konuşursun. Ara sıra ince bir espri yaparsın. Sevdiğin söz: "Güzel soru, biraz düşünelim."
 - İlgi alanların: Felsefe, tarih, bilim, edebiyat, psikoloji, insan ilişkileri, sanat ve hayatın küçük keyifleri; ama her konuda konuşabilirsin.
@@ -2356,16 +2385,24 @@ const WHISKERS = (len, op) => `<g stroke="var(--ink)" stroke-width="2.6" stroke-
   `<path d="M254 262 L${254 + len} 252"/><path d="M254 272 L${256 + len} 274"/><path d="M252 282 L${250 + len} 294"/></g>`;
 const PINK_NOSE = { rx: 14, ry: 10, fill: "#f28ca0" };
 const DECO = {
-  kedi: { over: WHISKERS(52, .55), nose: PINK_NOSE,
+  // a panda's dark band over the shoulders, joining its dark arms
+  panda: { body: `<path d="M70 382 C 76 326, 324 326, 330 382 C 300 318, 100 318, 70 382Z" fill="var(--fur-dark)"/>` },
+  // a tabby's stripes on the forehead and cheeks
+  kedi: { over: WHISKERS(52, .55), nose: PINK_NOSE, pupil: 3.5,
+    under: `<g fill="none" stroke="var(--fur-dark)" stroke-width="7" stroke-linecap="round" opacity=".6"><path d="M200 70 v30 M180 76 q2 14 6 24 M220 76 q-2 14 -6 24"/>` +
+           `<path d="M52 192 q16 2 28 8 M50 212 q16 0 28 4 M348 192 q-16 2 -28 8 M350 212 q-16 0 -28 4"/></g>`,
     tail: [`<path d="M0 0 C 46 -6, 56 -72, 24 -108" fill="none" stroke="var(--fur)" stroke-width="18" stroke-linecap="round"/>` +
            `<path d="M33 -86 C 31 -96, 28 -102, 24 -108" fill="none" stroke="var(--fur-dark)" stroke-width="18" stroke-linecap="round"/>`, "translate(316 444)"] },
   fare: { over: WHISKERS(46, .5), nose: PINK_NOSE,
     tail: [`<path d="M0 0 C 46 4, 76 -30, 56 -62 C 43 -82, 18 -72, 30 -54" fill="none" stroke="#e7a3b6" stroke-width="6" stroke-linecap="round"/>`, "translate(320 452)"] },
   tavsan: { nose: PINK_NOSE,
-    over: `<rect x="191" y="259" width="8" height="12" rx="2.5" fill="#fff" stroke="#e3d6cc" stroke-width="1.5"/>` +
+    over: WHISKERS(40, .3) + `<rect x="191" y="259" width="8" height="12" rx="2.5" fill="#fff" stroke="#e3d6cc" stroke-width="1.5"/>` +
           `<rect x="201" y="259" width="8" height="12" rx="2.5" fill="#fff" stroke="#e3d6cc" stroke-width="1.5"/>`,
     tail: [`<circle r="27" fill="#fff"/><circle cx="-7" cy="-8" r="13" fill="#fff" opacity=".9"/><circle cx="8" cy="9" r="9" fill="#f2ebe6"/>`, "translate(328 452)"] },
-  tilki: { over: WHISKERS(34, .35),
+  // a fox's white lower face, with tufts of fur sticking out at the cheeks
+  tilki: { over: WHISKERS(34, .35), pupil: 4.5,
+    under: `<path d="M52 222 C 90 262, 140 252, 200 262 C 260 252, 310 262, 348 222 L 366 262 L 340 266 L 352 296 L 318 296 C 290 330, 250 342, 200 342` +
+           ` C 150 342, 110 330, 82 296 L 48 296 L 60 266 L 34 262 Z" fill="var(--fur-light)"/>`,
     tail: [`<ellipse cx="0" cy="-62" rx="30" ry="68" fill="var(--fur)"/><ellipse cx="0" cy="-110" rx="21" ry="25" fill="#fff8ef"/>`, "translate(300 442) rotate(32)"] },
   kopek: { under: `<ellipse cx="263" cy="176" rx="35" ry="38" fill="var(--fur-dark)" opacity=".75"/>`,
     tail: [`<ellipse cx="0" cy="-30" rx="13" ry="34" fill="var(--fur)"/>`, "translate(318 424) rotate(48)"] },
@@ -2373,7 +2410,8 @@ const DECO = {
                  `<circle cx="228" cy="262" r="2.6"/><circle cx="234" cy="272" r="2.6"/><circle cx="226" cy="279" r="2.6"/></g>`,
     tail: [`<path d="M0 0 C 40 0, 62 -20, 58 -74" fill="none" stroke="var(--fur)" stroke-width="10" stroke-linecap="round"/>` +
            `<ellipse cx="57" cy="-88" rx="13" ry="18" fill="var(--fur-dark)"/>`, "translate(320 450)"] },
-  koala: { nose: { rx: 30, ry: 25, cy: 234, fill: "#4b4f58" } },
+  // a koala has a grey face round its big dark nose
+  koala: { nose: { rx: 30, ry: 25, cy: 234, fill: "#4b4f58" }, muzzle: "#c9ccd1" },
   unicorn: { nose: { rx: 12, ry: 8, fill: "#e9a8c8" },
     // a pastel forelock over the horn's base, and eyelashes
     over: `<ellipse cx="174" cy="80" rx="26" ry="15" fill="#ffb3d9" transform="rotate(-24 174 80)"/>` +
@@ -2383,7 +2421,10 @@ const DECO = {
     tail: [`<g fill="none" stroke-width="12" stroke-linecap="round"><path d="M0 -4 C 32 -6, 48 -46, 30 -92" stroke="#a8dcff"/>` +
            `<path d="M0 0 C 40 0, 60 -40, 46 -90" stroke="#ffb3d9"/><path d="M0 4 C 48 6, 72 -34, 62 -82" stroke="#d9b8ff"/></g>`, "translate(316 448)"] },
   // the wise owl: light rings round the eyes, round glasses, a beak instead of a nose, and a bow tie
-  baykus: { nose: { rx: 0.1, ry: 0.1, fill: "none" },
+  baykus: { nose: { rx: 0.1, ry: 0.1, fill: "none" }, pupil: 9,
+    body: `<g fill="none" stroke="var(--fur-dark)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".5">` +
+          [[172, 392], [200, 392], [228, 392], [158, 412], [186, 412], [214, 412], [242, 412], [172, 432], [200, 432], [228, 432]]
+            .map(([x, y]) => `<path d="M${x - 8} ${y} l8 7 l8 -7"/>`).join("") + `</g>`,
     under: `<circle cx="140" cy="182" r="54" fill="var(--fur-light)"/><circle cx="260" cy="182" r="54" fill="var(--fur-light)"/>`,
     over: `<g fill="none" stroke="#3b2a20" stroke-width="6"><circle cx="140" cy="181" r="36"/><circle cx="260" cy="181" r="36"/><path d="M176 176 q24 -14 48 0"/></g>` +
           `<path d="M184 218 Q200 210 216 218 L200 250 Z" fill="#f2b33d" stroke="#d99a2b" stroke-width="3" stroke-linejoin="round"/>` +
@@ -2396,16 +2437,18 @@ function styleDrawing(svg, d, colorHolder) {
   colorHolder.style.setProperty("--fur", d.ana);
   colorHolder.style.setProperty("--fur-light", d.acik);
   colorHolder.style.setProperty("--fur-dark", d.koyu);
+  colorHolder.style.setProperty("--ear-in", d.ic || d.acik);
+  colorHolder.style.setProperty("--iris", d.goz || "#6b4527");
   // panda-like toys have dark ears too
   const paint = s => d.leke ? s.replace(/var\(--fur(-light)?\)/g, "var(--fur-dark)") : s;
   const el = q("earL"), er = q("earR"), headShape = q("headShape");
-  el.innerHTML = paint(EARS[d.kulak](100)); er.innerHTML = paint(EARS[d.kulak](300));
+  el.innerHTML = paint(EARS[d.kulak](100, d)); er.innerHTML = paint(EARS[d.kulak](300, d));
   // floppy ears hang over the side of the head, the others sit behind it
-  if (d.kulak === "sarkik") headShape.after(el, er); else headShape.before(el, er);
+  if (d.kulak === "sarkik") q("headRim").after(el, er); else headShape.before(el, er);
   q("patches").setAttribute("display", d.leke ? "inline" : "none");
   // panda-like toys have dark arms
   svg.querySelectorAll(".armFur").forEach(a => a.setAttribute("fill", d.leke ? "var(--fur-dark)" : "var(--fur)"));
-  q("mane").setAttribute("display", d.yele ? "inline" : "none");
+  q("mane").innerHTML = d.yele ? MANE(d.yele) : "";
   q("horn").setAttribute("display", d.boynuz ? "inline" : "none");
   q("tuft").setAttribute("display", d.kulak === "yuvarlak" && !d.yele ? "inline" : "none");
   // the toy's own tail, face marks and nose
@@ -2415,6 +2458,10 @@ function styleDrawing(svg, d, colorHolder) {
   tail.setAttribute("transform", tail.dataset.base);
   q("decoUnder").innerHTML = deco.under || "";
   q("decoOver").innerHTML = deco.over || "";
+  q("bodyDeco").innerHTML = deco.body || "";
+  q("muzzle").setAttribute("fill", deco.muzzle || "var(--fur-light)");
+  // cats and foxes have narrow pupils
+  svg.querySelectorAll(".pupil").forEach(p => p.setAttribute("rx", deco.pupil || 8));
   const n = deco.nose || {}, nose = q("nose"), shine = q("noseShine");
   nose.setAttribute("rx", n.rx || 20); nose.setAttribute("ry", n.ry || 13);
   nose.setAttribute("cy", n.cy || 230); nose.setAttribute("fill", n.fill || "var(--ink)");
@@ -2604,7 +2651,7 @@ function gameRules() {
   const known = loadJSON("mem-" + look.id, emptyMemory()).notlar.length > 0;
   const together = meets === 1 && days !== 0 && known ? `${cn()} ile daha önce de konuşmuştunuz; onu tekrar gördüğüne sevin.`
     : meets === 1 && days !== 0 ? `Bu, ${cn()} ile ilk tanışmanız. Kendini karakterine uygun, kısa ve neşeli bir şekilde tanıt.`
-    : days === 0 ? `${cn()} ile bugün daha önce de konuştunuz; kendini yeniden tanıtma, "Yine geldin, ne güzel!" gibi sevinçle karşıla.`
+    : days === 0 ? `${cn()} ile bugün daha önce de konuştunuz; kendini yeniden tanıtma, onu gördüğüne kısaca sevin (her seferinde başka sözlerle).`
     : `${cn()} ile ${meets}. gün buluşuyorsunuz; en son ${days === 1 ? "dün" : days + " gün önce"} konuştunuz. Onu özlediğini söyleyebilirsin.`;
 
   const line = g => `- ${g.ad}${g.kamera ? " (kamera oyunu)" : ""}: ${g.tarif}`;
@@ -2844,7 +2891,6 @@ Eski yarım kalan: ${old.devam || "(yok)"}
 
 Sohbet:
 ${talk}` : `Aşağıda ${t.age} yaşındaki ${t.child} ile oyuncak arkadaşı ${t.d.ad} arasındaki sesli bir sohbetin yazıya dökülmüş hali var (ses tanıma hataları olabilir).` +
-    (t.family ? ` Bu sohbet birlikte modundaydı: ${t.child} dışında başka kişiler de (ailesi ya da bir arkadaşı) konuştu ve hepsi "${t.child}:" diye yazıldı. Notlara sadece ${t.child} hakkında olduğundan emin olduklarını yaz; diğer kişiler, özellikle başka çocuklar hakkında hiçbir not tutma.` : "") +
     (t.seen && t.seen.length ? ` Sohbetin başında kamerada ${t.child} ile birlikte şunlar da vardı: ${t.seen.join(", ")}. Onların söyledikleri de "${t.child}:" diye yazılmış olabilir; notlara sadece ${t.child} hakkında olduğundan emin olduklarını yaz.` : "") + `
 
 1) notlar: Oyuncağın bir sonraki sohbette hatırlaması gereken kısa notlar. Eski notlarla birleştir: hâlâ geçerli olanları koru, değişenleri güncelle, tekrarları birleştir. En fazla 10 not, her biri tek kısa cümle, "${t.child}" diye başlayabilir.
@@ -3299,7 +3345,7 @@ function schoolRules() {
   if (g === "kres" || g === "ana") return `
 
 OKUL
-${cn()} ${g === "ana" ? "anasınıfına" : "kreşe ya da anaokuluna"} gidiyor. Arada orada bugün ne yaptığını, kimlerle oynadığını merakla sor. Renkleri, sayıları, şekilleri ve sesleri sohbetin içinde doğal olarak tanıt; harf ezberletme, sınav yapar gibi soru sorma.`;
+${cn()} ${g === "ana" ? "anasınıfına" : "kreşe"} gidiyor. Arada orada bugün ne yaptığını, kimlerle oynadığını merakla sor. Renkleri, sayıları, şekilleri ve sesleri sohbetin içinde doğal olarak tanıt; harf ezberletme, sınav yapar gibi soru sorma.`;
   const s = SCHOOL[g];
   return `
 
@@ -3312,40 +3358,6 @@ Bu sınıfta genelde işlenen konular (okulunda sıra farklı olabilir):
 ÖDEV YARDIMI: Ödevinde yardım isterse cevabı asla doğrudan söyleme. Soruyu ona okut ya da birlikte okuyun, küçük ipuçları ver, "Sence ilk adım ne?" diye sor ve kendisinin bulmasını sağla. Bulunca çabasını öv. Ödevi onun yerine yapma, yazılarını onun yerine yazma. Emin olmadığın bir konuda uydurma; "Bunu öğretmenine soralım" de.
 Sıkıcı bir ders gibi değil, sıcak ve meraklı bir sohbet gibi anlat; oyunu sadece isterse oynayın.`;
 }
-
-// ---------- family game: the toy runs a game for the whole family ----------
-let family = false;
-function familyText() {
-  if (isAdult()) return `BİRLİKTE MODU (YETİŞKİNLER)
-Karşında birden fazla yetişkin var: eşler, aile ya da arkadaşlar. Bu modda kamera açık olur ve sadece kamerada gördüğün kişilerle konuşursun: tanıdığın biri göründüğünde uygulama sana bildirir; görmediğin kimseye adıyla seslenme. Herkese söz ver; konuşulan konuya katıl, fikrini söyle, eğlenceli ol. Kimin konuştuğunu bilmiyorsan isim kullanma ya da nazikçe sor. Kimseyi kırma, kimseyi küçük düşürme.
-İsterlerse grup oyunları önerebilirsin: bilgi yarışması (sırayla soru, puanı sen tut), tabu, film ya da şarkı tahmini, iki doğru bir yalan, münazara (bir konuda iki taraf), birlikte hikaye kurma.`;
-  return `BİRLİKTE MODU
-${cn()} başkalarıyla birlikte: ailesiyle ya da eve gelen bir arkadaşıyla. Bu modda kamera açık olur ve sadece kamerada gördüğün kişilerle konuşursun: tanıdığın biri göründüğünde uygulama sana bildirir, o zaman ona adıyla seslen. Görmediğin kimseye seslenme, "Kimler var?" diye sorma. Kamerada gördüğün herkese söz ver, konuştukları konuya katıl. Kamerada tanımadığın biri görünürse adını sorabilirsin; gelen bir arkadaşsa ona da sıcak bir hoş geldin de; ama ondan adı dışında hiçbir kişisel bilgi (adres, okul, telefon, aile) isteme. Kimin konuştuğundan emin değilsen isim kullanmadan cevap ver ya da nazikçe "Şimdi kim konuşuyor?" diye sor. Kendiliğinden oyun önerme; sadece oyun isterlerse aşağıdakilerden birini öner.
-Oyun oynarken sırayla herkese söz ver, herkese adıyla hitap et, puanları sen tut ve arada skoru söyle. Çocuğa (${cn()}) kendi yaşına uygun, büyüklere daha zor sorular sor; çocuğun kazanma şansı yüksek olsun ama herkes eğlensin, kaybedeni de alkışla. Kimseyle dalga geçme, kırıcı şaka yapma.
-Birlikte oyunlar (sadece istenirse):
-- Kategori yarışı: Sırayla bir kategoride (meyve, hayvan, renk, şehir) bir şey söyleyin; aklına gelmeyen elenmez, sadece güleriz.
-- Pandomim: Biri bir hayvanı ya da mesleği sessizce taklit eder, diğerleri tahmin eder; kamera açıksa sen de tahmin et.
-- Ailece hikaye: Herkes sırayla bir cümle ekler, sen sonunu bağlarsın.
-- Bilgi yarışması: Herkese yaşına göre bir soru; doğru cevaba puan.
-- Şarkı tamamla: Bilinen bir çocuk şarkısının ilk sözünü söyle, sırayla devamını getirsinler.
-- Kim bu?: Oynayanlardan birini adını söylemeden sevimli ipuçlarıyla anlatın ("Bu kişi en çok gülen kişi"); sadece güzel ve kırıcı olmayan ipuçları, görünüş hakkında değil.
-- Ses taklidi: Sen bir hayvan ya da araç sesi söyle, sırayla en komik taklidi yapsınlar; herkesi alkışla.`;
-}
-// The rules are always in the instructions, so turning the mode on or off mid-talk takes only a short note
-// (a long one is more likely to be read out).
-const familyRules = () => "\n\n" + familyText().replace(/^(BİRLİKTE MODU[^\n]*)/, "$1 (" + (family
-  ? "bu sohbet bu modda başladı" : "sadece uygulama birlikte modunun açıldığını söylerse geçerli") + ")");
-$("family").onclick = () => {
-  family = !family; $("family").classList.toggle("on", family);
-  if (running) {
-    // the family together: the camera opens, so the toy can see (and greet) who is there
-    if (family && !camStream && !settings.voiceOnly) { camByFamily = true; startCam(false); }
-    if (!family && camByFamily) { camByFamily = false; stopCam(); }
-    queueNote(family ? "Uygulama notu: birlikte modu açıldı ve kamera açılıyor; kamerada gördüğün kişilerle konuşacaksın. Buna kısaca sevin."
-      : "Uygulama notu: birlikte modu kapandı; artık yine sadece " + cn() + " ile konuşuyorsun. Katılanlara kısaca teşekkür et.");
-  }
-  else setStatus(family ? "Birlikte modu açık: Konuş'a basın; kamera açılır, oyuncak gördüğü kişilerle konuşur." : sleepingText());
-};
 
 // ---------- story book: stories told or made up together, written down after the talk ----------
 function showStories() {
@@ -3510,6 +3522,21 @@ $("logClear").onclick = () => {
   try { localStorage.removeItem("pofi.log-" + k); localStorage.removeItem("pofi.sum-" + k); } catch {}
   if (k === logDay) logLines = [];
   showLog();
+};
+// Everything the characters remember, in every section (the grown-ups' too): the talks, the day's
+// summaries, their notes and how often they have met. Stickers, stories, settings and photos stay.
+$("historyClear").onclick = () => {
+  if (running) { alert("Önce konuşmayı bitirin."); return; }
+  if (!confirm("Bütün profillerde ve karakterlerde konuşma geçmişi, özetler ve karakterlerin hafızası silinsin mi? Bu geri alınamaz.")) return;
+  clearTimeout(logSaveTimer); logLines = [];
+  try {
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const k = localStorage.key(i);
+      if (k && /^pofi\.(c\d+\.)?(alert|(log|sum|mem|meets|met|games|played)-.+)$/.test(k)) localStorage.removeItem(k);
+    }
+  } catch {}
+  memShown = ""; showMemory(); showAlert(); fillLogDays(); $("reportView").textContent = "";
+  alert("Tüm geçmiş silindi.");
 };
 
 // ---------- backup: all Pofi keeps on this phone, in one file to take to another phone or address ----------
