@@ -1562,12 +1562,15 @@ async function loadCharacter(d) {
     msg.textContent = d.ad + " geliyor...";
     if (!head) {
       const { TalkingHead } = await import("talkinghead");
-      head = new TalkingHead($("avatar"), { ttsEndpoint: "N/A", lipsyncModules: [], cameraView: "upper", avatarMood: "neutral",
+      // cameraRotateEnable: a child's finger on the picture must not turn the camera away from the character
+      head = new TalkingHead($("avatar"), { ttsEndpoint: "N/A", lipsyncModules: [], cameraView: "upper", avatarMood: "neutral", cameraRotateEnable: false,
         // sharp enough on a phone without drawing every pixel of its screen (that would drain the battery)
         modelPixelRatio: Math.min(1.5, window.devicePixelRatio || 1), update: dt => { if (lips) lips.update(dt); } });
     }
     await head.showAvatar({ url: AVATARS + d.model, body: d.body, avatarMood: "neutral", lipsyncLang: "en", ...d.ayar },
-      ev => { if (ev && ev.lengthComputable) msg.textContent = d.ad + " geliyor... %" + Math.round(ev.loaded / ev.total * 100); });
+      // the models come compressed, so the size the server gives is smaller than what arrives: their real sizes
+      ev => { const raw = { "avaturn.glb": 13.8e6, "avatarsdk.glb": 12.3e6, "brunette.glb": 4.7e6 }[d.model];
+        if (ev && ev.loaded && raw) msg.textContent = d.ad + " geliyor... %" + Math.min(99, Math.round(ev.loaded / raw * 100)); });
     if (d.gomlek) head.armature.traverse(o => {
       if (o.name === d.gomlek[0] && o.material) { o.material.map = null; o.material.color.set(d.gomlek[1]); o.material.needsUpdate = true; }
     });
@@ -2784,8 +2787,9 @@ setStatus(sleepingText());
 // When started with "Pofi'yi Baslat.bat", a key in anahtar.txt wins over the one saved in the panel.
 (async () => {
   try {
-    const r = await fetch("/anahtar");
-    const k = r.ok ? (await r.text()).replace(/\s+/g, "") : "";
+    // (only the computer's own server has it; on the website the request would just fail)
+    const r = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) ? await fetch("/anahtar") : null;
+    const k = r && r.ok ? (await r.text()).replace(/\s+/g, "") : "";
     if (k) settings.key = k;
   } catch {}
   if (!settings.key) setStatus("Başlamak için sağ üstteki ⚙️ düğmesine 2 saniye basılı tut ve API anahtarını yapıştır.");
