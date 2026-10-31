@@ -1206,7 +1206,9 @@ function onMicChunk(e) {
   if (!running || !ws || ws.readyState !== 1 || !ws.ready) return;
   // while still waking up, a child's voice would cut off the hello Gemini is preparing
   if (waking) return;
-  if (settings.mute && isSpeaking()) return;
+  // with "mute" the toy's own voice can't reach Gemini for its whole answer: also where its sound stops for a
+  // moment while the rest is still coming (a slow network), not only while sound is playing
+  if (settings.mute && (isSpeaking() || (generating && performance.now() - replyAt < 4000))) return;
   // a growing send queue means the upload can't keep up: say so instead of silently falling behind
   slowNet = ws.bufferedAmount > 64000;
 
@@ -1308,7 +1310,7 @@ async function start() {
   clearTimeout(adultBack);
   sessionLines = []; sessionLook = look; noteQueue = [];
   sessionInfo = { d: look, pid: profile, child: cn(), age: settings.childAge, toy: tn(), adult: isAdult() };
-  askedAt = cutAt = showAsk = noteEchoes = 0; toyTurnText = "";   // nothing from an earlier talk is waiting for an answer
+  askedAt = cutAt = notedAt = showAsk = noteEchoes = 0; toyTurnText = "";   // nothing from an earlier talk is waiting for an answer
   document.body.classList.add("running");
   resumeHandle = null; reconnects = 0;
 
@@ -1426,7 +1428,9 @@ function connect(model, attempt, resuming = false) {
         if (sc.turnComplete && camStream && /göster|getir|kameraya/i.test(toyTurnText)) showAsk = 1;
         if (sc.turnComplete || sc.interrupted) { bargedIn = generating = false; lastToyTurn = toyTurnText; toyTurnText = ""; noteEcho = false; }
       }
-      if (msg.goAway) setStatus(tn() + " birazdan uyuyacak...");
+      // Google closes each connection after about ten minutes and warns shortly before: it is renewed at the next
+      // quiet moment instead (the talk goes on where it was), so the toy isn't cut off in mid-sentence
+      if (msg.goAway) sock.goingAway = true;
     };
 
     sock.onclose = ev => {
@@ -1442,7 +1446,8 @@ function connect(model, attempt, resuming = false) {
         if (performance.now() - sock.readyAt > 20000) reconnects = 0;   // it had been working fine
         if (reconnects < 3) {
           reconnects++;
-          stopPlayback(); bargedIn = generating = awaitingReply = false;
+          // what the toy has already said plays to the end; only the connection is renewed
+          bargedIn = generating = awaitingReply = false;
           sock.ready = false;   // so the live status doesn't say "seni dinliyor" while nothing gets through
           setStatus(tn() + " yeniden bağlanıyor...");
           setTimeout(() => { if (running && ws === sock) connect(model, attempt, true); }, 600);
@@ -2660,7 +2665,7 @@ setInterval(() => {
   if (goodbyeAt) {
     const now = performance.now(), quiet = !generating && !isSpeaking();
     // the goodbye waits for the toy to finish its sentence (at most 15 s), so it doesn't cut it off
-    if (!goodbyeSent && (quiet || now - goodbyeAt > 15000)) {
+    if (!goodbyeSent && ((quiet && !answerDue()) || now - goodbyeAt > 15000)) {
       goodbyeSent = now; wavePending = true;   // waves while saying goodbye
       sendNote("Uygulama notu: bugünkü oyun süresi doldu. " + cn() + " ile çok kısa ve sevecen bir şekilde vedalaş; " +
         "dışarıda oynamayı, resim yapmayı ya da ailesiyle vakit geçirmeyi öner ve yarın yine konuşabileceğinizi söyle.");
@@ -2699,10 +2704,13 @@ function loadJSON(k, d) { try { const v = JSON.parse(load(k, "null")); return v 
 // notu:" (a bracketed tag was worse: the toy copied it into its own speech). A note is read out mostly when
 // it arrives while the toy is still talking, so notes wait for it to be quiet (queueNote).
 const asNote = text => /^Uygulama notu:/.test(text) ? text : "Uygulama notu: " + text;
-// words that only a note has (in lower case, Turkish İ included): the toy saying them is reading one out
-const NOTE_ECHO = /uygulama\s*(notu|bilgisi)|gizli bilgi|kameraya (bir an )?baktın|karşında şunları gördün|düğmeye bas(tı|ıldı)/;
+// words that only a note has (in lower case, Turkish İ included): the toy saying them is reading one out.
+// Its own sentences don't count: "Düğmeye bastın!" (the note says "bastı"), a "gizli bilgi" in a detective game.
+const NOTE_ECHO = /uygulama\s*(notu|bilgisi)|gelen gizli bilgi|düğmeye bas(tı|ıldı)(?![a-zçğıöşü])/;
 function sendNote(text) {
-  if (ws && ws.ready && ws.readyState === 1) ws.send(JSON.stringify({ clientContent: { turns: [{ role: "user", parts: [{ text: asNote(text) }] }], turnComplete: true } }));
+  if (!ws || !ws.ready || ws.readyState !== 1) return;
+  ws.send(JSON.stringify({ clientContent: { turns: [{ role: "user", parts: [{ text: asNote(text) }] }], turnComplete: true } }));
+  notedAt = performance.now();
 }
 
 // ---------- the moment: time of day, season, the parent's note ----------
@@ -2879,22 +2887,32 @@ ${talk}`, { type: "OBJECT",
 }
 function loadJSON2(pid, k, d) { try { const v = JSON.parse(loadFor(pid, k, "null")); return v === null ? d : v; } catch { return d; } }
 
-// App notes for the toy wait until it has finished speaking, so they never cut it off.
+// App notes for the toy wait until it has finished speaking, so they never cut it off, and until an answer on
+// its way has started (sent before it starts, a note makes Gemini drop it). They also wait for the connection.
 let noteQueue = [];
 function queueNote(text) { noteQueue.push(text); }
 setInterval(() => {
-  if (noteQueue.length && running && !waking && !generating && !isSpeaking()) sendNote(noteQueue.shift());
+  if (!running || waking || !ws || !ws.ready || ws.readyState !== 1 || generating || isSpeaking() || answerDue()) return;
+  // a connection Google is about to close (goAway) is renewed now, while nobody is talking
+  if (ws.goingAway && resumeHandle && performance.now() - heardAt > 1000) { ws.goingAway = false; ws.close(); return; }
+  if (noteQueue.length) sendNote(noteQueue.shift());
 }, 300);
 
 // ---------- no answer: something was said, but nothing came back ----------
 // A cough or another voice in the room can cut Gemini's answer off before it is heard, and in a noisy
 // room it can miss the end of what was said: the toy then just stays quiet and the child has to say it
 // again. Instead, after a few quiet seconds it is asked to answer (once for each thing said).
-let askedAt = 0, cutAt = 0, replyAt = 0, nudgedAt = 0, toyTurnText = "", lastToyTurn = "", showAsk = 0, noteEcho = false, noteEchoes = 0;
+// On a phone's mobile data an answer can take several seconds to start, and this reminder (or a note) sent
+// before it starts makes Gemini drop it: the toy began and stopped by itself. So it waits that long first.
+const ANSWER_WAIT = 6000;
+let askedAt = 0, cutAt = 0, replyAt = 0, nudgedAt = 0, notedAt = 0, toyTurnText = "", lastToyTurn = "", showAsk = 0, noteEcho = false, noteEchoes = 0;
+// the child said something (or a note went) after the toy's last answer, a moment ago: its answer is on the way
+const answerDue = () => Math.max(askedAt, cutAt, notedAt) > replyAt &&
+  performance.now() - Math.max(askedAt, cutAt, notedAt, childSpokeAt) < ANSWER_WAIT;
 setInterval(() => {
-  if (!running || waking || !ws || !ws.ready || generating || isSpeaking() || noteQueue.length || goodbyeAt || idleByeAt) return;
+  if (!running || waking || !ws || !ws.ready || generating || isSpeaking() || noteQueue.length || goodbyeAt || idleByeAt || answerDue()) return;
   const now = performance.now(), since = Math.max(askedAt, cutAt);
-  if (since && replyAt < since && nudgedAt < since && now - Math.max(since, childSpokeAt) > 3500) {
+  if (since && replyAt < since && nudgedAt < since) {
     nudgedAt = now;
     sendNote("Uygulama notu: sana söylenen son şeye cevap vermedin ya da cevabın yarıda kaldı. Şimdi kısaca cevap ver; anlamadıysan nazikçe tekrar etmesini iste.");
     return;
