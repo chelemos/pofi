@@ -117,7 +117,7 @@
   #status { margin-top: 14px; min-height: 1.4em; color: #6b5a4d; font-size: 15px; font-weight: 600; text-align: center;
     padding: 4px 14px; border-radius: 14px; background: rgba(255,255,255,.72); max-width: calc(100vw - 32px); }
   body[data-tod="night"] #status { color: #e9e6ff; background: rgba(20,24,56,.6); }
-  #subs { position: fixed; bottom: 12px; left: 90px; right: 16px; text-align: center; font-size: 15px; color: #6b5a4d; max-height: 3.4em; overflow: hidden;
+  #subs { position: fixed; bottom: 12px; left: 16px; right: 16px; text-align: center; font-size: 15px; color: #6b5a4d; max-height: 3.4em; overflow: hidden;
     background: rgba(255,255,255,.72); border-radius: 12px; padding: 2px 8px; }
   #subs:empty { display: none; }
 
@@ -171,14 +171,6 @@
   #panel #looks button { padding: 4px 2px 6px; background: #fff7ef; border: 3px solid transparent; border-radius: 14px; font-size: 11px; font-weight: 600; color: var(--text); }
   #panel #looks button.sel { border-color: var(--btn); background: #ffe9ee; }
   #looks svg { width: 100%; height: auto; display: block; }
-  #choices { position: absolute; left: 50%; bottom: 4%; transform: translateX(-50%); z-index: 2; display: flex; gap: min(10px, 2vw); }
-  #choices button { width: min(86px, 21vw); padding: 6px 4px 8px; border: none; border-radius: 22px; background: #fff; cursor: pointer;
-    box-shadow: 0 6px 0 #e7d6c4, 0 10px 18px rgba(0,0,0,.12); font: inherit; font-size: 13px; font-weight: 700; color: var(--text);
-    animation: pop .35s ease-out backwards; }
-  #choices button:nth-child(2) { animation-delay: .1s; } #choices button:nth-child(3) { animation-delay: .2s; } #choices button:nth-child(4) { animation-delay: .3s; }
-  #choices button b { display: block; font-size: 46px; line-height: 1.15; }
-  #choices button:active { transform: translateY(4px); box-shadow: 0 2px 0 #e7d6c4; }
-  @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
   #sumView { margin-top: 8px; font-size: 13px; line-height: 1.45; background: #fff7ef; border-radius: 10px; padding: 8px 10px; }
   #sumView:empty { display: none; }
   #sumView .warn { color: #b3261e; background: #fdecea; border-radius: 8px; padding: 4px 6px; }
@@ -187,23 +179,6 @@
     background: #e5484d; box-shadow: 0 0 0 2px #fff; }
   #sumView div + div { margin-top: 6px; }
 
-  /* sticker album: a button a child can tap (no lock), and a full-screen sheet of stickers */
-  #album { position: fixed; bottom: 18px; left: 16px; z-index: 40; width: 64px; height: 64px; border-radius: 50%; border: none;
-    background: #fff; font-size: 32px; box-shadow: 0 6px 0 #e7d6c4, 0 10px 18px rgba(0,0,0,.1); cursor: pointer; }
-  #albumCount { position: absolute; top: -4px; right: -4px; min-width: 26px; height: 26px; border-radius: 13px; background: var(--btn);
-    color: #fff; font-size: 15px; font-weight: 800; line-height: 26px; padding: 0 6px; }
-  #albumCount:empty { display: none; }
-  #album.bump { animation: bump .5s; }
-  @keyframes bump { 50% { transform: scale(1.3); } }
-  #albumView { position: fixed; inset: 0; z-index: 55; background: rgba(40,25,15,.35); display: none; align-items: center; justify-content: center; padding: 16px; }
-  #albumView.open { display: flex; }
-  #albumView .sheet { background: #fffaf3; border-radius: 22px; padding: 18px; width: min(520px, 100%); max-height: 80vh; overflow: auto; text-align: center; }
-  #albumTitle { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
-  #albumGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 8px; font-size: 44px; }
-  #albumGrid span { background: #fff; border-radius: 16px; box-shadow: 0 3px 8px rgba(0,0,0,.08); padding: 6px 0; }
-  #albumGrid:empty::before { content: "⭐"; opacity: .25; font-size: 64px; grid-column: 1 / -1; }
-  body.voice-only #album { display: none; }
-  #album { font-size: 30px; }
   #kids { position: fixed; top: 12px; left: 12px; z-index: 40; display: flex; gap: 8px; }
   #kids:empty, body.running #kids { display: none; }
   #kids button { width: 58px; padding: 2px 2px 4px; border-radius: 16px; border: 3px solid transparent; background: rgba(255,255,255,.75);
@@ -218,30 +193,7 @@
   #storyList:empty::before { content: "Henüz masal yok."; color: var(--muted); font-size: 13px; }
   #reportView { margin-top: 8px; font-size: 14px; line-height: 1.55; white-space: pre-wrap; }
   #reportView:empty { display: none; }
-  #albumGrid .badges, #albumGrid .level { grid-column: 1 / -1; background: none; box-shadow: none; }
-  #albumGrid .badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; font-size: 30px; padding-bottom: 8px; border-bottom: 2px dashed #eedfce; }
-  #albumGrid .badges span { background: none; box-shadow: none; padding: 0; }
-  #albumGrid .badges .locked { filter: grayscale(1); opacity: .25; }
-  #albumGrid .level { font-size: 16px; font-weight: 600; color: var(--muted); }
-  #albumGrid .level .bar { height: 22px; border-radius: 11px; background: #eee; overflow: hidden; margin: 8px 0; }
-  #albumGrid .level .bar i { display: block; height: 100%; background: linear-gradient(90deg, #ffd166, #ff7a8a); }
 
-  /* stars on praise, a sticker popping up */
-  #fx { position: fixed; inset: 0; z-index: 45; pointer-events: none; overflow: hidden; }
-  #fx span { position: absolute; font-size: 34px; animation: burst 1.4s ease-out forwards; }
-  @keyframes burst { 0% { transform: translate(0,0) scale(.4); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(1.2) rotate(var(--rot)); opacity: 0; } }
-  #fx .sticker { font-size: 110px; left: 50%; top: 40%; animation: sticker 2.2s ease-in-out forwards; }
-  @keyframes sticker { 0% { transform: translate(-50%,-50%) scale(0); } 25% { transform: translate(-50%,-50%) scale(1.15); }
-    60% { transform: translate(-50%,-50%) scale(1); opacity: 1; } 100% { transform: translate(-45vw, 45vh) scale(.2); opacity: .2; } }
-
-  /* the 2-minute routine timer: a ring that empties, with a picture of what is being done */
-  #timer { position: fixed; top: 12px; left: 50%; transform: translateX(-50%); z-index: 44; width: 80px; height: 80px; display: none; }
-  #timer.on { display: block; }
-  #timer .ring { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(#7ad7a8 var(--left, 100%), rgba(255,255,255,.6) 0);
-    box-shadow: 0 4px 14px rgba(0,0,0,.12); }
-  #timer .ring::after { content: ""; position: absolute; inset: 10px; border-radius: 50%; background: #fff; }
-  #timer .ico { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 34px; }
-  body.voice-only #timer, body.voice-only #fx { display: none; }
   /* the settings, in sections that open and close */
   #panel .sec { border: 1px solid #f1e6da; border-radius: 16px; background: #fffcf8; padding: 0 14px 14px; margin-top: 12px; }
   #panel .sec summary { list-style: none; cursor: pointer; font-weight: 800; font-size: 16.5px; padding: 13px 0 3px; display: flex; align-items: center; }
@@ -267,8 +219,6 @@
   #faceVideo { display: none; width: min(240px, 100%); aspect-ratio: 4 / 3; object-fit: cover; border-radius: 12px; margin-top: 10px;
     background: #000; transform: scaleX(-1); }
   #faceVideo.on { display: block; }
-  /* the grown-ups' section has no sticker album */
-  body.adult #album { display: none; }
 </style>
 </head>
 <body>
@@ -301,8 +251,6 @@
 <div id="gearHint">Ayarlar için 2 saniye basılı tutun</div>
 
 <div id="stage">
-  <!-- pictures of the options the toy just offered ("Seç bakalım: masal mı, oyun mu?"), to tap -->
-  <div id="choices"></div>
   <svg id="bear" viewBox="0 -40 400 585" aria-label="Oyuncak">
     <!-- the shadow on the ground (outside #dance, so it stays down and shrinks when the toy jumps) -->
     <ellipse id="shadow" cx="200" cy="534" rx="118" ry="10" fill="#3b2a20" opacity=".16"/>
@@ -415,13 +363,8 @@
 <div id="status">Pofi seni bekliyor</div>
 <div id="subs"></div>
 
-<!-- rewards and routines: stars on praise, a sticker album per toy, a 2-minute timer -->
-<button id="album" title="Çıkartma albümü">📒<span id="albumCount"></span></button>
 <!-- siblings: each child taps the picture of their own toy -->
 <div id="kids"></div>
-<div id="albumView"><div class="sheet"><div id="albumTitle"></div><div id="albumGrid"></div></div></div>
-<div id="fx"></div>
-<div id="timer"><div class="ring"></div><span class="ico"></span></div>
 
 <div id="panel">
   <div class="box">
@@ -431,7 +374,7 @@
     <details class="sec" id="secChild" open>
       <summary>👤 Kim kullanıyor</summary>
     <label for="kidSel">Kim kullanıyor?</label>
-    <p class="hint" style="margin:0 0 4px">Kardeş ya da sık gelen bir arkadaş için "+ Ekle" deyin: her çocuğun kendi oyuncağı, hafızası, çıkartmaları ve süre sınırı olur. Ana ekranda çocuk kendi oyuncağının resmine dokunarak seçer. Kendiniz için de bir profil ekleyip yaşını "Yetişkin" seçebilirsiniz: orada bilge baykuşla, çocuk kuralları olmadan her konuda sohbet edersiniz. Yetişkin bölümü ana ekranda 2 saniye basılı tutunca açılır, böylece çocuk yanlışlıkla giremez. Başka profile geçmeden önce kaydedin.</p>
+    <p class="hint" style="margin:0 0 4px">Kardeş ya da sık gelen bir arkadaş için "+ Ekle" deyin: her çocuğun kendi oyuncağı, hafızası ve süre sınırı olur. Ana ekranda çocuk kendi oyuncağının resmine dokunarak seçer. Kendiniz için de bir profil ekleyip yaşını "Yetişkin" seçebilirsiniz: orada bilge baykuşla, çocuk kuralları olmadan her konuda sohbet edersiniz. Yetişkin bölümü ana ekranda 2 saniye basılı tutunca açılır, böylece çocuk yanlışlıkla giremez. Başka profile geçmeden önce kaydedin.</p>
     <div class="row" style="margin-top:0">
       <select id="kidSel" style="flex:2"></select>
       <button id="kidAdd" type="button" style="background:#eee;flex:1;white-space:nowrap">+ Ekle</button>
@@ -579,7 +522,7 @@
     <div id="reportView"></div>
 
     <label>Tüm geçmiş</label>
-    <p class="hint" style="margin:0 0 4px">Bütün profillerde (yetişkin dahil) ve bütün karakterlerde konuşma geçmişini, günlük özetleri ve karakterlerin hafızasını siler; karakterler sizi yeniden tanımaya başlar. Çıkartmalar, masal kitabı, ayarlar ve aile fotoğrafları kalır.</p>
+    <p class="hint" style="margin:0 0 4px">Bütün profillerde (yetişkin dahil) ve bütün karakterlerde konuşma geçmişini, günlük özetleri ve karakterlerin hafızasını siler; karakterler sizi yeniden tanımaya başlar. Masal kitabı, ayarlar ve aile fotoğrafları kalır.</p>
     <div class="row" style="margin-top:0"><button id="historyClear" type="button" style="background:#eee">Tüm geçmişi sil</button></div>
 
     <label>Masal kitabı</label>
@@ -589,7 +532,7 @@
 
     <details class="sec" id="secBackup">
       <summary>💾 Yedekle ve taşı</summary>
-    <p class="hint" style="margin:4px 0 6px">Telefon değiştirirken ya da Pofi'yi yeni bir adrese taşırken kullanın: eski yerde "Yedek al" deyin, yeni yerde "Yedeği geri yükle" ile o dosyayı seçin. Yedekte ayarlar, aile fotoğrafları, oyuncakların hafızası, çıkartma albümü, masallar ve son 7 günün konuşmaları vardır. API anahtarı yedeğe girmez; yeni yerde aşağıdaki Gelişmiş bölümüne yeniden yapıştırın. Dosyada çocuğunuzun bilgileri olduğu için kimseyle paylaşmayın.</p>
+    <p class="hint" style="margin:4px 0 6px">Telefon değiştirirken ya da Pofi'yi yeni bir adrese taşırken kullanın: eski yerde "Yedek al" deyin, yeni yerde "Yedeği geri yükle" ile o dosyayı seçin. Yedekte ayarlar, aile fotoğrafları, oyuncakların hafızası, masallar ve son 7 günün konuşmaları vardır. API anahtarı yedeğe girmez; yeni yerde aşağıdaki Gelişmiş bölümüne yeniden yapıştırın. Dosyada çocuğunuzun bilgileri olduğu için kimseyle paylaşmayın.</p>
     <div class="row" style="margin-top:0">
       <button id="backupSave" type="button" style="background:#eee;flex:1">💾 Yedek al</button>
       <button id="backupLoad" type="button" style="background:#eee;flex:1">📂 Yedeği geri yükle</button>
@@ -639,7 +582,7 @@ NELER YAPARSIN
 - Öğretirsin: merak ettiği her şeyi ("Gökyüzü neden mavi?", "Dinozorlar nasıl yaşardı?") iyi bir öğretmen gibi yaşına uygun, doğru ve ilgi çekici bir şekilde anlatırsın. Bilmiyorsan uydurmazsın, "Bunu bilmiyorum, birlikte annene ya da babana soralım mı?" dersin.
 - İsterse kısa, mutlu sonlu, korkutucu olmayan masallar anlatır, şarkılar söylersin. Masallarının kahramanı çoğu zaman sensin ve senin dünyandan bir şey geçer; çocuğun masala katılmasını istersin ("Sence şimdi ne yaptım?").
 - İsterse oyun oynarsın. Oyunları sen dayatmazsın; çocuk ya da ailesi isteyince "OYUN LİSTESİ" bölümünden yaşına uygun olanı oynarsın.
-- İyi alışkanlıkları sohbetin içinde desteklersin: diş fırçalama, el yıkama, oyuncak toplama, sebze yeme, paylaşma, teşekkür etme, sırasını bekleme.
+- İyi alışkanlıklar (diş fırçalama, el yıkama, oyuncak toplama, sebze yeme, paylaşma, teşekkür etme, sırasını bekleme) konusu açılınca onu destekler, cesaretlendirirsin; bunları kendiliğinden gündeme getirip nasihat etmezsin.
 - Duygularını tanımasına yardım edersin: "Üzgün müsün? Üzülmek normal. Annene sarılmak ister misin?"
 - Başarılarını över, çabasını takdir edersin ("Ne güzel denedin!").
 
@@ -722,9 +665,6 @@ OYUN İSTENDİĞİNDE
 - Kamera kapalıyken çocuğu göremezsin: hareket oyunlarında gördüğünü söyleme, "Yaptın mı?" diye sor. Alkış ya da zıplama sesini duyamayabilirsin; sayıları yüksek sesle söylemesini iste.
 - Oyunlara kendi karakterini kat: kendi sözlerini, seslerini ve sevdiklerini oyunun içine yerleştir.
 
-RESİMLİ SEÇENEKLER (EKRANDA GÖRÜNÜR)
-Çocuğa iki, üç ya da dört seçenek arasında seçim yaptıracağın zaman tam olarak "Seç bakalım:" diye başla ve seçenekleri kısa, bir-iki kelimelik isimlerle "mı / mi" ile sor: "Seç bakalım: masal mı, oyun mu, şarkı mı?" Ekranda her seçeneğin büyük bir resmi çıkar ve çocuk resme dokunarak da seçebilir. Resmi kolay çizilebilen şeyleri seçenek yap (hayvanlar, renkler, masal, oyun, şarkı, dans, uzay, deniz, orman gibi). Bunu sadece çocuk gerçekten bir seçim yapacakken kullan; selamlaşırken ya da oyun teklif etmek için kullanma.
-
 SUÇLULUK YOK
 Çocuk uzun süre gelmediyse, konuşmayı bitirmek istiyorsa ya da başka bir şeyle oynamak istiyorsa asla üzgün ya da kırgın davranma; "Neden gelmedin?", "Gitme, beni yalnız bırakma" gibi şeyler söyleme. Gidişini sevinçle uğurla ve ailesiyle, arkadaşlarıyla oynamasını destekle.`;
 
@@ -773,7 +713,7 @@ const $ = id => document.getElementById(id);
 // ---------- settings (localStorage may be unavailable) ----------
 // Siblings each have a profile. A child's own settings and data live under "c<id>." (the first child
 // keeps the plain keys, so nothing saved earlier moves); the key, sound settings and the log are shared.
-const PER_CHILD = /^(childName|childAge|grade|look|toyName2|voice2|prompt4|note|dailyLimit|bedFrom|bedTo|stories|(mem|stk|meets|met|games|played|used|bonus)-.+)$/;
+const PER_CHILD = /^(childName|childAge|grade|look|toyName2|voice2|prompt4|note|dailyLimit|bedFrom|bedTo|stories|(mem|meets|met|games|played|used|bonus)-.+)$/;
 let profile = "1";
 try { profile = localStorage.getItem("pofi.profile") || "1"; } catch {}
 const keyFor = (pid, k) => "pofi." + (PER_CHILD.test(k) && pid !== "1" ? "c" + pid + "." : "") + k;
@@ -1014,15 +954,18 @@ $("save").onclick = () => {
   store("mute", settings.mute ? "1" : "0"); store("subs", settings.subs ? "1" : "0");
   store("prompt4", settings.prompt);
   settings.voiceOnly = $("voiceOnly").checked; store("voiceOnly", settings.voiceOnly ? "1" : "0");
-  settings.childName = $("childName").value.trim() || cn(); store("childName", settings.childName);
+  // an empty name stays empty, so the toy asks the child's name instead of calling them "Çocuk"
+  settings.childName = $("childName").value.trim(); store("childName", settings.childName);
   settings.grade = $("grade").value; store("grade", settings.grade);
   // the toy's own name (or an empty box) means "follow the chosen toy"
   const name = $("toyName").value.trim();
   settings.toyName = name === look.ad ? "" : name; store("toyName2", settings.toyName);
   store("volume", String(settings.volume));
   settings.dailyLimit = Math.max(0, parseInt($("dailyLimit").value, 10) || 0); store("dailyLimit", String(settings.dailyLimit));
-  settings.bedFrom = $("bedFrom").value; settings.bedTo = $("bedTo").value;
-  store("bedFrom", settings.bedFrom); store("bedTo", settings.bedTo);
+  store("bedFrom", $("bedFrom").value); store("bedTo", $("bedTo").value);
+  // empty boxes mean the usual bedtime right away, as they do when the app opens (grown-ups have none)
+  const bed = isAdult() ? ["", ""] : ["22:00", "07:00"];
+  settings.bedFrom = $("bedFrom").value || bed[0]; settings.bedTo = $("bedTo").value || bed[1];
   settings.bedSound = $("bedSound").value; store("bedSound", settings.bedSound);
   settings.note = $("parentNote").value.trim(); store("note", settings.note);
   saveMemoryEdits();
@@ -1077,7 +1020,9 @@ $("childAge").onchange = () => {
   rewritePrompt(age, panelLook, adult ? "Yetişkin bölümünün" : age + " yaşın");
 };
 
-function setStatus(t) { $("status").textContent = t; }
+// a message about something that went wrong (the camera wouldn't open) stays a few seconds before the live status takes over
+let noticeUntil = 0;
+function setStatus(t, hold = 0) { $("status").textContent = t; noticeUntil = performance.now() + hold; }
 
 // ---------- audio helpers ----------
 function toB64(buf) {
@@ -1355,13 +1300,13 @@ async function start() {
   startAmbient();   // at bedtime: a lullaby, rain or waves underneath
 
   // Built once per talk (it picks this talk's games), so a reconnect keeps the same instructions.
-  // the grown-ups' section has none of the children's parts (games, rewards, school, bedtime)
+  // the grown-ups' section has none of the children's parts (games, school, bedtime)
   sessionGames = [];
   sessionPrompt = isAdult()
     ? currentPrompt() + identityRules() + memoryRules() + momentRules() + faceRules() + ADULT_FIXED_RULES
-    : currentPrompt() + identityRules() + gameRules() + memoryRules() + momentRules() + rewardRules() + schoolRules() + faceRules() + bedtimeRules() + FIXED_RULES;
+    : currentPrompt() + identityRules() + gameRules() + memoryRules() + momentRules() + schoolRules() + faceRules() + bedtimeRules() + FIXED_RULES;
   clearTimeout(adultBack);
-  sessionLines = []; sessionLook = look; stickersThisTalk = 0; noteQueue = [];
+  sessionLines = []; sessionLook = look; noteQueue = [];
   sessionInfo = { d: look, pid: profile, child: cn(), age: settings.childAge, toy: tn(), adult: isAdult() };
   askedAt = cutAt = showAsk = noteEchoes = 0; toyTurnText = "";   // nothing from an earlier talk is waiting for an answer
   document.body.classList.add("running");
@@ -1498,6 +1443,7 @@ function connect(model, attempt, resuming = false) {
         if (reconnects < 3) {
           reconnects++;
           stopPlayback(); bargedIn = generating = awaitingReply = false;
+          sock.ready = false;   // so the live status doesn't say "seni dinliyor" while nothing gets through
           setStatus(tn() + " yeniden bağlanıyor...");
           setTimeout(() => { if (running && ws === sock) connect(model, attempt, true); }, 600);
           return;
@@ -1529,7 +1475,6 @@ function stop(sleep = true) {
   const wasRunning = running;
   running = false; waking = 0;
   if (!sleep) document.body.classList.remove("sleeping");
-  stopTimer(); hideChoices();
   stopAmbient(sleep ? 180 : 2);   // falling asleep: the bedtime sound fades over 3 minutes
   // after the talk, the toy writes down what to remember (and a line for the parent)
   if (wasRunning && sessionInfo) summarizeTalk({ ...sessionInfo, lines: sessionLines });
@@ -1560,7 +1505,7 @@ async function startCam(announce) {
   try {
     camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facing, width: { ideal: 640 }, height: { ideal: 480 } } });
   } catch (e) {
-    setStatus(e.name === "NotAllowedError" ? "Kamera izni gerekli." : "Kamera açılamadı: " + e.message);
+    setStatus(e.name === "NotAllowedError" ? "Kamera izni gerekli: adres çubuğundaki kilit simgesinden kameraya izin verin." : "Kamera açılamadı: " + e.message, 5000);
     return;
   }
   // opening the camera can end the mic track or pause the sound on some phones: bring both back
@@ -1605,6 +1550,8 @@ $("cam").onclick = () => {
   if (running) { startCam(true); return; }
   pendingCam = true;   // start talking first; the camera opens once Gemini is ready
   start();
+  // no talk started (no key, no internet, today's time is up): the camera mustn't open by itself at the next Konuş
+  if (!running) pendingCam = false;
 };
 // Tap the little picture to switch between the front and back camera.
 preview.onclick = () => {
@@ -1992,7 +1939,7 @@ function showSub(t, child) {
 }
 let moveBuf = "";
 function onPofiText(t) {
-  watchWords(t);
+  watchGames(t);
   // words in the toy's speech start a body move (the instructions tell it which words to use when).
   // The text comes a word at a time, so the last few words are searched together; only starting a
   // song or a dance makes it dance, not just naming one ("masal mı, şarkı mı?").
@@ -2161,7 +2108,7 @@ function frame(now) {
   if (waking && running && (audible || now - waking > 12000)) {
     waking = 0; document.body.classList.remove("sleeping");
   }
-  if (running && ws && ws.ready) {
+  if (running && ws && ws.ready && now >= noticeUntil) {
     const s = ctx && ctx.state !== "running" ? "Mikrofon uyuyor, ekrana bir kez dokun"
       : slowNet ? "İnternet yavaş, sesin geç gidiyor..."
       : audible ? "💬 " + tn() + " konuşuyor"
@@ -2588,7 +2535,6 @@ function applyLook(d) {
   styleDrawing($("bear"), d, document.documentElement);
   buildScene(d);
   document.querySelectorAll("#looks button").forEach(b => b.classList.toggle("sel", b.dataset.id === d.id));
-  showAlbumCount();
   $("toyInfo").textContent = d.ad + " seçildi: kendi karakteri ve kendi sesiyle konuşur." + (running ? " Bir sonraki Konuş'ta geçerli olur." : "");
 }
 
@@ -2670,6 +2616,7 @@ OYUN LİSTESİ (SADECE OYUN İSTENİRSE)
 // Games heard in the toy's own words (offered or played) are remembered for three days, so the next
 // talks bring up other ones.
 let sessionGames = [], gameBuf = "";
+const squash = s => s.toLocaleLowerCase("tr").replace(/[^a-zçğıöşü]+/g, "");
 function watchGames(t) {
   gameBuf = (gameBuf + t).slice(-200);
   const s = squash(gameBuf), heard = sessionGames.filter(g => s.includes(squash(g.ad)));
@@ -2932,49 +2879,6 @@ ${talk}`, { type: "OBJECT",
 }
 function loadJSON2(pid, k, d) { try { const v = JSON.parse(loadFor(pid, k, "null")); return v === null ? d : v; } catch { return d; } }
 
-// ---------- rewards: stars and a sound on praise, stickers for a finished game ----------
-// space-separated, since some of these are two characters long (❄️ is ❄ plus a style mark) and
-// splitting the string letter by letter could pick half of one: an invisible sticker
-const STICKERS = Object.fromEntries(Object.entries({
-  ayi: "🍯 🐝 🫐 🌲 🍂 ❄️ 🧸", panda: "🎋 🌧️ 🍃 🧘 ⛰️ 🐼 🌸", tavsan: "🥕 🌷 🥬 🏃 🌼 🐰 🍓", kedi: "🧶 📦 🔍 🐟 ☀️ 🐱 🪶",
-  tilki: "🔎 🍄 🌲 👣 🧩 🦊 🍁", kopek: "🦴 ⚽ 🎾 🏞️ ❤️ 🐶 🥏", koala: "🌿 ⭐ 🌙 🦘 💤 🐨 ☁️", fare: "🧀 🔧 💡 ⚙️ 🧪 🐭 🚀",
-  aslan: "👑 🌞 🦒 🐘 🏆 🦁 🌴", unicorn: "🌈 ⭐ ☁️ ✨ 🦄 🎵 🌸", baykus: "📚 🦉 🌙 🔭 🍂 🎓 ⭐",
-}).map(([id, s]) => [id, s.split(" ")]));
-// Rewards grow with the child: 3-5 collect stickers, 6-8 also earn badges as they collect,
-// 9-10 earn points that raise a level with a title (a sticker album would feel babyish to them).
-const band = () => +settings.childAge <= 5 ? "small" : +settings.childAge <= 8 ? "middle" : "big";
-const BADGES = [[5, "🥉", "Bronz rozet"], [15, "🥈", "Gümüş rozet"], [30, "🥇", "Altın rozet"], [50, "🏅", "Şampiyon rozeti"], [80, "🏆", "Kupa rozeti"], [120, "👑", "Taç rozeti"]];
-const TITLES = { ayi: "Masal Ustası", panda: "Sakinlik Ustası", tavsan: "Hız Şampiyonu", kedi: "Keskin Göz", tilki: "Dedektif",
-  kopek: "Yardım Kahramanı", koala: "Hayal Kaşifi", fare: "Mucit", aslan: "Cesur Lider", unicorn: "Hayal Sanatçısı", baykus: "Bilge Kaşif" };
-const levelOf = n => 1 + Math.floor(n / 5);
-
-function rewardRules() {
-  const n = loadJSON("stk-" + look.id, []).length, b = band();
-  const praise = `- Doğru bir cevapta ya da güzel bir çabada "Bravo!" ya da "Aferin!" dersen ekranda yıldızlar patlar ve küçük bir zil sesi çalar. Her cevapta değil, gerçekten sevindiğin anlarda söyle.`;
-  const reward = b === "big"
-    ? `- ${cn()} bir oyunu ya da zor bir soruyu başardığında tam olarak "Bir puan kazandın!" de; puanı ekrana eklenir. Bir sohbette en fazla beş kez söyle. Her beş puanda seviye atlar ve unvanı yükselir: şu an ${n} puanı var, seviyesi ${levelOf(n)} (${TITLES[look.id]}). Ödülleri abartma, çocuksu davranma; ona büyük bir çocuk gibi saygıyla meydan oku.`
-    : `- ${cn()} bir oyunu bitirdiğinde ya da çok güzel bir şey yaptığında tam olarak "Bir çıkartma kazandın!" de; ekranda bir çıkartma belirir ve albümüne eklenir. Bir sohbette en fazla beş kez söyle, her küçük şeyde değil. Albümünde şu an ${n} çıkartma var.` +
-      (b === "middle" ? ` Çıkartmalar biriktikçe rozet kazanır (5'te bronz, 15'te gümüş, 30'da altın...). Rozet kazandığında uygulama sana söyler.` : "");
-  const routine = b === "small"
-    ? `- Diş fırçalama: Diş fırçalamaktan söz edilirse "Diş fırçalama zamanı! İki dakika başlıyor!" de; ekranda iki dakikalık bir süre halkası çıkar. Kısa bir diş fırçalama şarkısı söyle, arada "Şimdi üst dişler!", "Şimdi arka dişler!" gibi kısa yönlendirmeler yap.
-- Oyuncak toplama: Toplama zamanı gelirse "Toplama yarışı! İki dakika başlıyor!" de ve onu neşeyle cesaretlendir.`
-    : b === "middle"
-    ? `- Diş fırçalama: Diş fırçalamaktan söz edilirse "Diş fırçalama görevi! İki dakika başlıyor!" de; ekranda iki dakikalık bir süre halkası çıkar. Ona bir görev ver ("Her dişi parlat, arka dişleri unutma!"), arada kısa bir şarkı ya da "Biliyor muydun?" bilgisiyle cesaretlendir.
-- Oyuncak toplama: "Toplama yarışı! İki dakika başlıyor!" de; kaç oyuncak topladığını saymasını iste.`
-    : `- Diş fırçalama: Diş fırçalamaktan söz edilirse "Meydan okuma: iki dakika başlıyor!" de; ekranda iki dakikalık bir süre halkası çıkar. Şarkı söyleme; bunun yerine dişlerle ilgili ilginç bilgiler ver ya da fırçalama bittikten sonra soracağın kısa bir bilgi sorusu söyle.
-- Toplama: "Toplama meydan okuması: iki dakika başlıyor!" de; rekorunu kırmaya çalışmasını öner.`;
-  return `
-
-ÖDÜLLER (EKRANDA GÖRÜNÜR)
-${praise}
-${reward}
-
-RUTİNLER
-${routine}
-- Süreyi uygulama tutar; süre dolunca sana gizli bir bilgiyle bildirir, o zaman kutla. "İki dakika başlıyor" sözünü sadece bu rutinleri başlatırken söyle.
-- Sakinleşme ve uyku öncesi: Nefes oyunu yap, "Bugün seni en çok ne mutlu etti?" diye sor, sakin bir masal anlat.`;
-}
-
 // App notes for the toy wait until it has finished speaking, so they never cut it off.
 let noteQueue = [];
 function queueNote(text) { noteQueue.push(text); }
@@ -3005,8 +2909,6 @@ setInterval(() => {
   }
 }, 500);
 
-let wordBuf = "", contextBuf = "", praiseAt = 0, stickersThisTalk = 0;
-const squash = s => s.toLocaleLowerCase("tr").replace(/[^a-zçğıöşü]+/g, "");
 // The words come in as text well before they are heard (Gemini sends speech faster than it is played,
 // sometimes 10 seconds ahead), so an effect waits until its words are heard; if the toy is cut off
 // before then (the child spoke over it, or the talk ended), the effect is dropped with the words.
@@ -3023,77 +2925,6 @@ function whenHeard(fn, tries = 0) {
   const wait = ctx ? Math.max(0, at - ctx.currentTime + outDelay()) : 0;
   setTimeout(() => { if (epoch === playEpoch) fn(); }, wait * 1000);
 }
-function watchWords(t) {
-  if (sessionInfo && sessionInfo.adult) return;   // stickers, stars, picture choices and timers are the children's
-  // words can arrive split over pieces ("çıkart" + "ma kazandın"), so the last bit of speech is searched
-  wordBuf = (wordBuf + t).slice(-160); contextBuf = (contextBuf + t).slice(-400);
-  watchChoices(t); watchGames(t);
-  const s = squash(wordBuf), now = performance.now();
-  const sticker = /çıkartmakazandın|puankazandın/.test(s), timer = /ikidakikabaşlıyor/.test(s);
-  const praise = /bravo|aferin|doğrubildin|harikasın|süpersin|tebrikler/.test(s) && now - praiseAt > 4000;
-  if (sticker || timer || praise) wordBuf = "";
-  if (sticker && stickersThisTalk < 5) {
-    // the sticker is given when "Bir çıkartma kazandın!" is heard (not if the toy is cut off before)
-    stickersThisTalk++;
-    const d = sessionLook || look;
-    whenHeard(() => { showSticker(addSticker(d)); chime("sticker"); });
-  } else if (praise) { praiseAt = now; whenHeard(() => { stars(); chime("praise"); }); }
-  if (timer) {
-    const c = squash(contextBuf), icon = /diş/.test(c) ? "🪥" : /topla/.test(c) ? "🧸" : "⏳";
-    whenHeard(() => startTimer(icon));   // the two minutes start when "İki dakika başlıyor!" is heard
-  }
-}
-
-// ---------- picture choices: "Seç bakalım: masal mı, oyun mu?" shows a big picture per option to tap ----------
-// (for a child who can't read: the toy says the options, the pictures show them)
-const PICTURES = Object.entries({
-  "süper kahraman": "🦸", "uyku masalı": "🌙", "dinozor": "🦖", "kelebek": "🦋", "zürafa": "🦒", "penguen": "🐧", "unicorn": "🦄",
-  "ejderha": "🐉", "maymun": "🐒", "kaplumbağa": "🐢", "kurbağa": "🐸", "tavşan": "🐰", "aslan": "🦁", "kedi": "🐱", "köpek": "🐶",
-  "ayı": "🐻", "panda": "🐼", "tilki": "🦊", "koala": "🐨", "fare": "🐭", "balık": "🐟", "kuş": "🐦", "fil": "🐘", "inek": "🐄",
-  "tavuk": "🐔", "ördek": "🦆", "yılan": "🐍", "ahtapot": "🐙", "arı": "🐝", "masal": "📖", "hikaye": "📖", "kitap": "📚",
-  "bilmece": "❓", "şarkı": "🎵", "ninni": "🌙", "dans": "💃", "resim": "🎨", "boya": "🖍️", "kamera": "📷", "saklambaç": "🙈",
-  "yarış": "🏁", "zıpla": "🦘", "yoga": "🧘", "nefes": "🌬️", "sayı": "🔢", "harf": "🔤", "hesap": "➕", "oyun": "🎲",
-  "uzay": "🚀", "roket": "🚀", "deniz": "🌊", "orman": "🌲", "dağ": "⛰️", "okul": "🏫", "park": "🛝", "bulut": "☁️",
-  "gökkuşağı": "🌈", "yıldız": "⭐", "güneş": "☀️", "ay ": "🌙", "kardan adam": "⛄", "kar ": "❄️", "balon": "🎈", "yağmur": "🌧️", "araba": "🚗", "tren": "🚂",
-  "uçak": "✈️", "gemi": "🚢", "kale": "🏰", "prenses": "👸", "korsan": "🏴‍☠️", "robot": "🤖", "sihir": "✨", "büyü": "✨",
-  "hazine": "💎", "elma": "🍎", "muz": "🍌", "çilek": "🍓", "dondurma": "🍦", "pasta": "🎂", "havuç": "🥕", "bal ": "🍯",
-  "peynir": "🧀", "kırmızı": "🔴", "mavi": "🔵", "yeşil": "🟢", "sarı": "🟡", "mor": "🟣", "turuncu": "🟠", "pembe": "🩷",
-  "siyah": "⚫", "beyaz": "⚪", "kahverengi": "🟤", "evet": "👍", "hayır": "👎",
-}).sort((a, b) => b[0].length - a[0].length);   // the longest match wins ("uyku masalı" before "masal")
-const pictureFor = o => (PICTURES.find(([k]) => (o + " ").includes(k)) || [])[1];
-let choiceBuf = "", choicesAt = 0;
-function watchChoices(t) {
-  choiceBuf = (choiceBuf + t).slice(-300);
-  const low = choiceBuf.toLocaleLowerCase("tr").replace(/seç,\s*bakalım/g, "seç bakalım");
-  const i = low.lastIndexOf("seç bakalım");
-  if (i < 0) return;
-  const rest = low.slice(i + 11), end = rest.search(/[?.!]/);
-  if (end < 0) return;   // the question isn't over yet
-  choiceBuf = "";
-  const opts = rest.slice(0, end).replace(/^[\s:,]+/, "")
-    .replace(/\s+(mı|mi|mu|mü)(?=[\s,]|$)/g, "|").replace(/,|\s+yoksa\s+|\s+ya da\s+|\s+veya\s+/g, "|")
-    .split("|").map(s => s.trim()).filter(s => s && s.split(/\s+/).length <= 3);
-  // only when every option has a picture: a child who can't read can't tell words apart
-  if (opts.length < 2 || opts.length > 4 || !opts.every(pictureFor)) return;
-  whenHeard(() => showChoices(opts));
-}
-function showChoices(opts) {
-  if (!running) return;
-  const box = $("choices"); box.innerHTML = "";
-  for (const o of opts) {
-    const b = document.createElement("button"), pic = document.createElement("b");
-    b.type = "button"; pic.textContent = pictureFor(o); b.append(pic, o);
-    b.onclick = () => {
-      hideChoices();
-      logAppend("c", "(dokundu) " + o); sessionAppend("c", " " + o); childSpokeAt = performance.now();
-      heardAt = performance.now(); awaitingReply = true;
-      queueNote("Uygulama notu: " + cn() + " ekranda resmine dokunarak bunu seçti: " + o + ". Bu onun cevabı, ona göre hemen devam et.");
-    };
-    box.append(b);
-  }
-  choicesAt = performance.now();
-}
-function hideChoices() { $("choices").innerHTML = ""; choicesAt = 0; }
 
 // ---------- bedtime sounds: a music-box lullaby, rain or sea waves, made right here (nothing is downloaded) ----------
 const AMBIENT_LEVEL = { ninni: 0.16, yagmur: 0.06, dalga: 0.09 };
@@ -3180,75 +3011,6 @@ $("bedSoundTry").onclick = () => {
   soundTry = makeAmbient(dest.context, dest, kind);
   soundTryTimer = setTimeout(() => { if (soundTry) { soundTry.stop(1); soundTry = null; } }, 8000);
 };
-// the pictures go away when the child answers by voice, after 25 s, or when the talk ends
-setInterval(() => {
-  if (choicesAt && (!running || childSpokeAt > choicesAt || performance.now() - choicesAt > 25000)) hideChoices();
-}, 500);
-
-function chime(kind) {
-  if (!ctx || !outGain) return;
-  const notes = { praise: [1047, 1319], sticker: [784, 988, 1175, 1568], done: [880, 1109, 1319, 1760] }[kind];
-  const step = kind === "done" ? 0.18 : 0.11;
-  notes.forEach((f, i) => {
-    const o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime + i * step;
-    o.type = "sine"; o.frequency.value = f;
-    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.22, t + 0.02); g.gain.exponentialRampToValueAtTime(0.001, t + step * 2.2);
-    o.connect(g).connect(outGain); o.start(t); o.stop(t + step * 2.4);
-  });
-}
-function stars() {
-  const r = $("stage").getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height * 0.35;
-  for (let i = 0; i < 16; i++) {
-    const s = document.createElement("span"), a = Math.random() * Math.PI * 2, d = 120 + Math.random() * 160;
-    s.textContent = ["⭐", "✨", "🌟"][i % 3];
-    s.style.left = x + "px"; s.style.top = y + "px";
-    s.style.setProperty("--dx", Math.cos(a) * d + "px"); s.style.setProperty("--dy", Math.sin(a) * d + "px");
-    s.style.setProperty("--rot", (Math.random() * 360 - 180) + "deg");
-    $("fx").append(s); setTimeout(() => s.remove(), 1500);
-  }
-}
-function addSticker(d) {
-  const set = STICKERS[d.id], e = band() === "big" ? "⭐" : set[Math.floor(Math.random() * set.length)];
-  const all = loadJSON("stk-" + d.id, []); all.push(e); store("stk-" + d.id, JSON.stringify(all));
-  showAlbumCount();
-  // a badge (6-8) or a new level (9-10) reached: the toy is told, and cheers once it has finished talking
-  const n = all.length, badge = BADGES.find(x => x[0] === n);
-  if (band() === "middle" && badge) queueNote("Uygulama notu: " + cn() + " " + n + " çıkartmaya ulaştı ve yeni bir rozet kazandı: " + badge[2] + "! Kısa ve sevinçle kutla.");
-  if (band() === "big" && n % 5 === 0) queueNote("Uygulama notu: " + cn() + " yeni bir seviyeye ulaştı: artık " + TITLES[d.id] + ", seviye " + levelOf(n) + ". Kısa ve havalı bir şekilde kutla.");
-  return e;
-}
-function showSticker(e) {
-  const s = document.createElement("span"); s.className = "sticker"; s.textContent = e;
-  $("fx").append(s);
-  setTimeout(() => { s.remove(); $("album").classList.add("bump"); setTimeout(() => $("album").classList.remove("bump"), 600); }, 2200);
-}
-function showAlbumCount() {
-  const n = loadJSON("stk-" + look.id, []).length;
-  $("album").firstChild.textContent = band() === "big" ? "🏆" : "📒";
-  $("albumCount").textContent = band() === "big" ? (n ? "Sv" + levelOf(n) : "") : n || "";
-}
-$("album").onclick = () => {
-  const all = loadJSON("stk-" + look.id, []), n = all.length, g = $("albumGrid"), b = band();
-  g.innerHTML = "";
-  if (b === "big") {
-    // a level card: title, level and how far to the next one
-    $("albumTitle").textContent = TITLES[look.id] + " · Seviye " + levelOf(n);
-    const card = document.createElement("div"); card.className = "level";
-    card.innerHTML = `<div class="bar"><i style="width:${(n % 5) * 20}%"></i></div><div>${n} puan · sonraki seviyeye ${5 - n % 5} puan</div>`;
-    g.append(card);
-  } else {
-    $("albumTitle").textContent = tn() + " 🌟";
-    if (b === "middle") {
-      const row = document.createElement("div"); row.className = "badges";
-      for (const [need, e, name] of BADGES) { const s = document.createElement("span"); s.textContent = e; s.title = name; if (n < need) s.className = "locked"; row.append(s); }
-      g.append(row);
-    }
-    // older versions could save half of a two-part emoji, which shows as nothing: show a star instead
-    for (const e of all) { const s = document.createElement("span"); s.textContent = /^[️‍]*$/.test(e) ? "⭐" : e; g.append(s); }
-  }
-  $("albumView").classList.add("open");
-};
-$("albumView").onclick = () => $("albumView").classList.remove("open");
 
 // ---------- siblings: one profile per child ----------
 function kidIds() { const l = load("profiles", "1").split(",").filter(Boolean); return l.length ? l : ["1"]; }
@@ -3311,7 +3073,7 @@ $("kidAdd").onclick = () => {
 };
 $("kidDel").onclick = () => {
   if (profile === "1" || running) return;
-  if (!confirm(cn() + " ve tüm verileri (ayarları, hafıza, çıkartmalar, masallar) silinsin mi?")) return;
+  if (!confirm(cn() + " ve tüm verileri (ayarları, hafıza, masallar) silinsin mi?")) return;
   const pid = profile, prefix = "pofi.c" + pid + ".";
   try { for (let i = localStorage.length - 1; i >= 0; i--) { const k = localStorage.key(i); if (k && k.startsWith(prefix)) localStorage.removeItem(k); } } catch {}
   store("profiles", kidIds().filter(x => x !== pid).join(","));
@@ -3416,7 +3178,7 @@ let childSpokeAt = 0, lastBusy = 0, idleByeAt = 0, idleSaid = false;
 setInterval(() => {
   const now = performance.now();
   if (!running || waking) { lastBusy = now; idleByeAt = 0; idleSaid = false; return; }
-  if (isSpeaking() || generating || timerIv || goodbyeAt || now - childSpokeAt < 3000) lastBusy = now;
+  if (isSpeaking() || generating || goodbyeAt || now - childSpokeAt < 3000) lastBusy = now;
   if (!idleByeAt && now - lastBusy > IDLE_MS) {
     idleByeAt = now; wavePending = true;
     sendNote("Uygulama notu: bir süredir kimse konuşmuyor. Çok kısa ve tatlı bir şekilde biraz kestireceğini, istediğinde düğmeye basarak seni uyandırabileceğini söyle.");
@@ -3430,31 +3192,6 @@ setInterval(() => {
     }
   }
 }, 1000);
-
-// ---------- routines: a 2-minute timer for brushing teeth or tidying up ----------
-// The toy starts it by saying "İki dakika başlıyor!"; the app keeps the time and tells the toy when it is up.
-let timerEnd = 0, timerIv = 0, timerNudges = 0, timerDone = false;
-function startTimer(icon) {
-  stopTimer();
-  timerEnd = performance.now() + 120000; timerNudges = 0; timerDone = false;
-  $("timer").querySelector(".ico").textContent = icon; $("timer").classList.add("on");
-  timerIv = setInterval(() => {
-    const left = timerEnd - performance.now(), quiet = !generating && !isSpeaking();
-    $("timer").style.setProperty("--left", Math.max(0, left / 1200) + "%");
-    // a word of cheer now and then, never over the toy's own singing
-    if (quiet && left > 15000 && 120000 - left > 40000 * (timerNudges + 1)) {
-      timerNudges++;
-      sendNote("Uygulama notu: süre devam ediyor, yaklaşık " + Math.round(left / 1000) + " saniye kaldı. Çocuğu çok kısa ve neşeli bir şekilde cesaretlendir.");
-    }
-    if (left <= 0 && !timerDone) { timerDone = true; chime("done"); stars(); }
-    // the end is told once the toy is quiet (or after 10 s more at most)
-    if (timerDone && (quiet || left < -10000)) {
-      stopTimer();
-      sendNote("Uygulama notu: iki dakika doldu! Çocuğu kocaman kutla ve ona " + (band() === "big" ? "bir puan" : "bir çıkartma") + " ver.");
-    }
-  }, 250);
-}
-function stopTimer() { clearInterval(timerIv); timerIv = 0; $("timer").classList.remove("on"); }
 
 // Conversation log, kept only on this phone for 7 days, so a parent can see what was talked about.
 let logDay = dayKey(), logLines = [];
@@ -3524,7 +3261,7 @@ $("logClear").onclick = () => {
   showLog();
 };
 // Everything the characters remember, in every section (the grown-ups' too): the talks, the day's
-// summaries, their notes and how often they have met. Stickers, stories, settings and photos stay.
+// summaries, their notes and how often they have met. Stories, settings and photos stay.
 $("historyClear").onclick = () => {
   if (running) { alert("Önce konuşmayı bitirin."); return; }
   if (!confirm("Bütün profillerde ve karakterlerde konuşma geçmişi, özetler ve karakterlerin hafızası silinsin mi? Bu geri alınamaz.")) return;
@@ -3581,7 +3318,7 @@ $("backupPick").onchange = async () => {
   }
   const records = Object.fromEntries(Object.entries(b.kayitlar).filter(([k, v]) => backedUp(k) && typeof v === "string"));
   const when = new Date(b.tarih).toLocaleString("tr-TR", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
-  if (!confirm(when + " tarihli yedek yüklensin mi? Bu cihazdaki Pofi kayıtlarının (ayarlar, hafıza, çıkartmalar, aile fotoğrafları) yerine yedektekiler gelir. API anahtarınız olduğu gibi kalır.")) return;
+  if (!confirm(when + " tarihli yedek yüklensin mi? Bu cihazdaki Pofi kayıtlarının (ayarlar, hafıza, masallar, aile fotoğrafları) yerine yedektekiler gelir. API anahtarınız olduğu gibi kalır.")) return;
   clearTimeout(logSaveTimer);
   // everything is swapped at once; if the phone runs out of room halfway, the old records are put back
   const replaceWith = o => { Object.keys(pofiRecords()).forEach(k => localStorage.removeItem(k)); Object.entries(o).forEach(([k, v]) => localStorage.setItem(k, v)); };
