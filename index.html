@@ -33,7 +33,8 @@
   }
   /* the full-body character is about 1.46x as tall as wide: 42vh wide keeps it within ~61% of the screen height */
   #stage { width: min(70vw, 42vh); position: relative; transition: transform .3s, width .3s; }
-  #bear { width: 100%; height: auto; display: block; overflow: hidden; }
+  /* visible: a head tilted in sleep or a dance takes big ears (a mouse's, a koala's) or a lion's mane past the drawing's edge */
+  #bear { width: 100%; height: auto; display: block; overflow: visible; }
   #bear .breathe { animation: breathe 3.2s ease-in-out infinite; transform-origin: 200px 420px; }
   @keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.015, 0.99); } }
   #head { transform-origin: 200px 330px; transition: transform .35s ease; }
@@ -219,6 +220,34 @@
   #faceVideo { display: none; width: min(240px, 100%); aspect-ratio: 4 / 3; object-fit: cover; border-radius: 12px; margin-top: 10px;
     background: #000; transform: scaleX(-1); }
   #faceVideo.on { display: block; }
+
+  /* ---------- a phone turned sideways (short and wide): the toy stands in the middle of its land, the camera
+     button is at the left and the talk button with the status line at the right (WIDE in the script is the same query) ---------- */
+  @media (min-aspect-ratio: 13/10) and (max-height: 600px) {
+    :root { --toy: min(56vh, 42vw); --side: 26vw; --edge: 3vw; --talk: min(150px, 34vh); --camb: min(92px, 22vh); }
+    /* the toy's feet stay at the same height above the bottom, whatever its size, so the land can be put under them */
+    body:not(.voice-only) { justify-content: flex-end; padding-bottom: 8vh; }
+    #stage, body.cam-on #stage { width: var(--toy); transform: none; }
+    #skyArt { height: 100%; max-height: none; }
+    /* the land is drawn to the toy's size (its trees just beside it, as on a phone held upright), with its ground
+       (y 80 of 420) under the toy's feet; the ground runs on to the edges and below the screen */
+    #land { height: calc(var(--toy) * 1.5); bottom: auto; top: calc(92vh - var(--toy) * 0.314); }
+    body:not(.voice-only) #controls { margin: 0; }
+    body:not(.voice-only) #talk { position: fixed; width: var(--talk); height: var(--talk);
+      right: calc(var(--edge) + var(--side) / 2 - var(--talk) / 2); top: calc(46% - var(--talk) / 2); }
+    body:not(.voice-only) #cam { position: fixed; width: var(--camb); height: var(--camb);
+      left: calc(var(--edge) + var(--side) / 2 - var(--camb) / 2); top: calc(54% - var(--camb) / 2); }
+    body:not(.voice-only) #status { position: fixed; margin: 0; width: max-content; max-width: var(--side);
+      right: calc(var(--edge) + var(--side) / 2); transform: translateX(50%); top: calc(46% + var(--talk) / 2 + 24px); }
+    /* the camera's picture is wide too */
+    #preview { width: min(22vw, 190px); aspect-ratio: 4 / 3; }
+    #subs { left: 30vw; right: 30vw; }
+    /* the settings get as much of the low screen as they can */
+    #panel { padding: 6px; }
+    #panel .box { max-height: calc(100vh - 12px); max-height: calc(100dvh - 12px); }
+    #panel .box > h2 { padding: 10px 0 4px; }
+    #panel .box > .actions { padding: 8px 0 10px; }
+  }
 </style>
 </head>
 <body>
@@ -1030,6 +1059,10 @@ $("childAge").onchange = () => {
 // a message about something that went wrong (the camera wouldn't open) stays a few seconds before the live status takes over
 let noticeUntil = 0;
 function setStatus(t, hold = 0) { $("status").textContent = t; noticeUntil = performance.now() + hold; }
+// Where the mic or the camera is allowed again: the Android app has no address bar, the phone's settings do it.
+const permissionHint = what => window.PofiAndroid
+  ? "telefonun Ayarlar > Uygulamalar > Pofi > İzinler bölümünden " + what + " izin verin."
+  : "tarayıcının adres çubuğundaki kilit simgesinden " + what + " izin verin.";
 
 // ---------- audio helpers ----------
 function toB64(buf) {
@@ -1179,8 +1212,9 @@ function audioInterrupted() {
 // Throws the old audio away; the next Konuş builds a fresh one.
 function resetAudio() {
   if (micStream) micStream.getTracks().forEach(t => { t.onmute = t.onended = null; t.stop(); });
+  stopAmbient(0);   // (its lullaby timer would otherwise go on for nothing)
   if (ctx) { ctx.onstatechange = null; ctx.close().catch(() => {}); }
-  ctx = analyser = outGain = mix = mouthDelay = null; ambient = null;
+  ctx = analyser = outGain = mix = mouthDelay = null;
   micStream = micNode = micSource = null;
   sources.clear(); nextTime = runStart = 0;
   audioBroken = false;
@@ -1344,7 +1378,7 @@ async function start() {
   } catch (e) {
     if (run !== runId) return;   // an older tap's failure: the newer talk is unaffected
     stop(false);
-    setStatus(e.name === "NotAllowedError" ? "Mikrofon izni gerekli. Tarayıcının adres çubuğundaki kilit simgesinden mikrofona izin verin."
+    setStatus(e.name === "NotAllowedError" ? "Mikrofon izni gerekli: " + permissionHint("mikrofona")
       : "Hata: " + e.message);
   }
 }
@@ -1511,17 +1545,29 @@ function setTalkButton(icon, label) {
 // ---------- camera: Deniz shows things to Pofi ----------
 // Only on while the 📷 button is on; one small JPEG per second goes to Gemini, nothing is saved.
 let camStream = null, camTimer = null, facing = "user", pendingCam = false;
+// camOpening: the camera is still starting (a tap meanwhile turns it off); camRun: only the latest opening counts
+let camOpening = false, camRun = 0;
 const preview = $("preview"), frameCanvas = document.createElement("canvas");
 
 async function startCam(announce) {
+  const run = ++camRun;
+  let stream;
+  camOpening = true;
   try {
-    camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facing, width: { ideal: 640 }, height: { ideal: 480 } } });
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: facing, width: { ideal: 640 }, height: { ideal: 480 } } });
   } catch (e) {
-    setStatus(e.name === "NotAllowedError" ? "Kamera izni gerekli: adres çubuğundaki kilit simgesinden kameraya izin verin." : "Kamera açılamadı: " + e.message, 5000);
+    if (run !== camRun) return;
+    stopCam();   // a picture that was on (turning to the other camera) doesn't stay frozen on the screen
+    setStatus(e.name === "NotAllowedError" ? "Kamera izni gerekli: " + permissionHint("kameraya") : "Kamera açılamadı: " + e.message, 5000);
     return;
   }
+  // turned off again, or the talk ended, while the camera was starting: it mustn't stay on unseen
+  if (run !== camRun || !running) { stream.getTracks().forEach(t => t.stop()); if (run === camRun) camOpening = false; return; }
+  camOpening = false;
+  camStream = stream;
   // opening the camera can end the mic track or pause the sound on some phones: bring both back
   try { if (running) { await openMic(); micStream.getAudioTracks().forEach(t => t.enabled = true); } } catch {}
+  if (run !== camRun) return;   // stopped meanwhile (stopCam has closed this camera too)
   if (ctx) ctx.resume();
   preview.srcObject = camStream;
   preview.classList.add("on"); preview.classList.toggle("mirror", facing === "user");
@@ -1538,6 +1584,7 @@ async function startCam(announce) {
 }
 
 function stopCam() {
+  camRun++; camOpening = false;   // a camera still starting is closed as soon as it opens
   pendingCam = false; stopPresence();
   clearInterval(camTimer); camTimer = null;
   if (camStream) camStream.getTracks().forEach(t => t.stop());
@@ -1558,7 +1605,7 @@ function sendFrame() {
 }
 
 $("cam").onclick = () => {
-  if (camStream) { stopCam(); return; }
+  if (camStream || camOpening) { stopCam(); return; }
   if (running) { startCam(true); return; }
   pendingCam = true;   // start talking first; the camera opens once Gemini is ready
   start();
@@ -1567,7 +1614,7 @@ $("cam").onclick = () => {
 };
 // Tap the little picture to switch between the front and back camera.
 preview.onclick = () => {
-  if (!camStream) return;
+  if (!camStream || camOpening) return;
   facing = facing === "user" ? "environment" : "user";
   camStream.getTracks().forEach(t => t.stop());
   clearInterval(camTimer);
@@ -1906,7 +1953,7 @@ $("faceTest").onclick = async () => {
     await faceReady();
     stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } } });
   } catch (e) {
-    msg.textContent = e.name === "NotAllowedError" ? "Kamera izni gerekli: adres çubuğundaki kilit simgesinden kameraya izin verin." : "Olmadı (" + (e.message || e) + ").";
+    msg.textContent = e.name === "NotAllowedError" ? "Kamera izni gerekli: " + permissionHint("kameraya") : "Olmadı (" + (e.message || e) + ").";
     return;
   } finally { btn.disabled = false; }
   faceTestStream = stream; v.srcObject = stream; v.play().catch(() => {}); v.classList.add("on"); btn.textContent = "⏹ Durdur";
@@ -1939,7 +1986,8 @@ document.addEventListener("pointerdown", () => {
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) return;
   if (ctx && ctx.state !== "running") ctx.resume();
-  if (running && !wakeLock) navigator.wakeLock?.request("screen").then(l => { wakeLock = l; }).catch(() => {});
+  // the browser lets go of the screen lock whenever the page is hidden, so it is taken again here
+  if (running && (!wakeLock || wakeLock.released)) navigator.wakeLock?.request("screen").then(l => { wakeLock = l; }).catch(() => {});
 });
 
 // ---------- subtitles & mood ----------
@@ -2525,16 +2573,22 @@ function buildScene(d) {
   }
   $("stars").innerHTML = stars;
 })();
+// the same query as the sideways layout in the style; turning the phone moves the sun and moon
+const WIDE = matchMedia("(min-aspect-ratio: 13/10) and (max-height: 600px)");
+WIDE.addEventListener("change", () => applySky());
 // the sky follows the clock (and bedtime is always night): morning, day, evening, night
 function applySky() {
   const h = new Date().getHours();
   const tod = isBedtime() || h >= 20 || h < 6 ? "night" : h < 11 ? "morning" : h < 17 ? "day" : "evening";
   document.body.dataset.tod = tod;
   // the sun rises low on the left in the morning, stands high at midday and sets low in the evening
-  // (kept clear of the toy's ears and of the buttons in the corners)
-  const [x, y] = { morning: [56, 150], day: [252, 50], evening: [30, 300], night: [318, 80] }[tod];
+  // (kept clear of the toy's ears and of the buttons in the corners). A phone turned sideways shows only the
+  // top of the sky (y 0-190) and has its buttons at the sides: there the sun and moon keep between them.
+  const wide = WIDE.matches;
+  const [x, y] = (wide ? { morning: [120, 128], day: [282, 30], evening: [112, 150], night: [282, 30] }
+    : { morning: [56, 150], day: [252, 50], evening: [30, 300], night: [318, 80] })[tod];
   $("sun").setAttribute("transform", `translate(${x} ${y})`);
-  $("moon").setAttribute("transform", "translate(318 84)");
+  $("moon").setAttribute("transform", wide ? "translate(282 30)" : "translate(318 84)");
   // the phone's top bar takes the colour of the sky (black in voice-only mode)
   document.querySelector('meta[name="theme-color"]').content = settings.voiceOnly ? "#000000"
     : { morning: "#9fd4ff", day: "#8ccfff", evening: "#7f88d8", night: "#141838" }[tod];
@@ -2872,7 +2926,8 @@ ${talk}`, { type: "OBJECT",
       masal: { type: "OBJECT", properties: { baslik: { type: "STRING" }, metin: { type: "STRING" } }, required: ["baslik", "metin"] } },
     required: ["notlar", "devam", "ozet", "masal"] });
   if (!r) return;
-  const m = { notlar: (r.notlar || []).map(n => String(n).trim().slice(0, 160)).filter(Boolean).slice(0, 10), devam: String(r.devam || "").trim().slice(0, 240) };
+  // as many notes as were asked for: 12 for the grown-ups, 10 for a child
+  const m = { notlar: (r.notlar || []).map(n => String(n).trim().slice(0, 160)).filter(Boolean).slice(0, t.adult ? 12 : 10), devam: String(r.devam || "").trim().slice(0, 240) };
   storeFor(t.pid, "mem-" + t.d.id, JSON.stringify(m));
   if (r.ozet) {
     // the day's summaries are shared by the children, so each says whose it is
