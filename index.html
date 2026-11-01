@@ -1117,6 +1117,8 @@ const BARGE_LEVEL = 0.05;
 let loudChunks = 0, bargedIn = false, generating = false;
 // awaitingReply: Deniz said something and Pofi hasn't started answering yet (shown as "düşünüyor").
 let awaitingReply = false, slowNet = false;
+// holding: an answer to an app note waits until its first words show it isn't the note read out (holdForNote)
+let holding = false, held = [], holdTimer = 0, afterNote = false;
 
 // Phones play sound a noticeable moment after it is scheduled (often 0.1-0.3 s), so "what is
 // audible now" is ctx.currentTime minus this delay. The status text and the mouth follow that.
@@ -1145,6 +1147,7 @@ function playChunk(b64) {
 function stopPlayback() {
   sources.forEach(s => { try { s.stop(); } catch {} });
   sources.clear(); if (ctx) runStart = nextTime = ctx.currentTime;
+  held = []; holding = false; clearTimeout(holdTimer);
   playEpoch++;   // effects waiting for words that will now never be heard are dropped (whenHeard)
 }
 let playEpoch = 0;
@@ -1427,6 +1430,7 @@ function connect(model, attempt, resuming = false) {
         sock.ready = true; sock.readyAt = performance.now();
         if (!handle && !resuming) wavePending = true;   // waves while saying hello
         // a resumed session already knows the conversation; a fresh one after a drop is told not to start over
+        if (!handle) afterNote = true;
         if (!handle) sock.send(JSON.stringify({ clientContent: {
           turns: [{ role: "user", parts: [{ text: asNote(resuming
             ? "Uygulama notu: bağlantı bir an koptu ve geri geldi. Yeniden merhaba deme, sohbete kaldığınız yerden devam et."
@@ -1441,19 +1445,14 @@ function connect(model, attempt, resuming = false) {
       const sc = msg.serverContent;
       if (sc) {
         if (sc.interrupted) { stopPlayback(); heardAt = cutAt = performance.now(); }
+        // a new answer: one to an app note starts held back (holdForNote)
+        if (sc.modelTurn && !generating) { noteEcho = false; if (afterNote) { afterNote = false; holdForNote(); } }
+        // (the rest of an answer the child cut into doesn't count as answering)
+        if (sc.modelTurn) { generating = true; if (!bargedIn) replyAt = performance.now(); }
         for (const p of (sc.modelTurn && sc.modelTurn.parts) || []) {
-          if (p.inlineData && p.inlineData.data) playChunk(p.inlineData.data);
+          if (p.inlineData && p.inlineData.data) toyAudio(p.inlineData.data);
         }
-        if (sc.outputTranscription && sc.outputTranscription.text) {
-          onPofiText(sc.outputTranscription.text); logAppend("t", sc.outputTranscription.text);
-          sessionAppend("t", sc.outputTranscription.text); toyTurnText += sc.outputTranscription.text;
-          // a note being read out after all: the rest of that answer is dropped, and once it is over the toy
-          // is asked to answer again in its own words (a note sent while it is still talking gets read out)
-          if (!noteEcho && noteEchoes < 2 && NOTE_ECHO.test(toyTurnText.slice(0, 200).toLocaleLowerCase("tr"))) {
-            noteEcho = true; noteEchoes++; stopPlayback(); bargedIn = generating;   // (the note below brings the answer)
-            queueNote("Az önce sana gelen gizli bilgiyi sesli okudun; bunu asla yapma. Şimdi onu okumadan, sadece kendi cümlenle doğal bir şekilde cevap ver.");
-          }
-        }
+        if (sc.outputTranscription && sc.outputTranscription.text) toyText(sc.outputTranscription.text);
         if (sc.inputTranscription && sc.inputTranscription.text) {
           // words over the toy's voice, after something loud was let through: a child talking, not a noise
           if (cutIn && isSpeaking() && sc.inputTranscription.text.trim()) bargeIn();
@@ -1463,10 +1462,12 @@ function connect(model, attempt, resuming = false) {
           if (!generating && !isSpeaking()) askedAt = performance.now();
           childSpokeAt = performance.now();
         }
-        // (the rest of an answer the child cut into doesn't count as answering)
-        if (sc.modelTurn) { generating = true; if (!bargedIn) replyAt = performance.now(); }
-        // the toy asked to be shown something on the camera: it has a look if the child stays quiet
-        if (sc.turnComplete && camStream && /göster|getir|kameraya/i.test(toyTurnText)) showAsk = 1;
+        if (sc.turnComplete) {
+          releaseHeld();   // a short answer, over before enough words came
+          if (!noteEcho && toyTurnText) noteEchoes = 0;   // it answered in its own words
+          // the toy asked to be shown something on the camera: it has a look if the child stays quiet
+          if (camStream && /göster|getir|kameraya/i.test(toyTurnText)) showAsk = 1;
+        }
         if (sc.turnComplete || sc.interrupted) { bargedIn = generating = false; lastToyTurn = toyTurnText; toyTurnText = ""; noteEcho = false; }
       }
       // Google closes each connection after about ten minutes and warns shortly before: it is renewed at the next
@@ -2763,16 +2764,51 @@ Sesin çok yumuşak, yavaş ve fısıltıya yakın olsun. Hareketli oyun, yarı�
 function loadJSON(k, d) { try { const v = JSON.parse(load(k, "null")); return v === null ? d : v; } catch { return d; } }
 // App notes reach Gemini as a turn of the conversation, as if someone had said them, marked "Uygulama
 // notu:" (a bracketed tag was worse: the toy copied it into its own speech). A note is read out mostly when
-// it arrives while the toy is still talking, so notes wait for it to be quiet (queueNote).
+// it arrives while the toy is still talking, so notes wait for it to be quiet (queueNote), and the answer
+// to one is held back until it is clear the toy isn't reading it out (holdForNote).
 const asNote = text => /^Uygulama notu:/.test(text) ? text : "Uygulama notu: " + text;
-// words that only a note has (in lower case, Turkish İ included): the toy saying them is reading one out.
+// words that only a note has (in lower case, Turkish İ included): the toy saying them is reading one out
+// ("uygulama notu", "uygulamadan bir not", "uygulamanın bilgisi").
 // Its own sentences don't count: "Düğmeye bastın!" (the note says "bastı"), a "gizli bilgi" in a detective game.
-const NOTE_ECHO = /uygulama\s*(notu|bilgisi)|gelen gizli bilgi|düğmeye bas(tı|ıldı)(?![a-zçğıöşü])/;
+const NOTE_ECHO = /uygulama(dan|nın)?\s*(bir\s*)?(not|bilgi)|gelen gizli bilgi|düğmeye bas(tı|ıldı)(?![a-zçğıöşü])/;
 function sendNote(text) {
   if (!ws || !ws.ready || ws.readyState !== 1) return;
   ws.send(JSON.stringify({ clientContent: { turns: [{ role: "user", parts: [{ text: asNote(text) }] }], turnComplete: true } }));
-  notedAt = performance.now();
+  notedAt = performance.now(); afterNote = true;
 }
+
+// An answer to an app note is held back for a moment, until its first words show it isn't the note read
+// out, so a child never hears one; the toy looks like it is thinking meanwhile. Gemini sends speech faster
+// than it is played, so the words are usually there long before the wait is over.
+const HOLD_CHARS = 30, HOLD_MAX = 1500;
+function holdForNote() {
+  holding = true; held = []; awaitingReply = true;
+  clearTimeout(holdTimer); holdTimer = setTimeout(releaseHeld, HOLD_MAX);
+}
+function releaseHeld() {
+  if (!holding) return;
+  holding = false; clearTimeout(holdTimer);
+  const items = held; held = [];
+  for (const h of items) h.a ? playChunk(h.a) : toyWords(h.t);
+}
+function toyAudio(b64) { if (holding && !bargedIn) held.push({ a: b64 }); else playChunk(b64); }
+// The toy's words go to the subtitle, its moves, the day's log and the talk's notes, unless it is reading a
+// note out after all: then that answer is dropped, sound and words, and once it is over the toy is asked to
+// answer again in its own words (twice in a row at most, so it can't go round in circles).
+function toyText(t) {
+  if (noteEcho) return;
+  toyTurnText += t;
+  if (NOTE_ECHO.test(toyTurnText.slice(0, 200).toLocaleLowerCase("tr"))) {
+    noteEcho = true; stopPlayback(); bargedIn = generating;
+    if (noteEchoes++ < 2) queueNote("Az önce sana gelen gizli bilgiyi sesli okudun; bunu asla yapma. Şimdi onu okumadan, sadece kendi cümlenle doğal bir şekilde cevap ver.");
+    else awaitingReply = false;
+    return;
+  }
+  if (!holding) { toyWords(t); return; }
+  held.push({ t });
+  if (toyTurnText.length >= HOLD_CHARS) releaseHeld();
+}
+function toyWords(t) { onPofiText(t); logAppend("t", t); sessionAppend("t", t); }
 
 // ---------- the moment: time of day, season, the parent's note ----------
 function momentRules() {
