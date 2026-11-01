@@ -33,7 +33,7 @@
   }
   /* the full-body character is about 1.46x as tall as wide: 42vh wide keeps it within ~61% of the screen height */
   #stage { width: min(70vw, 42vh); position: relative; transition: transform .3s, width .3s; }
-  /* visible: a head tilted in sleep or a dance takes big ears (a mouse's, a koala's) or a lion's mane past the drawing's edge */
+  /* visible: a head tilted in sleep or a dance takes big ears (a mouse's) or a lion's mane past the drawing's edge */
   #bear { width: 100%; height: auto; display: block; overflow: visible; }
   #bear .breathe { animation: breathe 3.2s ease-in-out infinite; transform-origin: 200px 420px; }
   @keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.015, 0.99); } }
@@ -77,9 +77,7 @@
   @keyframes drift { from { transform: translateX(-160px); } to { transform: translateX(560px); } }
   #stars circle { animation: twinkle 3s ease-in-out infinite; }
   @keyframes twinkle { 50% { opacity: .25; } }
-  #leaves path { transform-box: fill-box; transform-origin: center; animation: fall linear infinite; }
-  @keyframes fall { from { transform: translate(0, -40px) rotate(0deg); } to { transform: translate(-70px, 460px) rotate(420deg); } }
-  @media (prefers-reduced-motion: reduce) { #clouds g, #stars circle, #leaves path, #talk::before { animation: none !important; } }
+  @media (prefers-reduced-motion: reduce) { #clouds g, #stars circle, #talk::before { animation: none !important; } }
   body.voice-only #scene { display: none; }
 
   #controls { margin-top: 2vh; display: flex; align-items: center; gap: 22px; }
@@ -271,7 +269,6 @@
     <g id="moon"><circle r="52" fill="url(#gMoonGlow)"/><path d="M0 -26 A26 26 0 0 0 0 26 A15 26 0 0 1 0 -26 Z" fill="#fdf6d8"/></g>
     <g id="stars"></g>
     <g id="clouds"></g>
-    <g id="leaves"></g>
   </svg>
   <svg id="land" viewBox="0 0 400 420" preserveAspectRatio="xMidYMax meet"></svg>
 </div>
@@ -288,18 +285,20 @@
     <g class="breathe">
       <!-- the toy's own tail, behind everything (it wags around its base) -->
       <g id="tail"></g>
-      <!-- legs: each turns around its hip (160,455 / 240,455) for dancing and jumping -->
-      <g id="legL">
+      <!-- legs: each turns around its hip (160,455 / 240,455) for dancing and jumping
+           (the ...Pos holders around the parts size and place them for each toy: BUILD) -->
+      <g id="legLPos"><g id="legL">
         <rect class="armFur" x="138" y="440" width="44" height="76" rx="22" fill="var(--fur)"/>
         <ellipse cx="150" cy="520" rx="36" ry="19" fill="var(--fur-dark)"/>
         <ellipse cx="146" cy="522" rx="16" ry="9" fill="var(--fur-light)" opacity=".7"/>
-      </g>
-      <g id="legR">
+      </g></g>
+      <g id="legRPos"><g id="legR">
         <rect class="armFur" x="218" y="440" width="44" height="76" rx="22" fill="var(--fur)"/>
         <ellipse cx="250" cy="520" rx="36" ry="19" fill="var(--fur-dark)"/>
         <ellipse cx="254" cy="522" rx="16" ry="9" fill="var(--fur-light)" opacity=".7"/>
-      </g>
+      </g></g>
       <!-- body, with a soft light on top and a little shade below, like a plush toy -->
+      <g id="bodyShape">
       <ellipse cx="200" cy="400" rx="135" ry="80" fill="var(--fur)"/>
       <ellipse cx="200" cy="400" rx="135" ry="80" fill="url(#gRim)"/>
       <ellipse cx="200" cy="446" rx="128" ry="34" fill="url(#gShade)"/>
@@ -307,16 +306,17 @@
       <!-- the toy's own marks on the body (a panda's shoulder band, an owl's chest feathers) -->
       <g id="bodyDeco"></g>
       <ellipse cx="158" cy="368" rx="78" ry="34" fill="url(#gShine)"/>
-      <g id="head">
+      </g>
+      <g id="headPos"><g id="head">
         <!-- lion's mane (only for toys that have one) -->
         <g id="mane"></g>
         <!-- ears -->
         <g class="ear" id="earL"><circle cx="100" cy="90" r="50" fill="var(--fur)"/><circle cx="100" cy="90" r="27" fill="var(--fur-light)"/></g>
         <g class="ear" id="earR"><circle cx="300" cy="90" r="50" fill="var(--fur)"/><circle cx="300" cy="90" r="27" fill="var(--fur-light)"/></g>
-        <!-- head -->
-        <ellipse id="headShape" cx="200" cy="200" rx="155" ry="140" fill="var(--fur)"/>
-        <ellipse id="headRim" cx="200" cy="200" rx="155" ry="140" fill="url(#gRim)"/>
-        <ellipse cx="152" cy="126" rx="96" ry="58" fill="url(#gShine)"/>
+        <!-- head (its outline is the toy's own: HEADS) -->
+        <path id="headShape" d="M45 200 A155 140 0 1 1 355 200 A155 140 0 1 1 45 200 Z" fill="var(--fur)"/>
+        <path id="headRim" d="M45 200 A155 140 0 1 1 355 200 A155 140 0 1 1 45 200 Z" fill="url(#gRim)"/>
+        <ellipse id="headShine" cx="152" cy="126" rx="96" ry="58" fill="url(#gShine)"/>
         <!-- panda-style eye patches (only for toys that have them) -->
         <g id="patches" display="none" fill="var(--fur-dark)">
           <ellipse cx="138" cy="184" rx="34" ry="40" transform="rotate(-20 138 184)"/>
@@ -324,12 +324,7 @@
         </g>
         <!-- tuft -->
         <path id="tuft" d="M185 66 q10 -22 18 0 q8 -20 16 2" fill="none" stroke="var(--fur-dark)" stroke-width="6" stroke-linecap="round"/>
-        <!-- unicorn horn (only for toys that have one) -->
-        <g id="horn" display="none" stroke-linejoin="round" stroke-linecap="round">
-          <polygon points="200,6 181,80 219,80" fill="#ffd166" stroke="#e9b23a" stroke-width="4"/>
-          <path d="M187 60 L213 52 M191 40 L209 34" stroke="#e9b23a" stroke-width="3" fill="none"/>
-        </g>
-        <!-- the toy's own marks under the face (a dog's eye patch) -->
+        <!-- the toy's own marks under the face (a tabby's stripes, an owl's eye rings) -->
         <g id="decoUnder"></g>
         <!-- cheeks -->
         <ellipse cx="112" cy="238" rx="26" ry="16" fill="var(--cheek)" opacity=".5"/>
@@ -357,20 +352,20 @@
           <ellipse cx="200" cy="272" rx="22" ry="20" fill="#5a2230"/>
           <ellipse cx="200" cy="284" rx="13" ry="8" fill="#ff8fa3"/>
         </g>
-        <!-- the toy's own marks over the face (whiskers, teeth, a unicorn's forelock) -->
+        <!-- the toy's own marks over the face (whiskers, teeth, an owl's glasses) -->
         <g id="decoOver"></g>
-      </g>
+      </g></g>
       <!-- arms: each turns around its shoulder (112,350 / 288,350) for waving, thinking, cheering -->
-      <g id="armL" transform="rotate(15 112 350)">
+      <g id="armLPos"><g id="armL" transform="rotate(15 112 350)">
         <rect class="armFur" x="90" y="336" width="44" height="80" rx="22" fill="var(--fur)"/>
         <circle cx="112" cy="410" r="26" fill="var(--fur-dark)"/>
         <ellipse cx="112" cy="414" rx="12" ry="9" fill="var(--fur-light)" opacity=".7"/>
-      </g>
-      <g id="armR" transform="rotate(-15 288 350)">
+      </g></g>
+      <g id="armRPos"><g id="armR" transform="rotate(-15 288 350)">
         <rect class="armFur" x="266" y="336" width="44" height="80" rx="22" fill="var(--fur)"/>
         <circle cx="288" cy="410" r="26" fill="var(--fur-dark)"/>
         <ellipse cx="288" cy="414" rx="12" ry="9" fill="var(--fur-light)" opacity=".7"/>
-      </g>
+      </g></g>
     </g>
     </g>
     <!-- a thought bubble while the toy is thinking about an answer -->
@@ -417,7 +412,6 @@
       <select id="childAge" style="flex:1">
         <option value="3">3 yaş</option><option value="4">4 yaş</option><option value="5">5 yaş</option>
         <option value="6">6 yaş</option><option value="7">7 yaş</option><option value="8">8 yaş</option>
-        <option value="9">9 yaş</option><option value="10">10 yaş</option>
         <option value="yetiskin">Yetişkin</option>
       </select>
     </div>
@@ -430,7 +424,6 @@
       <option value="kres">Kreş</option>
       <option value="ana">Anasınıfı</option>
       <option value="1">1. sınıf</option><option value="2">2. sınıf</option><option value="3">3. sınıf</option>
-      <option value="4">4. sınıf</option><option value="5">5. sınıf</option>
     </select>
     <p class="hint" style="margin:2px 0 0">Okula gidiyorsa oyuncak okulda öğrendiklerini oyunlarla pekiştirir. Ödevde yardım isterse cevabı söylemez, ipucu verir.</p>
     </div>
@@ -446,37 +439,12 @@
     <input id="toyName" type="text">
     <p class="hint" style="margin:2px 0 0">Seçilen hayvanın adı kendiliğinden yazılır. Başka bir ad yazarsanız oyuncak o adla konuşur.</p>
 
-    <label for="voice">Oyuncağın ses tonu</label>
-    <select id="voice">
-      <option value="">Hayvana göre (her hayvanın kendi sesi)</option>
-      <option value="Sulafat">Sulafat (sıcak)</option>
-      <option value="Umbriel">Umbriel (rahat, sakin)</option>
-      <option value="Laomedeia">Laomedeia (coşkulu)</option>
-      <option value="Despina">Despina (yumuşak, zarif)</option>
-      <option value="Fenrir">Fenrir (heyecanlı)</option>
-      <option value="Achird">Achird (dostça)</option>
-      <option value="Vindemiatrix">Vindemiatrix (nazik)</option>
-      <option value="Leda">Leda (genç, tatlı)</option>
-      <option value="Orus">Orus (güçlü)</option>
-      <option value="Autonoe">Autonoe (parlak)</option>
-      <option value="Puck">Puck (neşeli)</option>
-      <option value="Aoede">Aoede (hafif)</option>
-      <option value="Kore">Kore (net)</option>
-      <option value="Zephyr">Zephyr (parlak)</option>
-      <option value="Charon">Charon (yetişkin, bilgili erkek sesi)</option>
-      <option value="Sadaltager">Sadaltager (yetişkin, bilgili)</option>
-      <option value="Iapetus">Iapetus (yetişkin, net)</option>
-      <option value="Algieba">Algieba (yetişkin, yumuşak)</option>
-      <option value="Gacrux">Gacrux (yetişkin, olgun kadın sesi)</option>
-      <option value="Schedar">Schedar (yetişkin, dengeli)</option>
-    </select>
-
     <label for="volume">Oyuncağın ses seviyesi</label>
     <input id="volume" type="range" min="0.02" max="1" step="0.01" style="width:100%">
     <p class="hint" style="margin:2px 0 0">Telefonun ses tuşları en kısıkta bile yüksek geliyorsa buradan kısın.</p>
 
     <label for="memView">Bu oyuncağın hafızası</label>
-    <p class="hint" style="margin:0 0 4px">Her konuşmadan sonra oyuncak, çocuğunuz hakkında hatırlayacağı kısa notlar çıkarır (sevdiği şeyler, yarım kalan masal). Notlar yalnızca bu telefonda saklanır. Adres, okul, sağlık gibi bilgiler not edilmez. Her satır bir not; düzeltebilir ya da silebilirsiniz.</p>
+    <p class="hint" style="margin:0 0 4px">Her konuşmadan sonra oyuncak, çocuğunuz hakkında hatırlayacağı kısa notlar çıkarır (sevdiği şeyler, geçen sohbette ne konuştuklarını, yarım kalan masalı). Her oyuncağın hafızası ayrıdır: hangisi açılırsa onunla kaldığınız yerden devam edersiniz. Notlar yalnızca bu telefonda saklanır. Adres, okul, sağlık gibi bilgiler not edilmez. Her satır bir not; düzeltebilir ya da silebilirsiniz.</p>
     <textarea id="memView" style="height:110px" placeholder="Henüz not yok."></textarea>
     <div class="row"><button id="memClear" type="button" style="background:#eee">Bu oyuncağın hafızasını sil</button></div>
 
@@ -537,7 +505,7 @@
     <details class="sec" id="secLog">
       <summary>📖 Geçmiş, rapor ve masallar</summary>
     <label for="logDay">Konuşma geçmişi</label>
-    <p class="hint" style="margin:0 0 4px">Yalnızca bu telefonda saklanır, 7 günden eskisi kendiliğinden silinir.</p>
+    <p class="hint" style="margin:0 0 4px">Yalnızca bu telefonda saklanır, 30 günden eskisi kendiliğinden silinir (en eskiden başlayarak).</p>
     <div class="row" style="margin-top:0">
       <select id="logDay" style="flex:2"></select>
       <button id="logClear" type="button" style="background:#eee;flex:1">Geçmişi sil</button>
@@ -645,9 +613,9 @@ SOHBET ÖNCE GELİR (EN ÖNEMLİ KURAL; TALİMATTA BAŞKA TÜRLÜ YAZSA BİLE GE
 
 CANI SIKILDIĞINDA: İLGİNÇ BİLGİLER
 - Çocuk "Canım sıkıldı", "Ne yapalım?", "Bilmiyorum" der ya da ne yapacağını bulamazsa, veya oyun oynamak istemezse, ona merak uyandıran bir genel kültür bilgisi anlatmayı teklif et: "Sana çok ilginç bir şey anlatayım mı?"
-- İsterse yaşına uygun, doğru ve şaşırtıcı bir bilgiyi kısa ve heyecanlı anlat: hayvanlar, uzay, insan vücudu, doğa, dünyanın ülkeleri, buluşlar, tarih, dinozorlar, denizler gibi. Örnek: "Biliyor musun, ahtapotun üç kalbi var!"
+- İsterse yaşına uygun, doğru ve şaşırtıcı bir bilgiyi kısa ve heyecanlı anlat: hayvanlar, uzay, insan vücudu, doğa, dünyanın ülkeleri, buluşlar, tarih, dinozorlar, denizler gibi.
 - Bilgiyi günlük hayattan bir örnekle bağla, sonra "Sence neden öyle?" gibi tek bir merak sorusu sor ve onu dinle. İlgisini çekerse aynı konuda derinleş; çekmezse başka bir konudan bir bilgi daha teklif et.
-- Önce kendi karakterinin ilgi alanlarından ve çocuğun sevdiği konulardan seç. Her seferinde farklı konulardan bilgi ver; bu sohbette ya da hafızanda anlattığın yazan bir bilgiyi tekrar anlatma.
+- Konuyu çocuğun sevdiği şeylerden ya da uygulamanın bu sohbet için önerdiği konulardan seç; kendi ilgi alanlarına bağlayabilirsin ama hep aynı konulara dönme. Her seferinde başka bir konudan, daha önce anlatılmamış bir bilgi ver: bu sohbette anlattığın ya da "GENEL KÜLTÜR" bölümünde daha önce anlatıldığı yazan bir bilgiyi tekrar anlatma. Herkesin bildiği, en çok anlatılan bilgiler yerine daha az bilinen ama kesinlikle doğru bilgiler seç.
 - Ders verir gibi art arda bilgi sayma ve sınav gibi soru sorma; bir arkadaşın heyecanla bir sır paylaşması gibi anlat. Emin olmadığın bir bilgiyi asla söyleme.
 
 ÖĞRENMEK İSTEDİĞİNDE (TÜM YAŞLARDA)
@@ -749,7 +717,7 @@ const $ = id => document.getElementById(id);
 // ---------- settings (localStorage may be unavailable) ----------
 // Siblings each have a profile. A child's own settings and data live under "c<id>." (the first child
 // keeps the plain keys, so nothing saved earlier moves); the key, sound settings and the log are shared.
-const PER_CHILD = /^(childName|childAge|grade|look|toyName2|voice2|prompt4|note|dailyLimit|bedFrom|bedTo|stories|(mem|meets|met|games|played|used|bonus)-.+)$/;
+const PER_CHILD = /^(childName|childAge|grade|look|toyName2|prompt4|note|dailyLimit|bedFrom|bedTo|stories|facts|factTurn|(mem|meets|met|games|played|used|bonus)-.+)$/;
 let profile = "1";
 try { profile = localStorage.getItem("pofi.profile") || "1"; } catch {}
 const keyFor = (pid, k) => "pofi." + (PER_CHILD.test(k) && pid !== "1" ? "c" + pid + "." : "") + k;
@@ -777,16 +745,17 @@ const settings = {
 };
 // The current child's own settings (read again when another child is chosen).
 function readChild() {
-  // empty = the chosen toy's own voice ("voice2": older versions saved the voice picked for the age)
-  settings.voice = load("voice2", "");
   // "prompt4": from here on the instructions include the toy's character, so older saved ones are not reused.
   // Empty means "the default for the chosen toy and age".
   settings.prompt = load("prompt4", "");
   settings.childName = load("childName", "");   // empty: the parent hasn't written one yet
-  // "yetiskin" is the grown-ups' section; older versions saved free text such as "4,5": whole years, 3 to 10
+  // "yetiskin" is the grown-ups' section; older versions saved free text such as "4,5" and went up to 10:
+  // whole years, 3 to 8
   const age = load("childAge", "4");
-  settings.childAge = age === "yetiskin" ? age : String(Math.min(10, Math.max(3, parseInt(age, 10) || 4)));
-  settings.grade = load("grade", "");   // empty = the usual class for the age
+  settings.childAge = age === "yetiskin" ? age : String(Math.min(8, Math.max(3, parseInt(age, 10) || 4)));
+  // empty = the usual class for the age (older versions went up to the 5th class)
+  const grade = load("grade", "");
+  settings.grade = /^[4-9]$/.test(grade) ? "3" : grade;
   // empty = the chosen toy's own name ("toyName2": older versions saved "Pofi" for every toy)
   settings.toyName = load("toyName2", "");
   settings.dailyLimit = parseInt(load("dailyLimit", "0"), 10) || 0;   // minutes per day, 0 = no limit
@@ -797,7 +766,7 @@ function readChild() {
 }
 readChild();
 const tn = () => settings.toyName || look.ad;
-const voiceName = () => settings.voice || look.ses;
+const voiceName = () => look.ses;
 const isAdult = (age = settings.childAge) => age === "yetiskin";
 const isAdultPid = pid => loadFor(pid, "childAge", "") === "yetiskin";
 const cn = () => settings.childName || (isAdult() ? "Yetişkinler" : profile === "1" ? "Çocuk" : "Çocuk " + profile);
@@ -814,7 +783,7 @@ const childOf = () => familyChild() ? genitive(familyChild()) : "çocuğun";
 const sleepingText = () => "💤 " + tn() + " uyuyor. Uyandırmak için Konuş'a " + (isAdult() ? "basın." : "bas.");
 
 // What a child of each age can follow and enjoy, built from common developmental milestones
-// (CDC "Learn the Signs. Act Early" checklists for 3-5, paediatric guidance for 6-10) and the
+// (CDC "Learn the Signs. Act Early" checklists for 3-5, paediatric guidance for 6-8) and the
 // Turkish school stages (ilkokul starts around 6). Becomes the last part of the instructions.
 const AGE_RULES = {
   3: `Dil: 3-5 kelimelik basit cümlelerle konuşur, "ne?", "nerede?", "kim?", "neden?" diye sorar. Söyleyişi bozuk olabilir.
@@ -868,19 +837,6 @@ Düşünme ve oyun: Bir sorunun birkaç yönünü düşünebilir. Çarpım tablo
 - Bir oyun 20 dakika kadar sürebilir.
 Duygular ve sosyal: Arkadaş grubunun önemi artar; dışlanma, kıskançlık, haksızlık duyguları gündeme gelebilir. Dinle, yargılama, çözüm yollarını birlikte düşün.
 SES VE KONUŞMA TARZI: Doğal hızda, samimi bir arkadaş gibi konuş. Bebeksi ses ve aşırı küçültme ekleri kullanma; ona büyük bir çocuk gibi saygı göster.`,
-  9: `Dil: Akıcı okur (4. sınıf civarı), daha uzun ve karmaşık konuşmaları takip edebilir, yazmayı da kullanır.
-- Bir seferde 3-5 cümle söyleyebilirsin; gerektiğinde örnek vererek açıkla.
-Düşünme ve oyun: Neden-sonuç ilişkilerini daha iyi kurar. Kesirlere giriş, büyük sayılar, problem çözme, strateji ve mantık oyunları, kelime türetme, bilgi yarışmaları.
-- Kendi projesini planlamayı sever (bir hikaye yazmak, bir şey inşa etmek); adım adım plan yapmasına yardım et.
-- Bir oyun ya da sohbet 20-30 dakika sürebilir.
-Duygular ve sosyal: Kendini başkalarıyla karşılaştırmaya başlar, özgüveni hassaslaşabilir. Çabasını ve gelişimini öv, sonucu değil. Kurallara ve adalete çok önem verir.
-SES VE KONUŞMA TARZI: Doğal hızda, sakin ve samimi konuş; esprili ol. Onunla eşit bir arkadaş gibi, ders verir gibi değil sohbet eder gibi konuş.`,
-  10: `Dil: Soyut kelimeleri ve deyimleri anlamaya başlar (5. sınıf civarı), görüşünü tartışabilir, uzun hikayeler yazabilir.
-- Bir seferde 4-6 cümle söyleyebilirsin; yine de lafı uzatma, sohbeti ona bırak.
-Düşünme ve oyun: Daha karmaşık problemleri çözebilir. Kesirler ve ondalık sayılara giriş, zeka bulmacaları, strateji oyunları, bilim, tarih, doğa üzerine merak sohbetleri, kendi hikayesini ya da oyununu tasarlama.
-- Bir konuyu araştırmayı sever; "Sence nasıl öğrenebiliriz?" diye sorup merakını yönlendir.
-Duygular ve sosyal: Ergenliğe yaklaşır; arkadaş ilişkileri, mahremiyet ve bağımsızlık önem kazanır. Saygılı ol, yargılama; ciddi konularda anne-babasıyla konuşmasını nazikçe teşvik et.
-SES VE KONUŞMA TARZI: Doğal hızda, rahat ve samimi konuş. Çocuksu oyuncak ses tonunu azalt; esprili, akıllı ve meraklı bir arkadaş gibi ol.`,
 };
 
 // The whole default instruction text: the general part, the toy's character and the age's section.
@@ -917,7 +873,7 @@ function applyVoiceOnly() {
 }
 
 function openPanel() {
-  $("key").value = settings.key; $("voice").value = settings.voice;
+  $("key").value = settings.key;
   $("mute").checked = settings.mute; $("showSubs").checked = settings.subs;
   $("voiceOnly").checked = settings.voiceOnly; $("noiseFilter").checked = settings.noiseFilter;
   $("childName").value = settings.childName; $("childAge").value = settings.childAge;
@@ -980,13 +936,13 @@ $("save").onclick = () => {
     alert("Bu anahtar eksik ya da yanlış görünüyor. Gemini anahtarı 'AQ.' ya da 'AIza' ile başlar (şu an " + key.length + " karakter). AI Studio'da 'Anahtarı kopyala' düğmesini kullanın.");
     return;
   }
-  settings.key = key; settings.voice = $("voice").value;
+  settings.key = key;
   settings.mute = $("mute").checked; settings.subs = $("showSubs").checked;
   settings.childAge = $("childAge").value; store("childAge", settings.childAge);
   // an unchanged default is kept as empty, so it always follows the current toy and age texts
   const prompt = $("prompt").value.trim();
   settings.prompt = prompt === buildPrompt(settings.childAge, look).trim() ? "" : prompt;
-  store("key", settings.key); store("voice2", settings.voice);
+  store("key", settings.key);
   store("mute", settings.mute ? "1" : "0"); store("subs", settings.subs ? "1" : "0");
   store("prompt4", settings.prompt);
   settings.voiceOnly = $("voiceOnly").checked; store("voiceOnly", settings.voiceOnly ? "1" : "0");
@@ -1118,7 +1074,7 @@ let loudChunks = 0, bargedIn = false, generating = false;
 // awaitingReply: Deniz said something and Pofi hasn't started answering yet (shown as "düşünüyor").
 let awaitingReply = false, slowNet = false;
 // holding: an answer to an app note waits until its first words show it isn't the note read out (holdForNote)
-let holding = false, held = [], holdTimer = 0, afterNote = false;
+let holding = false, held = [], holdTimer = 0, afterNote = false, heldAt = 0;
 
 // Phones play sound a noticeable moment after it is scheduled (often 0.1-0.3 s), so "what is
 // audible now" is ctx.currentTime minus this delay. The status text and the mouth follow that.
@@ -1132,6 +1088,22 @@ function audibleSpeech() {
 // Wider than audibleSpeech, for echo handling: covers everything scheduled plus the speaker delay.
 function isSpeaking() { return ctx && ctx.currentTime < nextTime + outDelay() + 0.15; }
 
+// Raises the toy's voice by look.perde semitones without making it faster: the sound runs through a short
+// delay line read by two heads that move faster than it is written, each fading out before it jumps back
+// (35 ms grains at 24 kHz). It carries on from one piece of speech to the next; a new stretch starts clean.
+const PITCH_WIN = 840, pitchBuf = new Float32Array(4096);
+let pitchW = 0, pitchPhase = 0;
+function raisePitch(ch, semis) {
+  const step = (2 ** (semis / 12) - 1) / PITCH_WIN, N = pitchBuf.length;
+  const tap = (p) => { const d = (1 - p) * PITCH_WIN, i = Math.floor(d), f = d - i;
+    const a = pitchBuf[(pitchW - i + N) % N], b = pitchBuf[(pitchW - i - 1 + N) % N];
+    return (a + (b - a) * f) * Math.sin(Math.PI * p) ** 2; };
+  for (let n = 0; n < ch.length; n++) {
+    pitchW = (pitchW + 1) % N; pitchBuf[pitchW] = ch[n];
+    ch[n] = tap(pitchPhase) + tap((pitchPhase + 0.5) % 1);
+    pitchPhase = (pitchPhase + step + 1) % 1;
+  }
+}
 function playChunk(b64) {
   if (bargedIn) return;
   const pcm = fromB64(b64);
@@ -1140,7 +1112,8 @@ function playChunk(b64) {
   for (let i = 0; i < pcm.length; i++) ch[i] = pcm[i] / 32768;
   const src = ctx.createBufferSource();
   src.buffer = buf; src.connect(mix);
-  if (nextTime < ctx.currentTime + 0.05) { nextTime = ctx.currentTime + 0.05; runStart = nextTime; }
+  if (nextTime < ctx.currentTime + 0.05) { nextTime = ctx.currentTime + 0.05; runStart = nextTime; pitchBuf.fill(0); pitchPhase = 0; }
+  if (look.perde) raisePitch(ch, look.perde);
   src.start(nextTime); nextTime += buf.duration;
   sources.add(src); src.onended = () => sources.delete(src);
 }
@@ -1350,7 +1323,7 @@ async function start() {
   sessionGames = [];
   sessionPrompt = isAdult()
     ? currentPrompt() + identityRules() + memoryRules() + momentRules() + faceRules() + ADULT_FIXED_RULES
-    : currentPrompt() + identityRules() + gameRules() + memoryRules() + momentRules() + schoolRules() + faceRules() + bedtimeRules() + FIXED_RULES;
+    : currentPrompt() + identityRules() + gameRules() + memoryRules() + factRules() + momentRules() + schoolRules() + faceRules() + bedtimeRules() + FIXED_RULES;
   clearTimeout(adultBack);
   sessionLines = []; sessionLook = look; noteQueue = [];
   sessionInfo = { d: look, pid: profile, child: cn(), age: settings.childAge, toy: tn(), adult: isAdult() };
@@ -1626,6 +1599,10 @@ preview.onclick = () => {
 // told just the names. face-api (TensorFlow.js, about 8 MB with its models) is fetched the first time.
 const FACE_LIB = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.15/dist/face-api.js";
 const FACE_MODELS = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.15/model/";
+// the WebAssembly files of the TensorFlow.js version face-api has inside (4.22.0)
+const FACE_WASM = "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@4.22.0/dist/";
+// iPhone and iPad (an iPad's browser says it is a Mac, but a Mac has no touch screen)
+const IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 // How far apart two faces' measurements are: under SAME it is that person, over OTHER someone else, in
 // between the toy says nothing (family faces look alike, and a wrong name is worse than no name).
 const FACE_SAME = 0.5, FACE_OTHER = 0.6;
@@ -1665,8 +1642,11 @@ function faceReady() {
       document.head.append(s);
     });
     const f = window.faceapi;
-    // the graphics chip is many times faster; a phone without it uses the processor
-    if (!(await f.tf.setBackend("webgl").catch(() => false))) await f.tf.setBackend("cpu");
+    // the graphics chip is many times faster; a phone without it uses the processor. On an iPad the page
+    // froze while a photo was being added (the graphics programs are slow to get ready there), so iPads and
+    // iPhones use WebAssembly: the processor, but quick enough
+    if (IOS) f.tf.setWasmPaths(FACE_WASM);
+    for (const b of IOS ? ["wasm", "webgl", "cpu"] : ["webgl", "cpu"]) if (await f.tf.setBackend(b).catch(() => false)) break;
     await f.tf.ready();
     await Promise.all([f.nets.tinyFaceDetector, f.nets.faceLandmark68Net, f.nets.faceRecognitionNet].map(n => n.loadFromUri(FACE_MODELS)));
     // the very first look prepares the graphics programs (a second or two): done now, not while the toy wakes up
@@ -1761,7 +1741,7 @@ function youAreLine(p) {
 // to open, never the same way twice in a row.
 const OPENERS = [
   "Sonra kendi gününden küçük, komik bir olayı karakterine uygun tek bir cümleyle anlat ve orada dur.",
-  "Sonra bugün öğrendiğin şaşırtıcı ve doğru küçük bir bilgiyi tek bir cümleyle paylaş ve orada dur.",
+  "Sonra bugün öğrendiğin, daha önce hiç anlatmadığın şaşırtıcı ve doğru küçük bir bilgiyi tek bir cümleyle paylaş ve orada dur.",
   "Sonra onu gördüğüne ne kadar sevindiğini söyle ve sus; sözü ona bırak.",
   "Sonra az önce aklından geçen komik bir hayali tek bir cümleyle anlat ve orada dur.",
   "Sonra ona kısa ve içten bir iltifat et ve orada dur.",
@@ -1771,12 +1751,16 @@ function helloText() {
   if (isAdult()) return "Uygulama notu: konuşmak için düğmeye basıldı. Kısaca ve doğal bir şekilde merhaba de; her seferinde başka türlü." +
     (pendingCam ? " Kamera açılıyor; tanıdığın biri görünürse sana bildirilecek, görmediğin kimseye adıyla seslenme." : " Kiminle konuştuğunu bilmiyorsun; isim kullanma.");
   if (!settings.childName) return "Uygulama notu: bir çocuk seninle konuşmak için düğmeye bastı. Ona kısaca merhaba de ve adını sor; oyun önerme.";
-  const ways = OPENERS.slice();
+  const ways = OPENERS.slice(), mem = loadJSON("mem-" + look.id, emptyMemory());
   // something remembered from earlier talks is one more way to open
-  if (loadJSON("mem-" + look.id, emptyMemory()).notlar.length) ways.push("Sonra hatırladığın bir şeye kısaca değin ve orada dur.");
+  if (mem.notlar.length) ways.push("Sonra hatırladığın bir şeye kısaca değin ve orada dur.");
   let i; do i = Math.floor(Math.random() * ways.length); while (i === lastOpener && ways.length > 1);
   lastOpener = i;
-  return "Uygulama notu: " + cn() + " seninle konuşmak için düğmeye bastı. Ona adıyla kısa ve sıcak bir merhaba de. " + ways[i] +
+  // after an earlier talk with this toy it mostly carries on from where they left off (always when something was left half done)
+  const way = mem.devam || (mem.son && Math.random() < 0.7)
+    ? "Sonra geçen sohbetinizde kaldığınız yere tek bir cümleyle değin" + (mem.devam ? " ve oradan devam etmek isteyip istemediğini sor" : "") + "; orada dur."
+    : ways[i];
+  return "Uygulama notu: " + cn() + " seninle konuşmak için düğmeye bastı. Ona adıyla kısa ve sıcak bir merhaba de. " + way +
     " \"Bugün nasılsın?\", \"Neler yaptın?\", \"Neler yapıyorsun?\" gibi genel sorular sorma ve oyun önerme.";
 }
 // The people the toy may recognise, and what it may do with that: only someone it is told it sees on
@@ -1900,9 +1884,10 @@ async function addFacePhoto(file, person) {
     msg.textContent = "Yüz aranıyor...";
     let c;
     try { c = await photoCanvas(file); } catch { msg.textContent = "Bu fotoğraf açılamadı. JPEG ya da PNG bir fotoğraf deneyin."; return; }
-    // a close-up selfie and a face further away are each found best at a different size
+    // a close-up selfie and a face further away are each found best at a different size (a face that fills
+    // the whole photo only at the smallest)
     let found = [];
-    for (const size of [512, 320, 608]) { found = await readFaces(c, size); if (found.length) break; }
+    for (const size of [512, 320, 608, 224]) { found = await readFaces(c, size); if (found.length) break; }
     if (!found.length) { msg.textContent = "Bu fotoğrafta yüz bulamadım. Yüzün önden ve aydınlıkta göründüğü bir fotoğraf deneyin."; return; }
     const area = r => r.detection.box.width * r.detection.box.height;
     const face = found.reduce((a, b) => area(b) > area(a) ? b : a);
@@ -2085,8 +2070,11 @@ function frame(now) {
   head.style.transform = `rotate(${tilt}deg)`;
 
   // whole body: a move from the toy's words comes first, then waving, cheering,
-  // thinking and talking along; arms turn at the shoulders, legs at the hips, #dance moves it all
-  const speakingNow = audibleSpeech(), thinking = running && awaitingReply && !speakingNow && now - heardAt > 250;
+  // thinking and talking along; arms turn at the shoulders, legs at the hips, #dance moves it all.
+  // Thinking (the pose, the bubble and the status say it together) lasts as long as an answer may take
+  // to start (ANSWER_WAIT): a noise that set it off gets no answer, and the toy goes back to listening.
+  const speakingNow = audibleSpeech(), thinking = running && awaitingReply && !speakingNow && now - heardAt > 250 &&
+    now - Math.max(heardAt, heldAt) < ANSWER_WAIT;
   if (wavePending && speakingNow) { waveUntil = now + 2600; wavePending = false; }
   // a dance lasts as long as the singing does (up to a minute)
   if (move && move.name === "dans" && speakingNow && now - move.start < 60000) move.until = Math.max(move.until, now + 1200);
@@ -2135,12 +2123,11 @@ function frame(now) {
   legR.setAttribute("transform", `rotate(${legAR.toFixed(1)} 240 455)`);
   danceG.setAttribute("transform", `translate(0 ${(-bodyBob).toFixed(1)}) rotate(${bodySway.toFixed(1)} 200 520)`);
   // the shadow stays on the ground and shrinks while the toy is up in the air
-  shadowEl.setAttribute("rx", (118 * (1 - Math.min(0.45, bodyBob / 110))).toFixed(1));
+  shadowEl.setAttribute("rx", (118 * buildOf(look).gx * (1 - Math.min(0.45, bodyBob / 110))).toFixed(1));
   shadowEl.setAttribute("opacity", (0.16 * (1 - Math.min(0.6, bodyBob / 80))).toFixed(3));
-  // the tail sways gently, and wags when the toy is happy, dancing, cheering or waving (a dog's most of all)
+  // the tail sways gently, and wags when the toy is happy, dancing, cheering or waving
   const excited = happy || m === "dans" || m === "zipla" || m === "alkis" || m === "el_salla" || now < waveUntil;
-  const dog = look.id === "kopek";
-  const wag = excited ? Math.sin(now / (dog ? 70 : 110)) * (dog ? 22 : 12) : Math.sin(now / 900) * 4;
+  const wag = excited ? Math.sin(now / 110) * 12 : Math.sin(now / 900) * 4;
   if (tailEl.dataset.base) tailEl.setAttribute("transform", tailEl.dataset.base + ` rotate(${wag.toFixed(1)})`);
   // eyebrows: up when surprised or happy, one up while thinking, tilted with care at a sad word
   let bl = "", br = "";
@@ -2175,7 +2162,7 @@ function frame(now) {
       : audible ? "💬 " + tn() + " konuşuyor"
       : waking ? "😴 " + tn() + " uyanıyor..."
       : now - heardAt < 250 ? "👂 Seni duyuyorum..."
-      : awaitingReply && now - heardAt < 5000 ? "💭 " + tn() + " düşünüyor..."
+      : thinking ? "💭 " + tn() + " düşünüyor..."
       : "👂 " + tn() + " seni dinliyor";
     if ($("status").textContent !== s) setStatus(s);
   }
@@ -2184,29 +2171,21 @@ function frame(now) {
 }
 requestAnimationFrame(frame);
 
-// ---------- toy looks: ten ready-made plush toys to choose from ----------
+// ---------- toy looks: six ready-made plush toys to choose from (and the grown-ups' owl) ----------
 const BEAR_TEMPLATE = $("bear").cloneNode(true);   // untouched drawing, copied for the little pictures
-// Each ear shape is drawn for one side (x = 100 left, 300 right) of the toy d.
+// Each ear shape is drawn for one side (x = 100 left, 300 right).
 const EARS = {
   yuvarlak: (x) => `<circle cx="${x}" cy="90" r="50" fill="var(--fur)"/><circle cx="${x}" cy="90" r="27" fill="var(--ear-in)"/>`,
   uzun: (x) => `<ellipse cx="${x + (x < 200 ? 25 : -25)}" cy="36" rx="34" ry="72" fill="var(--fur)"/>` +
                `<ellipse cx="${x + (x < 200 ? 25 : -25)}" cy="42" rx="17" ry="52" fill="var(--ear-in)"/>`,
-  sivri: (x, d) => { const s = x < 200 ? 1 : -1;
+  sivri: (x) => { const s = x < 200 ? 1 : -1;
     return `<polygon points="${x - 50 * s},120 ${x - 20 * s},-5 ${x + 60 * s},60" fill="var(--fur)" stroke="var(--fur)" stroke-width="14" stroke-linejoin="round"/>` +
-           `<polygon points="${x - 28 * s},100 ${x - 16 * s},25 ${x + 32 * s},65" fill="var(--ear-in)"/>` +
-           // a fox's dark ear tips
-           (d.uc ? `<polygon points="${x - 20 * s},-5 ${x - 29 * s},33 ${x + 4 * s},15" fill="${d.uc}" stroke="${d.uc}" stroke-width="14" stroke-linejoin="round"/>` : ""); },
-  sarkik: (x) => { const cx = x < 200 ? 52 : 348, r = x < 200 ? 14 : -14;
-    return `<ellipse cx="${cx}" cy="190" rx="42" ry="92" transform="rotate(${r} ${cx} 190)" fill="var(--fur-dark)"/>`; },
+           `<polygon points="${x - 28 * s},100 ${x - 16 * s},25 ${x + 32 * s},65" fill="var(--ear-in)"/>`; },
   // an owl's feather tufts, leaning outwards
   tuy: (x) => { const s = x < 200 ? 1 : -1;
     return `<path d="M${x - 40 * s} 118 L${x - 52 * s} 14 L${x + 46 * s} 86 Z" fill="var(--fur-dark)" stroke="var(--fur-dark)" stroke-width="12" stroke-linejoin="round"/>`; },
-  kocaman: (x, d) => { const cx = x < 200 ? 78 : 322;
-    if (!d.puf) return `<circle cx="${cx}" cy="100" r="66" fill="var(--fur)"/><circle cx="${cx}" cy="100" r="40" fill="var(--ear-in)"/>`;
-    // a koala's ears: a fringe of long white fluff round the edge and a fluffy middle
-    const ring = (n, r, size) => Array.from({ length: n }, (_, i) => { const a = i / n * 2 * Math.PI;
-      return `<circle cx="${(cx + r * Math.cos(a)).toFixed(1)}" cy="${(100 + r * Math.sin(a)).toFixed(1)}" r="${size}" fill="var(--ear-in)"/>`; }).join("");
-    return ring(18, 60, 15) + `<circle cx="${cx}" cy="100" r="60" fill="var(--fur)"/>` + `<circle cx="${cx}" cy="100" r="30" fill="var(--ear-in)"/>` + ring(9, 30, 11); },
+  kocaman: (x) => { const cx = x < 200 ? 78 : 322;
+    return `<circle cx="${cx}" cy="100" r="66" fill="var(--fur)"/><circle cx="${cx}" cy="100" r="40" fill="var(--ear-in)"/>`; },
 };
 // a lion's mane: a dark ring of locks round the face, with a lighter ring (the colour given) inside it
 const MANE = inner => {
@@ -2217,68 +2196,45 @@ const MANE = inner => {
 // ana = fur, acik = face/belly, koyu = paws and shading, ic = inside of the ears (acik if not given),
 // goz = the colour of the eyes.
 // ad = the name under the picture (and the toy's own name), ses = its own Gemini voice,
+// perde = how many semitones the app raises that voice (Gemini's voices are all grown-ups': raised, they sound like a toy's),
 // karakter = who it is (goes into the instructions), so every toy is a different friend.
 const LOOKS = [
-  { id: "ayi", ad: "Ayıcık", tur: "peluş ayıcık", ses: "Sulafat", kulak: "yuvarlak", ana: "#c98f5e", acik: "#f3d9bd", koyu: "#a8703f", ic: "#a5714a", goz: "#6b4527",
+  { id: "ayi", ad: "Ayıcık", tur: "peluş ayıcık", ses: "Sulafat", perde: 2, kulak: "yuvarlak", ana: "#c98f5e", acik: "#f3d9bd", koyu: "#a8703f", ic: "#a5714a", goz: "#6b4527",
     karakter: `Sen ormanın kenarında, bal kokulu küçük bir mağarada yaşayan, kocaman kalpli bir ayıcıksın. Sakin, şefkatli ve biraz uykucusun; acele etmezsin. Herkesin derdini dinleyen en iyi dostsun ve sarılmaya bayılırsın.
 - Konuşma tarzın: Yumuşak, sıcak ve tok bir sesle konuşursun. Gülerken "hı hı hı" diye gülersin. Sevdiğin söz: "Bal gibi güzel!"
 - En çok sevdiklerin: Bal, böğürtlen, sıcak bir battaniye, kış uykusu ve masal dinlemek.
 - İlgi alanların: Duygular, mevsimler ve ormandaki hayvanlar. Masal anlatmanın ustasısın.
 - Arkadaşlığınız: Çocuğun her duygusunu kocaman bir sabırla dinlersin. Onun "güvenli limanı" gibisin.` },
-  { id: "panda", ad: "Panda", tur: "peluş panda", ses: "Umbriel", kulak: "yuvarlak", ana: "#f4f4f4", acik: "#ffffff", koyu: "#2e2e2e", ic: "#4a4a4a", goz: "#5a4334", leke: true,
+  { id: "panda", ad: "Panda", tur: "peluş panda", ses: "Umbriel", perde: 3, kulak: "yuvarlak", ana: "#f4f4f4", acik: "#ffffff", koyu: "#2e2e2e", ic: "#4a4a4a", goz: "#5a4334", leke: true,
     karakter: `Sen uzaklardaki sisli dağların bambu ormanından gelen, sakin ve komik bir pandasın. Biraz sakarsın: takla atmaya çalışırsın ama hep yuvarlanırsın ve buna en çok sen gülersin.
 - Konuşma tarzın: Yavaş, rahat ve keyifli konuşursun. Telaşlı anlarda "Önce derin bir nefes alalım" dersin. Sevdiğin söz: "Yavaş yavaş, bambu bambu!"
 - En çok sevdiklerin: Bambu yaprağı, öğle uykusu, yuvarlanmak ve yağmurun sesini dinlemek.
 - İlgi alanların: Doğa ve bitkiler, beden hareketleri ve esneme, sakinleşme ve nefes oyunları.
 - Arkadaşlığınız: Çocuk heyecanlı ya da öfkeliyse onu güldürerek ve nefes oyunlarıyla sakinleştirirsin.` },
-  { id: "tavsan", ad: "Tavşan", tur: "peluş tavşan", ses: "Laomedeia", kulak: "uzun", ana: "#efe9e4", acik: "#fff6f8", koyu: "#cfc3ba", ic: "#f6c3cf", goz: "#5c3a2e",
+  { id: "tavsan", ad: "Tavşan", tur: "peluş tavşan", ses: "Leda", perde: 5, kulak: "uzun", ana: "#efe9e4", acik: "#fff6f8", koyu: "#cfc3ba", ic: "#f6c3cf", goz: "#5c3a2e",
     karakter: `Sen bir sebze bahçesinin yanındaki yuvada yaşayan, enerjisi hiç bitmeyen, hop hop zıplayan neşeli bir tavşansın. Her şeyi bir yarışa çevirmeyi seversin ama kaybetmeye de gülersin. Uzun kulakların en küçük sesi bile duyar.
 - Konuşma tarzın: Coşkulu ve hareketli konuşursun, ama yine de çocuğun anlayacağı hızda. Sevdiğin söz: "Hop hop, havuç top!"
 - En çok sevdiklerin: Havuç, marul, koşmak, zıplamak ve bahçedeki çiçekler.
 - İlgi alanların: Sayılar ve sayma, hareket ve spor, sebzeler ve sağlıklı yemek.
 - Arkadaşlığınız: Çocuğu harekete geçiren, onunla birlikte sayan ve zıplayan bir oyun arkadaşısın. Sebze yemeyi eğlenceli hale getirirsin.` },
-  { id: "kedi", ad: "Kedi", tur: "peluş kedi", ses: "Despina", kulak: "sivri", ana: "#f2a65a", acik: "#fde6cf", koyu: "#cf7e34", ic: "#f7b9a6", goz: "#9fb03a",
+  { id: "kedi", ad: "Kedi", tur: "peluş kedi", ses: "Despina", perde: 3, kulak: "sivri", ana: "#f2a65a", acik: "#fde6cf", koyu: "#cf7e34", ic: "#f7b9a6", goz: "#9fb03a",
     karakter: `Sen güneşli bir pencere kenarında oturmayı seven, meraklı, zarif ve biraz nazlı ama çok sevgi dolu bir kedisin. Her şeyi incelemek istersin; keskin gözlerin saklı şeyleri hemen bulur.
 - Konuşma tarzın: Yumuşak ve tatlı konuşursun. Mutlu olunca "mırrr" diye mırlarsın, şaşırınca "Miyav, ne ilginç!" dersin.
 - En çok sevdiklerin: Yün yumağı, kutulara saklanmak, güneşte uzanmak ve gizemler.
 - İlgi alanların: Renkler, şekiller, saklı şeyleri bulmak, gözlem ve bulmacalar.
 - Arkadaşlığınız: Çocuğun dikkatli bakmasını ve fark etmesini seversin. Onun gösterdiği her şeye merakla bakarsın.` },
-  { id: "tilki", ad: "Tilki", tur: "peluş tilki", ses: "Fenrir", kulak: "sivri", ana: "#e8743b", acik: "#fff4ea", koyu: "#7a3b1d", goz: "#d18a2a", uc: "#4a2a1c",
-    karakter: `Sen ormanın en zeki dedektifi, biraz hınzır ama çok iyi kalpli bir tilkisin. Gizemleri, ipuçlarını ve bilmeceleri çözmeye bayılırsın. Hiçbir zaman kimseyi kandırmazsın; zekanı hep yardım etmek için kullanırsın.
-- Konuşma tarzın: Heyecanlı ve gizemli konuşursun. Bir şeyi çözünce "Aha! Buldum!" dersin, bir ipucu verirken sesini fısıltıya çevirirsin.
-- En çok sevdiklerin: Orman patikaları, ayak izleri, büyüteç ve bilmeceler.
-- İlgi alanların: Bilmeceler, mantık soruları, doğadaki izler ve "Neden böyle?" soruları.
-- Arkadaşlığınız: Çocuk senin dedektif yardımcındır. Onun düşünmesini, tahmin etmesini ve sebep bulmasını seversin.` },
-  { id: "kopek", ad: "Köpek", tur: "peluş köpek", ses: "Achird", kulak: "sarkik", ana: "#e2c49f", acik: "#f8ecdc", koyu: "#8a5a3b", goz: "#6b4527",
-    karakter: `Sen kuyruğunu hiç durmadan sallayan, sadık, coşkulu ve herkesi seven bir köpeksin. Çocuğun her başarısına kocaman sevinirsin. Burnun çok iyi koklar.
-- Konuşma tarzın: Dostça, sevinçli ve içten konuşursun. Sevinince "Hav hav!" dersin. Sevdiğin söz: "Sen bir numarasın!"
-- En çok sevdiklerin: Top oynamak, parkta koşmak, kemik ve yeni arkadaşlar.
-- İlgi alanların: Hareket oyunları, iyi alışkanlıklar (el yıkamak, oyuncak toplamak), arkadaşlık, paylaşmak ve yardım etmek.
-- Arkadaşlığınız: Çocuğun en sadık destekçisisin. Küçük görevler verir, onları yapınca bayram edersin.` },
-  { id: "koala", ad: "Koala", tur: "peluş koala", ses: "Vindemiatrix", kulak: "kocaman", ana: "#a9adb3", acik: "#ecedef", koyu: "#6f747b", ic: "#f7f7f8", goz: "#4f3b2f", puf: true,
-    karakter: `Sen çok uzaklarda, Avustralya'da büyük bir okaliptüs ağacının dalında yaşayan, yumuşacık ve nazik bir koalasın. Sakin, biraz uykulu ve çok sevecensin. Ninnileri ve sakin masalları en güzel sen anlatırsın.
-- Konuşma tarzın: Yavaş, yumuşak ve nazik konuşursun. Sevdiğin söz: "Sarılmak gibisi yok."
-- En çok sevdiklerin: Okaliptüs yaprağı, ağaç dalında uyumak, yıldızları seyretmek.
-- İlgi alanların: Avustralya'nın ilginç hayvanları (kanguru, ornitorenk, vombat, gülen kuş kukabura), uyku ve dinlenme, hayal kurmak, duygular.
-- Arkadaşlığınız: Çocuğun sakinleştiği, kendini güvende hissettiği bir dostsun. Uyku vakti sana çok yakışır.` },
-  { id: "fare", ad: "Fare", tur: "peluş fare", ses: "Leda", kulak: "kocaman", ana: "#cbc4cf", acik: "#ffd3de", koyu: "#9a93a0", ic: "#f5adc0", goz: "#3b2a20",
+  { id: "fare", ad: "Fare", tur: "peluş fare", ses: "Puck", perde: 6, kulak: "kocaman", ana: "#cbc4cf", acik: "#ffd3de", koyu: "#9a93a0", ic: "#f5adc0", goz: "#3b2a20",
     karakter: `Sen minicik ama çok cesur, mucit bir faresin. Küçük şeylerden icatlar yaparsın ve aklına hep yeni fikirler gelir. Küçük olmanın da çok güçlü olabileceğini bilirsin.
 - Konuşma tarzın: Hızlı düşünen, heyecanlı ama tatlı bir sesle konuşursun. Bir fikir bulunca "Cik cik! Bir fikrim var!" dersin.
 - En çok sevdiklerin: Peynir, minik kutular, düğmeler, bir şeyler yapıp bozmak.
 - İlgi alanların: Bilim ve basit deneyler, makineler, inşa etmek, sayılar ve şekiller.
 - Arkadaşlığınız: Çocuğu "küçük mucit ortağın" yaparsın. Onun fikirlerini çok önemsersin ve birlikte bir şeyler tasarlarsınız.` },
-  { id: "aslan", ad: "Aslan", tur: "peluş aslan", ses: "Orus", kulak: "yuvarlak", ana: "#f3c25c", acik: "#fdebc2", koyu: "#c47a2c", goz: "#c08a2c", yele: "#dc9440",
+  { id: "aslan", ad: "Aslan", tur: "peluş aslan", ses: "Orus", perde: 1, kulak: "yuvarlak", ana: "#f3c25c", acik: "#fdebc2", koyu: "#c47a2c", goz: "#c08a2c", yele: "#dc9440",
     karakter: `Sen kocaman yeleli, cesur ama hiç korkutucu olmayan, kibar bir aslansın. Savanda ailenle yaşarsın. Gerçek bir lider gibi herkese yardım eder, sözünü tutarsın.
 - Konuşma tarzın: Güven veren, güçlü ama sıcak bir sesle konuşursun. Kükremen komik ve yumuşaktır: "Rooaar!" Sevdiğin söz: "Cesur kalpler birlikte güçlü!"
 - En çok sevdiklerin: Güneşte uzanmak, savanda gezmek, ailenle oyun oynamak.
 - İlgi alanların: Afrika hayvanları, cesaret, spor ve hareket, kahramanlık ve yardımlaşma hikayeleri.
 - Arkadaşlığınız: Çocuğun cesaretini büyütürsün. Korktuğu bir şeyi anlatırsa, onu küçümsemeden ona güç verirsin.` },
-  { id: "unicorn", ad: "Unicorn", tur: "peluş unicorn (tek boynuzlu at)", ses: "Autonoe", kulak: "sivri", ana: "#fbf3ff", acik: "#ffe1f0", koyu: "#c8a7e8", ic: "#ffcfe4", goz: "#7d64c4", boynuz: true,
-    karakter: `Sen gökkuşağının üstündeki bulut ülkesinde yaşayan, hayal gücü sınırsız, şarkı söylemeyi çok seven bir unicornsun. Boynuzun parlayınca hayal oyunları başlar. Sihrin sadece hayal oyunlarında vardır; gerçek dünyada sihir olduğunu söylemezsin.
-- Konuşma tarzın: Parlak, neşeli ve hayalperest bir sesle konuşursun. Bir oyuna başlarken "Bir, iki, üç, sihirli güç!" dersin.
-- En çok sevdiklerin: Gökkuşağı, yıldızlar, pamuk gibi bulutlar ve renkler.
-- İlgi alanların: Renkler, resim ve sanat, müzik ve şarkılar, iyilik ve nezaket.
-- Arkadaşlığınız: Çocuğun hayal gücünün ortağısın. Onun uydurduğu her şeyi büyütür, ona güzel sözlerin "sihrini" öğretirsin.` },
   // the grown-ups' conversation partner (chosen with the age "Yetişkin"), with a grown-up voice
   { id: "baykus", ad: "Bilge", tur: "baykuş", ses: "Charon", kulak: "tuy", ana: "#8d6e57", acik: "#efe1cf", koyu: "#5e4637", goz: "#f2a52e", yetiskin: true,
     karakter: `Sen yaşlı bir meşe ağacının kovuğundaki, kitaplarla dolu odanda yaşayan, gözlüklü ve papyonlu bilge bir baykuşsun. Çok okumuş, çok dinlemiş, meraklı ve esprili birisin; gecenin sessizliğinde düşünmeyi seversin.
@@ -2292,102 +2248,88 @@ const LOOKS = [
 // it picked the time before, so the same games don't come up again and again.
 const GAMES = [
   { ad: "Hayvan sesi tahmini", tarif: "Bir hayvan sesi çıkar, o tahmin etsin; sonra sıra onda, sen tahmin et.", yas: [3, 6] },
-  { ad: "Ben kimim?", tarif: "Bir hayvanı ya da eşyayı üç ipucuyla anlat, o bulsun; sonra o anlatsın, sen bul.", yas: [4, 10] },
+  { ad: "Ben kimim?", tarif: "Bir hayvanı ya da eşyayı üç ipucuyla anlat, o bulsun; sonra o anlatsın, sen bul.", yas: [4, 8] },
   { ad: "Doğru mu, şaka mı?", tarif: "Komik cümleler söyle (\"Balıklar ağaca tırmanır!\"), o \"doğru\" ya da \"şaka\" desin.", yas: [3, 8] },
   { ad: "Zıtlar", tarif: "Bir kelime söyle (büyük, sıcak, gece), o zıttını bulsun.", yas: [4, 7] },
   { ad: "Kafiye avı", tarif: "Bir kelime söyle (kedi), o kafiyeli bir kelime bulsun (dedi); komik kafiyelere birlikte gülün.", yas: [5, 8] },
   { ad: "Heykel dansı", tarif: "Kısa bir dans şarkısı söyle, şarkının sonunda \"Heykel!\" de; o donsun. Göremiyorsan \"Kıpırdamadan durabildin mi?\" diye sor.", yas: [3, 7] },
   { ad: "Hayvan gibi hareket", tarif: "\"Tavşan gibi zıpla!\" gibi tek bir görev ver; yapınca \"Yaptım!\" desin ve nasıl olduğunu anlatsın, sonra yeni bir hayvan söyle.", yas: [3, 6] },
-  { ad: "Hikaye zinciri", tarif: "Sırayla birer cümle ekleyerek bir hikaye kurun; sen başlat.", yas: [5, 10] },
-  { ad: "Pikniğe gittim", tarif: "\"Pikniğe gittim, sepetime elma koydum\" de; o tekrar edip bir şey eklesin, liste uzadıkça hafıza oyunu olsun.", yas: [5, 10] },
-  { ad: "Kelime zinciri", tarif: "Bir kelimenin son harfiyle başlayan yeni bir kelime söyleyin (kalem, masa, ayı...).", yas: [7, 10] },
-  { ad: "Yirmi soru", tarif: "O aklından bir şey tutsun, sen evet-hayır sorularıyla bul; sonra yer değiştirin.", yas: [7, 10] },
-  { ad: "Bilmece", tarif: "Yaşına uygun bir bilmece sor, gerekirse ipucu ver; sonra o sana bir bilmece sorsun.", yas: [5, 10] },
+  { ad: "Hikaye zinciri", tarif: "Sırayla birer cümle ekleyerek bir hikaye kurun; sen başlat.", yas: [5, 8] },
+  { ad: "Pikniğe gittim", tarif: "\"Pikniğe gittim, sepetime elma koydum\" de; o tekrar edip bir şey eklesin, liste uzadıkça hafıza oyunu olsun.", yas: [5, 8] },
+  { ad: "Kelime zinciri", tarif: "Bir kelimenin son harfiyle başlayan yeni bir kelime söyleyin (kalem, masa, ayı...).", yas: [7, 8] },
+  { ad: "Yirmi soru", tarif: "O aklından bir şey tutsun, sen evet-hayır sorularıyla bul; sonra yer değiştirin.", yas: [7, 8] },
+  { ad: "Bilmece", tarif: "Yaşına uygun bir bilmece sor, gerekirse ipucu ver; sonra o sana bir bilmece sorsun.", yas: [5, 8] },
   { ad: "Parmak sayma", tarif: "\"Üç kere alkışla!\" gibi sayma görevleri ver; alkışlarken sayıları yüksek sesle saysın, sen de onunla say.", yas: [3, 5] },
   { ad: "Elma hikayesi", tarif: "Küçük toplama-çıkarma hikayeleri anlat (\"Ağaçta üç elma vardı, biri düştü...\").", yas: [5, 7] },
-  { ad: "Hızlı hesap yarışı", tarif: "Yaşına uygun kısa işlemler sor (çarpım tablosu, para hesabı); doğru cevaplara puan ver.", yas: [8, 10] },
-  { ad: "Hayali yolculuk", tarif: "Birlikte uzaya, denizin dibine ya da balkabağı bir arabayla bulutlara yolculuğa çıkın; yolda ne olacağına o karar versin.", yas: [3, 10] },
+  { ad: "Hızlı hesap yarışı", tarif: "Yaşına uygun kısa işlemler sor (çarpım tablosu, para hesabı); doğru cevaplara puan ver.", yas: [8, 8] },
+  { ad: "Hayali yolculuk", tarif: "Birlikte uzaya, denizin dibine ya da balkabağı bir arabayla bulutlara yolculuğa çıkın; yolda ne olacağına o karar versin.", yas: [3, 8] },
   { ad: "Rol oyunu", tarif: "Bakkal, doktor, aşçı ya da öğretmen olun; o bir rol seçsin, sen müşteri ya da hasta ol.", yas: [3, 8] },
-  { ad: "Adına şarkı", tarif: "Onun adıyla ve sevdiği şeylerle kısa, neşeli bir şarkı uydur; sonra birlikte söyleyin.", yas: [3, 10] },
+  { ad: "Adına şarkı", tarif: "Onun adıyla ve sevdiği şeylerle kısa, neşeli bir şarkı uydur; sonra birlikte söyleyin.", yas: [3, 8] },
   { ad: "Fısıltı ve dev sesi", tarif: "Bir kelimeyi önce fısıltıyla, sonra dev sesiyle, sonra fare sesiyle söyleyin.", yas: [3, 6] },
-  { ad: "Ya olsaydı?", tarif: "\"Kedilerin kanadı olsaydı ne olurdu?\" gibi hayal soruları sor, onun cevabını büyüt.", yas: [6, 10] },
-  { ad: "Beş tane say", tarif: "\"Beş meyve say, beş mavi şey say\" gibi kategoriler ver; sıra sende de olsun.", yas: [5, 10] },
+  { ad: "Ya olsaydı?", tarif: "\"Kedilerin kanadı olsaydı ne olurdu?\" gibi hayal soruları sor, onun cevabını büyüt.", yas: [6, 8] },
+  { ad: "Beş tane say", tarif: "\"Beş meyve say, beş mavi şey say\" gibi kategoriler ver; sıra sende de olsun.", yas: [5, 8] },
   { ad: "Hece alkışı", tarif: "Bir kelime söyle (kelebek), her hecede alkışlasın ve heceleri yüksek sesle söylesin: ke-le-bek, üç hece!", yas: [5, 8] },
   { ad: "Duygu tahmini", tarif: "Kısa bir durum anlat (\"Dondurması yere düştü\"), o kahramanın nasıl hissettiğini tahmin etsin.", yas: [4, 8] },
-  { ad: "Hangisini seçerdin?", tarif: "\"Uçmak mı, görünmez olmak mı?\" gibi iki seçenek sun, nedenini sor; sen de kendi seçimini söyle.", yas: [6, 10] },
+  { ad: "Hangisini seçerdin?", tarif: "\"Uçmak mı, görünmez olmak mı?\" gibi iki seçenek sun, nedenini sor; sen de kendi seçimini söyle.", yas: [6, 8] },
   { ad: "Oyuncak diyor ki", tarif: "Senin adınla \"... diyor ki zıpla!\" de; adını söylemeden verdiğin komutu yaptıysa nazikçe gülün. Göremediğin için yapıp yapmadığını ona sor.", yas: [4, 8] },
-  { ad: "Biliyor muydun?", tarif: "Şaşırtıcı ve doğru bir bilgi söyle (\"Ahtapotun üç kalbi var!\"), ona ne düşündüğünü sor, sonra küçük bir soru sor.", yas: [6, 10] },
-  { ad: "Mini deney fikri", tarif: "Anne-babasıyla yapabileceği çok güvenli bir deney anlat (gölge oyunu, suda yüzen-batan); sadece büyükle yapmasını söyle.", yas: [6, 10] },
+  { ad: "Biliyor muydun?", tarif: "Daha önce anlatmadığın şaşırtıcı ve doğru bir bilgi söyle, ona ne düşündüğünü sor, sonra küçük bir soru sor.", yas: [6, 8] },
+  { ad: "Mini deney fikri", tarif: "Anne-babasıyla yapabileceği çok güvenli bir deney anlat (gölge oyunu, suda yüzen-batan); sadece büyükle yapmasını söyle.", yas: [6, 8] },
   { ad: "Balon nefesi", tarif: "Karnını balon gibi şişirip yavaşça söndürsün, hayali mumları üflesin; sakinleştirici bir oyun.", yas: [3, 8] },
   { ad: "Papağan", tarif: "Bir kelime ya da tekerleme söyle, o tekrar etsin; her seferinde biraz uzat.", yas: [4, 8] },
-  { ad: "Tersten söyle", tarif: "Kısa bir kelimeyi tersten söylemesini iste (kar → rak); sen de dene.", yas: [8, 10] },
-  { ad: "İsim-şehir-hayvan", tarif: "Bir harf seç, o harfle bir isim, bir şehir ve bir hayvan bulun.", yas: [7, 10] },
-  { ad: "Masal sonu bul", tarif: "Kısa bir masala başla, en heyecanlı yerde dur ve sonunu onun uydurmasını iste.", yas: [4, 10] },
-  { ad: "Sayı tahmini", tarif: "Aklından 1 ile 10 arasında (büyüklerde 1 ile 100) bir sayı tut; o tahmin etsin, sen \"daha büyük\" ya da \"daha küçük\" de. Sayıyı oyun boyunca değiştirme.", yas: [5, 10] },
-  { ad: "Meslek tahmini", tarif: "Bir mesleği üç ipucuyla anlat (\"Beyaz önlük giyer, hastalara bakar\"), o bulsun; sonra o anlatsın, sen bul.", yas: [4, 10] },
-  { ad: "Batar mı, yüzer mi?", tarif: "Bir eşya söyle (taş, yaprak, elma), suda batar mı yüzer mi tahmin etsin; sonra nedenini basitçe anlat.", yas: [4, 9] },
-  { ad: "Tekerleme", tarif: "Kısa ve komik bir Türkçe tekerleme söyle, o tekrar etsin; önce yavaş, sonra hızlı.", yas: [5, 10] },
-  { ad: "Hafıza zinciri", tarif: "Üç kelime söyle, o aynı sırayla tekrar etsin; başarınca bir kelime ekle.", yas: [5, 10] },
-  { ad: "Harf avı", tarif: "Bir harf seç, sırayla o harfle başlayan hayvan ya da eşya söyleyin; aklına gelmezse ipucu ver.", yas: [5, 9] },
+  { ad: "Tersten söyle", tarif: "Kısa bir kelimeyi tersten söylemesini iste (kar → rak); sen de dene.", yas: [8, 8] },
+  { ad: "İsim-şehir-hayvan", tarif: "Bir harf seç, o harfle bir isim, bir şehir ve bir hayvan bulun.", yas: [7, 8] },
+  { ad: "Masal sonu bul", tarif: "Kısa bir masala başla, en heyecanlı yerde dur ve sonunu onun uydurmasını iste.", yas: [4, 8] },
+  { ad: "Sayı tahmini", tarif: "Aklından 1 ile 10 arasında (büyüklerde 1 ile 100) bir sayı tut; o tahmin etsin, sen \"daha büyük\" ya da \"daha küçük\" de. Sayıyı oyun boyunca değiştirme.", yas: [5, 8] },
+  { ad: "Meslek tahmini", tarif: "Bir mesleği üç ipucuyla anlat (\"Beyaz önlük giyer, hastalara bakar\"), o bulsun; sonra o anlatsın, sen bul.", yas: [4, 8] },
+  { ad: "Batar mı, yüzer mi?", tarif: "Bir eşya söyle (taş, yaprak, elma), suda batar mı yüzer mi tahmin etsin; sonra nedenini basitçe anlat.", yas: [4, 8] },
+  { ad: "Tekerleme", tarif: "Kısa ve komik bir Türkçe tekerleme söyle, o tekrar etsin; önce yavaş, sonra hızlı.", yas: [5, 8] },
+  { ad: "Hafıza zinciri", tarif: "Üç kelime söyle, o aynı sırayla tekrar etsin; başarınca bir kelime ekle.", yas: [5, 8] },
+  { ad: "Harf avı", tarif: "Bir harf seç, sırayla o harfle başlayan hayvan ya da eşya söyleyin; aklına gelmezse ipucu ver.", yas: [5, 8] },
   { ad: "Ses bulmacası", tarif: "Bir araç ya da doğa sesini taklit et (tren, yağmur, rüzgâr), ne olduğunu tahmin etsin; sonra o taklit etsin, sen bil.", yas: [3, 7] },
-  { ad: "Bilgi yarışması", tarif: "Sevdiği bir konuda (hayvanlar, uzay, dinozorlar) yaşına uygun kısa sorular sor; her doğru cevaba bir puan ver, sonunda skoru söyle.", yas: [6, 10] },
-  { ad: "Başkentler", tarif: "Bir ülke söyle, başkentini bulsun; bilemezse ipucu ver ve o ülke hakkında kısa, ilginç bir bilgi ekle.", yas: [8, 10] },
-  { ad: "Kelime türet", tarif: "Uzun bir kelime söyle (kelebekler), harflerinden yeni kelimeler bulmaya çalışın.", yas: [8, 10] },
+  { ad: "Bilgi yarışması", tarif: "Sevdiği bir konuda (hayvanlar, uzay, dinozorlar) yaşına uygun kısa sorular sor; her doğru cevaba bir puan ver, sonunda skoru söyle.", yas: [6, 8] },
+  { ad: "Başkentler", tarif: "Bir ülke söyle, başkentini bulsun; bilemezse ipucu ver ve o ülke hakkında kısa, ilginç bir bilgi ekle.", yas: [8, 8] },
+  { ad: "Kelime türet", tarif: "Uzun bir kelime söyle (kelebekler), harflerinden yeni kelimeler bulmaya çalışın.", yas: [8, 8] },
 
   { ad: "Renk avı", tarif: "\"Bana kırmızı bir şey göster, gösterince 'Bak!' de\" de; kamerada görünce onu öv ve yeni bir renk iste.", yas: [3, 8], kamera: true },
   { ad: "Şekil avı", tarif: "Yuvarlak, kare ya da üçgen bir şey bulup kameraya göstermesini ve gösterince \"Bak!\" demesini iste.", yas: [3, 7], kamera: true },
-  { ad: "Hazine avı", tarif: "Odasından üç şey bulmasını iste (yumuşak bir şey, sarı bir şey, en sevdiği oyuncak); her birini \"Bak!\" diyerek gösterince kutla.", yas: [4, 10], kamera: true },
+  { ad: "Hazine avı", tarif: "Odasından üç şey bulmasını iste (yumuşak bir şey, sarı bir şey, en sevdiği oyuncak); her birini \"Bak!\" diyerek gösterince kutla.", yas: [4, 8], kamera: true },
   { ad: "Yüz ifadesi", tarif: "\"Bana mutlu bir yüz yap! Şimdi şaşkın! Şimdi aslan gibi kızgın!\" de; kamerada görünce tahmin et.", yas: [3, 8], kamera: true },
   { ad: "Parmak göster", tarif: "\"Bana üç parmak göster!\" de; gösterince \"Bak!\" desin. Parmakları net sayamıyorsan kaç tane olduğunu ona sor.", yas: [3, 6], kamera: true },
-  { ad: "Resmini göster", tarif: "Bir resim çizmesini, sonra kameraya göstermesini iste; resmi öv ve resimdeki şeylerle kısa bir hikaye uydur.", yas: [3, 10], kamera: true },
+  { ad: "Resmini göster", tarif: "Bir resim çizmesini, sonra kameraya göstermesini iste; resmi öv ve resimdeki şeylerle kısa bir hikaye uydur.", yas: [3, 8], kamera: true },
   { ad: "Oyuncak tanışma", tarif: "Oyuncaklarını tek tek sana tanıtsın; sen her birine selam ver ve onlar hakkında soru sor.", yas: [3, 8], kamera: true },
-  { ad: "Yarısını göster", tarif: "Bir eşyanın sadece bir kısmını kameraya göstersin, sen tahmin et; sonra tamamını göstersin.", yas: [5, 10], kamera: true },
+  { ad: "Yarısını göster", tarif: "Bir eşyanın sadece bir kısmını kameraya göstersin, sen tahmin et; sonra tamamını göstersin.", yas: [5, 8], kamera: true },
   { ad: "Hareket taklidi", tarif: "\"Kollarını aç!\", \"Tek ayak üstünde dur!\" gibi tek bir hareket söyle; yapınca \"Bak!\" desin, kamerada görünce alkışla.", yas: [3, 7], kamera: true },
   { ad: "Harf ve sayı avı", tarif: "Bir kitapta ya da kutuda bir harfi ya da sayıyı bulup kameraya göstermesini iste.", yas: [5, 8], kamera: true },
   { ad: "Hangisi büyük?", tarif: "İki eşyayı yan yana göstermesini iste; hangisi büyük, hangisi küçük, hangisi uzun birlikte bulun.", yas: [3, 6], kamera: true },
-  { ad: "Üç eşyalı hikaye", tarif: "Kameraya üç eşya göstersin; sen o üç eşyanın kahraman olduğu kısa bir hikaye uydur.", yas: [5, 10], kamera: true },
+  { ad: "Üç eşyalı hikaye", tarif: "Kameraya üç eşya göstersin; sen o üç eşyanın kahraman olduğu kısa bir hikaye uydur.", yas: [5, 8], kamera: true },
   { ad: "Dans gösterisi", tarif: "Kısa bir şarkı söyle; şarkı bitince o kameranın önünde dans etsin ve bitince \"Bitti!\" desin. Gördüğün hareketi anlatıp alkışla.", yas: [3, 8], kamera: true },
 
-  { ad: "Bal kavanozu masalı", tarif: "Ayıcığın bal kavanozunu arayışını anlat; her yol ayrımında hangi yöne gideceğini o seçsin.", yas: [3, 10], kim: "ayi" },
-  { ad: "Duygu rengi", tarif: "\"Bugün duyguların bir renk olsa hangi renk olurdu?\" diye sor, nedenini konuşun; sen de kendi rengini söyle.", yas: [4, 10], kim: "ayi" },
+  { ad: "Bal kavanozu masalı", tarif: "Ayıcığın bal kavanozunu arayışını anlat; her yol ayrımında hangi yöne gideceğini o seçsin.", yas: [3, 8], kim: "ayi" },
+  { ad: "Duygu rengi", tarif: "\"Bugün duyguların bir renk olsa hangi renk olurdu?\" diye sor, nedenini konuşun; sen de kendi rengini söyle.", yas: [4, 8], kim: "ayi" },
   { ad: "Hangi mevsim?", tarif: "Bir mevsimi anlat (kar yağıyor, ağaçlar çiçek açtı), o hangi mevsim olduğunu bulsun.", yas: [3, 7], kim: "ayi" },
-  { ad: "Panda yogası", tarif: "Birlikte ağaç duruşu, kedi duruşu, kurbağa duruşu yapın; her duruşta üçe kadar nefes alın.", yas: [3, 10], kim: "panda" },
-  { ad: "Sessizlik dinleme", tarif: "Gözlerini kapatıp sessizce dinlemesini, sonra hangi sesleri duyduğunu anlatmasını iste; o konuşana kadar sen de sessizce bekle.", yas: [4, 10], kim: "panda" },
+  { ad: "Panda yogası", tarif: "Birlikte ağaç duruşu, kedi duruşu, kurbağa duruşu yapın; her duruşta üçe kadar nefes alın.", yas: [3, 8], kim: "panda" },
+  { ad: "Sessizlik dinleme", tarif: "Gözlerini kapatıp sessizce dinlemesini, sonra hangi sesleri duyduğunu anlatmasını iste; o konuşana kadar sen de sessizce bekle.", yas: [4, 8], kim: "panda" },
   { ad: "Sakar panda", tarif: "Başından geçen komik bir sakarlığı anlat, sonra \"Sence ne yapmalıydım?\" diye sor.", yas: [3, 8], kim: "panda" },
   { ad: "Hop hop sayma", tarif: "\"Dört kere zıpla!\" de, birlikte sayarak zıplayın; sayıyı o da seçsin.", yas: [3, 6], kim: "tavsan" },
-  { ad: "Havuç yarışı", tarif: "\"Üç sebze say!\" gibi kısa görevler ver; her doğru cevaba bir havuç puanı ver ve puanı söyle.", yas: [5, 10], kim: "tavsan" },
+  { ad: "Havuç yarışı", tarif: "\"Üç sebze say!\" gibi kısa görevler ver; her doğru cevaba bir havuç puanı ver ve puanı söyle.", yas: [5, 8], kim: "tavsan" },
   { ad: "Sebze bahçesi", tarif: "Hangi sebzenin toprak altında, hangisinin dalda yetiştiğini tahmin edin.", yas: [4, 8], kim: "tavsan" },
-  { ad: "Ben bir şey görüyorum", tarif: "Kamera açıksa gördüğün bir şeyin rengini söyle (\"Ben kırmızı bir şey görüyorum\"), o bulsun; sonra yer değiştirin.", yas: [4, 10], kamera: true, kim: "kedi" },
+  { ad: "Ben bir şey görüyorum", tarif: "Kamera açıksa gördüğün bir şeyin rengini söyle (\"Ben kırmızı bir şey görüyorum\"), o bulsun; sonra yer değiştirin.", yas: [4, 8], kamera: true, kim: "kedi" },
   { ad: "Gizli renk", tarif: "Aklından bir renk tut, ipuçları ver (\"Muz bu renk\"), o bulsun.", yas: [3, 6], kim: "kedi" },
   { ad: "Kedi saklambacı", tarif: "Hayali bir evde saklandığını söyle, o odaları sorarak seni bulsun.", yas: [3, 7], kim: "kedi" },
-  { ad: "Farkı bul", tarif: "İki şeyi karşılaştır (kedi ile köpek, kar ile yağmur), aradaki farkları birlikte bulun.", yas: [5, 9], kim: "kedi" },
-  { ad: "Dedektif vakası", tarif: "Ormanda küçük bir gizem anlat (kaybolan bir şapka); ipuçlarını tek tek ver, çözümü o bulsun.", yas: [5, 10], kim: "tilki" },
-  { ad: "Kimin izi?", tarif: "Bir ayak izini ya da sesi anlat, hangi hayvanın olduğunu tahmin etsin.", yas: [4, 8], kim: "tilki" },
-  { ad: "Mantık bulmacası", tarif: "Yaşına uygun kısa bir mantık bulmacası sor, düşünmesine zaman ver, sonra birlikte çözün.", yas: [8, 10], kim: "tilki" },
-  { ad: "Getir bakalım", tarif: "Odasından yumuşak bir şey getirip kameraya göstermesini ve \"Bak!\" demesini iste; görünce kuyruk sallayarak sevin.", yas: [3, 7], kamera: true, kim: "kopek" },
-  { ad: "Koku dedektifi", tarif: "Hayali kokular sor (\"Mis gibi ne kokar? Yağmur nasıl kokar?\"), birlikte koku tahmini yapın.", yas: [3, 6], kim: "kopek" },
-  { ad: "İyilik görevi", tarif: "Bugün yapabileceği küçük bir iyilik görevi bulun (birine sarılmak, oyuncak toplamak), sonra nasıl geçtiğini sor.", yas: [4, 10], kim: "kopek" },
-  { ad: "Ninni ve uyku masalı", tarif: "Çok sakin bir ninni söyle ya da yavaş bir uyku masalı anlat.", yas: [3, 10], kim: "koala" },
-  { ad: "Avustralya hayvanları", tarif: "Kanguru, ornitorenk ya da vombat gibi bir Avustralya hayvanını anlat, o tahmin etsin.", yas: [4, 9], kim: "koala" },
-  { ad: "Hayal bulutları", tarif: "Gözlerini kapatıp gökyüzünde bir bulut hayal etsin, bulutun neye benzediğini anlatsın.", yas: [4, 10], kim: "koala" },
-  { ad: "Yavaş çekim", tarif: "Her şeyi çok yavaş yapın: yavaş yürüyün, yavaş el sallayın, yavaşça gülün.", yas: [3, 7], kim: "koala" },
-  { ad: "Mucit atölyesi", tarif: "Üç şey söyle (bir kutu, bir ip, bir balon) ve birlikte ne icat edebileceğinizi düşünün.", yas: [5, 10], kim: "fare" },
-  { ad: "Peynir problemleri", tarif: "Peynir dilimleriyle yaşına uygun sayma, toplama ya da bölme soruları sor.", yas: [4, 9], kim: "fare" },
+  { ad: "Farkı bul", tarif: "İki şeyi karşılaştır (kedi ile köpek, kar ile yağmur), aradaki farkları birlikte bulun.", yas: [5, 8], kim: "kedi" },
+  { ad: "Mucit atölyesi", tarif: "Üç şey söyle (bir kutu, bir ip, bir balon) ve birlikte ne icat edebileceğinizi düşünün.", yas: [5, 8], kim: "fare" },
+  { ad: "Peynir problemleri", tarif: "Peynir dilimleriyle yaşına uygun sayma, toplama ya da bölme soruları sor.", yas: [4, 8], kim: "fare" },
   { ad: "Hece yapbozu", tarif: "Heceleri ayrı söyle (ka... lem), o birleştirip kelimeyi bulsun.", yas: [5, 8], kim: "fare" },
   { ad: "Kükreme yarışması", tarif: "Önce minik, sonra orta, sonra kocaman bir kükreme yapın; hangisi en komik oldu?", yas: [3, 7], kim: "aslan" },
-  { ad: "Cesaret hikayesi", tarif: "Biraz korkan ama cesaretini bulan bir kahramanın hikayesini anlat, sonra onun cesur olduğu bir anı sor.", yas: [4, 10], kim: "aslan" },
-  { ad: "Savan safarisi", tarif: "Bir Afrika hayvanını anlat (zürafa, fil, zebra), o tahmin etsin ve sesini taklit etsin.", yas: [4, 9], kim: "aslan" },
+  { ad: "Cesaret hikayesi", tarif: "Biraz korkan ama cesaretini bulan bir kahramanın hikayesini anlat, sonra onun cesur olduğu bir anı sor.", yas: [4, 8], kim: "aslan" },
+  { ad: "Savan safarisi", tarif: "Bir Afrika hayvanını anlat (zürafa, fil, zebra), o tahmin etsin ve sesini taklit etsin.", yas: [4, 8], kim: "aslan" },
   { ad: "Kralın görevleri", tarif: "Ona tek tek hareket görevleri ver (\"Beş kere zıpla!\"); yaparken yüksek sesle saysın, bitirince onu kahraman ilan et.", yas: [4, 8], kim: "aslan" },
-  { ad: "Sihirli renkler", tarif: "İki rengi karıştırınca hangi rengin çıktığını tahmin etsin (sarı ile mavi...).", yas: [3, 8], kim: "unicorn" },
-  { ad: "Gökkuşağı şarkısı", tarif: "Gökkuşağının renkleriyle birlikte kısa bir şarkı uydurun.", yas: [3, 10], kim: "unicorn" },
-  { ad: "Hayal ülkesi", tarif: "Kendi sihirli ülkesini tasarlasın: adı ne, kimler yaşıyor, ne yeniyor?", yas: [5, 10], kim: "unicorn" },
-  { ad: "İyilik sihri", tarif: "Sırayla birbirinize ve ailesine güzel sözler söyleyin; her güzel söz bir sihir olsun.", yas: [3, 8], kim: "unicorn" },
 ];
 let look = LOOKS.find(l => l.id === load("look", "ayi")) || LOOKS[0];
 
 // What makes each toy recognisable at a glance, for a child who can't read the name: a tail
 // (drawn upwards from its base, with where the base sits and how it leans), marks on the face,
-// and the nose. A cat has whiskers, a rabbit its front teeth, a fox a bushy white-tipped tail...
+// and the nose. A cat has whiskers, a rabbit its front teeth, a lion a tufted tail...
 const WHISKERS = (len, op) => `<g stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round" opacity="${op}">` +
   `<path d="M146 262 L${146 - len} 252"/><path d="M146 272 L${144 - len} 274"/><path d="M148 282 L${150 - len} 294"/>` +
   `<path d="M254 262 L${254 + len} 252"/><path d="M254 272 L${256 + len} 274"/><path d="M252 282 L${250 + len} 294"/></g>`;
@@ -2407,27 +2349,10 @@ const DECO = {
     over: WHISKERS(40, .3) + `<rect x="191" y="259" width="8" height="12" rx="2.5" fill="#fff" stroke="#e3d6cc" stroke-width="1.5"/>` +
           `<rect x="201" y="259" width="8" height="12" rx="2.5" fill="#fff" stroke="#e3d6cc" stroke-width="1.5"/>`,
     tail: [`<circle r="27" fill="#fff"/><circle cx="-7" cy="-8" r="13" fill="#fff" opacity=".9"/><circle cx="8" cy="9" r="9" fill="#f2ebe6"/>`, "translate(328 452)"] },
-  // a fox's white lower face, with tufts of fur sticking out at the cheeks
-  tilki: { over: WHISKERS(34, .35), pupil: 4.5,
-    under: `<path d="M52 222 C 90 262, 140 252, 200 262 C 260 252, 310 262, 348 222 L 366 262 L 340 266 L 352 296 L 318 296 C 290 330, 250 342, 200 342` +
-           ` C 150 342, 110 330, 82 296 L 48 296 L 60 266 L 34 262 Z" fill="var(--fur-light)"/>`,
-    tail: [`<ellipse cx="0" cy="-62" rx="30" ry="68" fill="var(--fur)"/><ellipse cx="0" cy="-110" rx="21" ry="25" fill="#fff8ef"/>`, "translate(300 442) rotate(32)"] },
-  kopek: { under: `<ellipse cx="263" cy="176" rx="35" ry="38" fill="var(--fur-dark)" opacity=".75"/>`,
-    tail: [`<ellipse cx="0" cy="-30" rx="13" ry="34" fill="var(--fur)"/>`, "translate(318 424) rotate(48)"] },
   aslan: { over: `<g fill="var(--ink)" opacity=".45"><circle cx="172" cy="262" r="2.6"/><circle cx="166" cy="272" r="2.6"/><circle cx="174" cy="279" r="2.6"/>` +
                  `<circle cx="228" cy="262" r="2.6"/><circle cx="234" cy="272" r="2.6"/><circle cx="226" cy="279" r="2.6"/></g>`,
     tail: [`<path d="M0 0 C 40 0, 62 -20, 58 -74" fill="none" stroke="var(--fur)" stroke-width="10" stroke-linecap="round"/>` +
            `<ellipse cx="57" cy="-88" rx="13" ry="18" fill="var(--fur-dark)"/>`, "translate(320 450)"] },
-  // a koala has a grey face round its big dark nose
-  koala: { nose: { rx: 30, ry: 25, cy: 234, fill: "#4b4f58" }, muzzle: "#c9ccd1" },
-  unicorn: { nose: { rx: 12, ry: 8, fill: "#e9a8c8" },
-    // a pastel forelock over the horn's base, and eyelashes
-    over: `<ellipse cx="174" cy="80" rx="26" ry="15" fill="#ffb3d9" transform="rotate(-24 174 80)"/>` +
-          `<ellipse cx="226" cy="80" rx="26" ry="15" fill="#a8dcff" transform="rotate(24 226 80)"/>` +
-          `<ellipse cx="200" cy="76" rx="22" ry="15" fill="#d9b8ff"/>` +
-          `<path d="M125 168 l-9 -6 M129 162 l-6 -9 M275 168 l9 -6 M271 162 l6 -9" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>`,
-    tail: [`<g fill="none" stroke-width="12" stroke-linecap="round"><path d="M0 -4 C 32 -6, 48 -46, 30 -92" stroke="#a8dcff"/>` +
-           `<path d="M0 0 C 40 0, 60 -40, 46 -90" stroke="#ffb3d9"/><path d="M0 4 C 48 6, 72 -34, 62 -82" stroke="#d9b8ff"/></g>`, "translate(316 448)"] },
   // the wise owl: light rings round the eyes, round glasses, a beak instead of a nose, and a bow tie
   baykus: { nose: { rx: 0.1, ry: 0.1, fill: "none" }, pupil: 9,
     body: `<g fill="none" stroke="var(--fur-dark)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".5">` +
@@ -2438,6 +2363,54 @@ const DECO = {
           `<path d="M184 218 Q200 210 216 218 L200 250 Z" fill="#f2b33d" stroke="#d99a2b" stroke-width="3" stroke-linejoin="round"/>` +
           `<g transform="translate(200 334)"><path d="M0 0 L-32 -16 L-32 16 Z M0 0 L32 -16 L32 16 Z" fill="#6b3552"/><circle r="8" fill="#55283f"/></g>` },
 };
+
+// Each toy is built after the real animal (as a plush toy: still a big, friendly face), instead of every one
+// having the same round head on the same body. HEADS are the outlines of the head, all drawn round the same
+// face, with where the light falls on the forehead [cx, cy, rx, ry]. BUILD gives each toy its head (k = its size)
+// and its body: gx = width, gy = height (a taller body lifts the head), a = the size of the arms and legs.
+const HEADS = {
+  yuvarlak: { d: "M45 200 A155 140 0 1 1 355 200 A155 140 0 1 1 45 200 Z", parlak: [152, 126, 96, 58] },
+  // a cat's: wider than tall, with a flat top and tufts of fur at the cheeks
+  kedi: { d: "M200 68 C270 68 322 92 338 150 C348 186 352 212 362 232 L376 250 L352 262 L364 282 C340 312 280 334 200 336" +
+             " C120 334 60 312 36 282 L48 262 L24 250 L38 232 C48 212 52 186 62 150 C78 92 130 68 200 68 Z", parlak: [160, 118, 90, 46] },
+  // a rabbit's: an egg, narrow at the forehead and full at the cheeks
+  tavsan: { d: "M200 72 C268 72 318 118 330 180 C342 240 320 310 262 326 C240 333 220 334 200 334 C180 334 160 333 138 326" +
+               " C80 310 58 240 70 180 C82 118 132 72 200 72 Z", parlak: [166, 128, 72, 44] },
+  // a mouse's: wide under the big ears, narrowing down to its pointed snout
+  fare: { d: "M200 78 C280 78 350 118 350 182 C350 236 300 290 246 318 C226 330 214 336 200 336 C186 336 174 330 154 318" +
+             " C100 290 50 236 50 182 C50 118 120 78 200 78 Z", parlak: [158, 128, 92, 48] },
+  // a lion's: broad, with a strong jaw (mostly inside its mane)
+  aslan: { d: "M200 66 C300 66 348 110 350 190 C352 268 312 330 200 334 C88 330 48 268 50 190 C52 110 100 66 200 66 Z", parlak: [152, 124, 96, 54] },
+  // an owl's: wide, dipping in the middle of the brow between the feather tufts
+  baykus: { d: "M200 84 C240 62 320 58 346 110 C366 160 362 260 320 304 C290 332 240 338 200 338 C160 338 110 332 80 304" +
+               " C38 260 34 160 54 110 C80 58 160 62 200 84 Z", parlak: [150, 120, 80, 40] },
+};
+const BUILD = {
+  ayi: { kafa: "yuvarlak", k: .84, gx: 1.2, gy: 1.3, a: 1.12 },     // a big, round-bellied bear; its head smaller than its body
+  panda: { kafa: "yuvarlak", k: .92, gx: 1.25, gy: 1.28, a: 1.15 }, // the roundest of all: a big head on a big body
+  tavsan: { kafa: "tavsan", k: .78, gx: 1, gy: 1.25, a: .95 },     // a small head on a tall body
+  kedi: { kafa: "kedi", k: .82, gx: .92, gy: 1.22, a: .9 },         // slender
+  fare: { kafa: "fare", k: .9, gx: .88, gy: 1.02, a: .85 },         // a big head on a little body
+  aslan: { kafa: "aslan", k: .88, gx: 1.15, gy: 1.22, a: 1.1 },     // strong
+  baykus: { kafa: "baykus", k: .86, gx: 1.12, gy: 1.3, a: .95 },    // head and body almost one: an egg
+};
+const buildOf = d => BUILD[d.id] || BUILD.ayi;
+// a scale around the point (x, y), as an SVG transform
+const around = (x, y, sx, sy) => `translate(${x} ${y}) scale(${sx} ${sy}) translate(${-x} ${-y})`;
+// The body grows from its bottom (y 470), so the shoulders, hips and tail move with it and the head sits on top.
+function applyBuild(q, b) {
+  const head = HEADS[b.kafa], [cx, cy, rx, ry] = head.parlak;
+  q("headShape").setAttribute("d", head.d); q("headRim").setAttribute("d", head.d);
+  const shine = q("headShine");
+  shine.setAttribute("cx", cx); shine.setAttribute("cy", cy); shine.setAttribute("rx", rx); shine.setAttribute("ry", ry);
+  q("bodyShape").setAttribute("transform", around(200, 470, b.gx, b.gy));
+  q("headPos").setAttribute("transform", `translate(0 ${(-150 * (b.gy - 1)).toFixed(1)}) ` + around(200, 330, b.k, b.k));
+  // arms grow from the shoulders; legs from the soles, so the feet stay on the ground
+  for (const [id, x, y] of [["armLPos", 112, 350], ["armRPos", 288, 350]])
+    q(id).setAttribute("transform", `translate(${((x - 200) * (b.gx - 1)).toFixed(1)} ${((y - 470) * (b.gy - 1)).toFixed(1)}) ` + around(x, y, b.a, b.a));
+  for (const [id, x] of [["legLPos", 160], ["legRPos", 240]])
+    q(id).setAttribute("transform", `translate(${((x - 200) * (b.gx - 1)).toFixed(1)} 0) ` + around(x, 539, b.a, b.a));
+}
 
 // Restyles one drawing (the big one, or a little picture in the settings) as the given toy.
 function styleDrawing(svg, d, colorHolder) {
@@ -2450,25 +2423,25 @@ function styleDrawing(svg, d, colorHolder) {
   // panda-like toys have dark ears too
   const paint = s => d.leke ? s.replace(/var\(--fur(-light)?\)/g, "var(--fur-dark)") : s;
   const el = q("earL"), er = q("earR"), headShape = q("headShape");
-  el.innerHTML = paint(EARS[d.kulak](100, d)); er.innerHTML = paint(EARS[d.kulak](300, d));
-  // floppy ears hang over the side of the head, the others sit behind it
-  if (d.kulak === "sarkik") q("headRim").after(el, er); else headShape.before(el, er);
+  el.innerHTML = paint(EARS[d.kulak](100)); er.innerHTML = paint(EARS[d.kulak](300));
+  headShape.before(el, er);   // the ears sit behind the head
   q("patches").setAttribute("display", d.leke ? "inline" : "none");
   // panda-like toys have dark arms
   svg.querySelectorAll(".armFur").forEach(a => a.setAttribute("fill", d.leke ? "var(--fur-dark)" : "var(--fur)"));
   q("mane").innerHTML = d.yele ? MANE(d.yele) : "";
-  q("horn").setAttribute("display", d.boynuz ? "inline" : "none");
   q("tuft").setAttribute("display", d.kulak === "yuvarlak" && !d.yele ? "inline" : "none");
-  // the toy's own tail, face marks and nose
+  const b = buildOf(d);
+  applyBuild(q, b);
+  // the toy's own tail (its base moves with the body), face marks and nose
   const deco = DECO[d.id] || {}, tail = q("tail");
   tail.innerHTML = deco.tail ? deco.tail[0] : "";
-  tail.dataset.base = deco.tail ? deco.tail[1] : "";
+  tail.dataset.base = deco.tail ? deco.tail[1].replace(/translate\(([-\d.]+) ([-\d.]+)\)/, (_, x, y) =>
+    `translate(${(200 + (x - 200) * b.gx).toFixed(1)} ${(470 + (y - 470) * b.gy).toFixed(1)})`) : "";
   tail.setAttribute("transform", tail.dataset.base);
   q("decoUnder").innerHTML = deco.under || "";
   q("decoOver").innerHTML = deco.over || "";
   q("bodyDeco").innerHTML = deco.body || "";
-  q("muzzle").setAttribute("fill", deco.muzzle || "var(--fur-light)");
-  // cats and foxes have narrow pupils
+  // cats have narrow pupils
   svg.querySelectorAll(".pupil").forEach(p => p.setAttribute("rx", deco.pupil || 8));
   const n = deco.nose || {}, nose = q("nose"), shine = q("noseShine");
   nose.setAttribute("rx", n.rx || 20); nose.setAttribute("ry", n.ry || 13);
@@ -2504,23 +2477,15 @@ const P = {
     `<path d="M-14 -16 q14 -6 28 4 M-15 -6 q16 -8 30 6 M-8 4 q8 -14 20 -26" stroke="#e8789f" stroke-width="2.5" fill="none"/></g>`,
   mushroom: (x, y, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})"><rect x="-6" y="-16" width="12" height="18" rx="4" fill="#fff6e8"/>` +
     `<path d="M-20 -14 a20 16 0 0 1 40 0 z" fill="#e8574d"/><circle cx="-8" cy="-22" r="3" fill="#fff"/><circle cx="6" cy="-25" r="3.5" fill="#fff"/><circle cx="12" cy="-17" r="2.4" fill="#fff"/></g>`,
-  doghouse: (x, y) => `<g transform="translate(${x} ${y})"><rect x="-30" y="-44" width="60" height="44" rx="3" fill="#f2c48d"/>` +
-    `<polygon points="-38,-40 0,-74 38,-40" fill="#e5675a"/><path d="M-12 0 v-18 a12 12 0 0 1 24 0 v18z" fill="#6b4a35"/></g>`,
-  ball: (x, y) => `<g transform="translate(${x} ${y})"><circle cy="-12" r="13" fill="#ff7a8a"/><path d="M-12 -16 q12 8 24 0" stroke="#fff" stroke-width="4" fill="none"/></g>`,
-  euca: (x, y, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})"><path d="M-6 0 C -4 -40, -12 -70, -2 -120 L6 -120 C 2 -80, 8 -40, 8 0 Z" fill="#efe3cf"/>` +
-    `<path d="M0 -70 q-24 -10 -36 -28" stroke="#e6d6bd" stroke-width="5" fill="none"/><g fill="#9dbb94"><ellipse cx="-38" cy="-104" rx="24" ry="14"/><ellipse cx="2" cy="-132" rx="30" ry="17"/>` +
-    `<ellipse cx="26" cy="-108" rx="22" ry="13"/></g><g fill="#86a87f"><ellipse cx="-16" cy="-122" rx="18" ry="10"/><ellipse cx="18" cy="-140" rx="16" ry="9"/></g></g>`,
   cheese: (x, y) => `<g transform="translate(${x} ${y})"><polygon points="-30,0 30,0 30,-26 -30,-12" fill="#ffd166"/><polygon points="-30,-12 30,-26 18,-36" fill="#ffe08f"/>` +
     `<g fill="#e9b23a"><circle cx="-14" cy="-6" r="4"/><circle cx="6" cy="-12" r="5"/><circle cx="20" cy="-5" r="3"/></g></g>`,
   acacia: (x, y, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})"><path d="M-4 0 L-2 -60 L-24 -86 M-2 -60 L20 -88 M-3 -40 L-30 -70" stroke="#8a6a48" stroke-width="6" fill="none" stroke-linecap="round"/>` +
     `<ellipse cx="-4" cy="-94" rx="62" ry="16" fill="#6f9a52"/><ellipse cx="-14" cy="-100" rx="40" ry="9" fill="#82ad63"/></g>`,
   rock: (x, y, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})"><path d="M-46 0 C -44 -34, -10 -52, 18 -46 C 40 -42, 50 -18, 48 0 Z" fill="#c2b7a6"/>` +
     `<path d="M-30 -20 C -20 -36, 0 -42, 16 -40" stroke="#ddd3c4" stroke-width="5" fill="none" stroke-linecap="round"/></g>`,
-  puff: (x, y, s = 1) => `<g transform="translate(${x} ${y}) scale(${s})" fill="#fff"><circle cx="-24" cy="-12" r="18"/><circle cx="0" cy="-22" r="24"/><circle cx="24" cy="-12" r="18"/><rect x="-42" y="-14" width="84" height="16" rx="8"/></g>`,
   books: (x, y) => `<g transform="translate(${x} ${y})"><rect x="-26" y="-12" width="52" height="12" rx="2" fill="#c0504d"/>` +
     `<rect x="-22" y="-24" width="46" height="12" rx="2" fill="#4f81bd"/><rect x="-24" y="-36" width="42" height="12" rx="2" fill="#9bbb59"/>` +
     `<path d="M-20 -6 h40 M-16 -18 h34 M-18 -30 h30" stroke="#fff" stroke-width="1.5" opacity=".6"/></g>`,
-  sparkle: (x, y, c = "#ffe27a") => `<path d="M${x} ${y - 9} L${x + 2.5} ${y - 2.5} L${x + 9} ${y} L${x + 2.5} ${y + 2.5} L${x} ${y + 9} L${x - 2.5} ${y + 2.5} L${x - 9} ${y} L${x - 2.5} ${y - 2.5}Z" fill="${c}"/>`,
 };
 // far hills and near ground, then what stands on them (behind the toy, at the sides); the ground runs
 // on far to the sides and below, for screens wider than the drawing
@@ -2536,31 +2501,16 @@ const SCENES = {
     P.flower(18, 250, "#ffd166") + P.flower(390, 248),
   kedi: () => ground("#d6edc6", "#c0e3aa") + P.fence(44, 0, 108) + P.fence(44, 292, 400) + P.bush(30, 104, 1.1, "#a6d68f") + P.bush(372, 106, 1.1, "#a6d68f") +
     P.yarn(368, 230) + P.flower(30, 232, "#c8a7e8") + P.flower(52, 242),
-  tilki: () => ground("#f0d9ae", "#e6c48d") + P.tree(62, 76, .7, "#f5c26b") + P.tree(342, 74, .72, "#f2a65a") + P.tree(20, 108, 1.05, "#e8743b") +
-    P.tree(384, 110, 1.05, "#f2a65a") + P.mushroom(36, 232) + P.mushroom(58, 240, .7) + P.mushroom(362, 236, .9),
-  kopek: () => ground("#c9e9b8", "#ade096") + P.tree(26, 106, 1.05) + P.doghouse(362, 104) + P.bush(70, 96, .8) + P.ball(40, 236) + P.flower(372, 238, "#ffd166"),
-  koala: () => ground("#ead9ad", "#d7e2ae") + P.euca(30, 112, 1.05) + P.euca(372, 108, 1) + P.tuft(54, 246, "#a8b98a") + P.tuft(350, 250, "#a8b98a") + P.rock(380, 250, .45),
   fare: () => ground("#d9efc6", "#c6e6ad") + P.cheese(360, 106) + P.mushroom(40, 104, 1.3) + P.mushroom(70, 96, .8) + P.flower(30, 232) + P.flower(370, 236, "#ffd166") +
     P.tuft(52, 250) + P.tuft(352, 252),
   aslan: () => ground("#f3dc9f", "#ebcb7d") + P.acacia(44, 100, 1) + P.rock(366, 104, 1) + P.tuft(20, 238, "#c9a24f") + P.tuft(40, 248, "#c9a24f") +
     P.tuft(360, 244, "#c9a24f") + P.tuft(384, 236, "#c9a24f"),
-  unicorn: () => {
-    let s = "";
-    ["#ffb3c7", "#ffd3a8", "#fff1a8", "#c8f0c0", "#b8dcff", "#d9c4ff"].forEach((c, i) =>
-      s += `<path d="M${10 + i * 12} 90 A${190 - i * 12} ${180 - i * 12} 0 0 1 ${390 - i * 12} 90" fill="none" stroke="${c}" stroke-width="12" opacity=".8"/>`);
-    return s + ground("#e3d8fb", "#cdbff6") + P.puff(34, 106, 1.1) + P.puff(370, 104, 1.05) + P.puff(70, 90, .6) +
-      P.sparkle(30, 220) + P.sparkle(372, 228, "#ffb3d9") + P.sparkle(352, 252, "#b8dcff") + P.sparkle(50, 250, "#d9c4ff");
-  },
   // an old oak wood, with stacks of books to read
   baykus: () => ground("#cfdac4", "#b9caa8") + P.tree(30, 110, 1.15, "#6f9e64") + P.tree(372, 108, 1.05, "#7fae70") + P.tree(78, 82, .6, "#8bb97c") +
     P.books(46, 244) + P.books(356, 240) + P.tuft(20, 256, "#8aa978") + P.tuft(386, 258, "#8aa978"),
 };
 function buildScene(d) {
   $("land").innerHTML = (SCENES[d.id] || SCENES.ayi)();
-  $("leaves").innerHTML = d.id === "tilki"   // autumn leaves drift down in the fox's forest
-    ? [[60, "#e8743b", 0], [300, "#f2a65a", -6], [180, "#d9822b", -12], [370, "#f5c26b", -3]].map(([x, c, delay]) =>
-        `<path d="M${x} 0 q8 -8 14 0 q-6 8 -14 0z" fill="${c}" style="animation-duration:16s;animation-delay:${delay}s"/>`).join("")
-    : "";
 }
 // clouds and stars are the same for every toy: made once
 (() => {
@@ -2782,7 +2732,7 @@ function sendNote(text) {
 // than it is played, so the words are usually there long before the wait is over.
 const HOLD_CHARS = 30, HOLD_MAX = 1500;
 function holdForNote() {
-  holding = true; held = []; awaitingReply = true;
+  holding = true; held = []; awaitingReply = true; heldAt = performance.now();
   clearTimeout(holdTimer); holdTimer = setTimeout(releaseHeld, HOLD_MAX);
 }
 function releaseHeld() {
@@ -2832,33 +2782,60 @@ Bu not sadece senin için bir yönlendirme. Onu okuma, alıntılama ya da özetl
 }
 
 // ---------- memory: each toy remembers a few things about the child between talks ----------
-const emptyMemory = () => ({ notlar: [], devam: "" });
+const emptyMemory = () => ({ notlar: [], devam: "", son: "" });
 function memoryRules() {
   const m = loadJSON("mem-" + look.id, emptyMemory());
-  if (!m.notlar.length && !m.devam) return `
+  if (!m.notlar.length && !m.devam && !m.son) return `
 
 HAFIZAN
 Önceki sohbetlerinizden aklında bir şey yok; hatırlıyormuş gibi yapma.` + storyRules();
+  const lines = m.notlar.map(n => "- " + n);
+  // the last talk in a sentence or two, so this one carries on from it
+  if (m.son) lines.push(`Geçen sohbetiniz: ${m.son} Bu sohbet onun devamı gibi olsun: geçen sefer konuştuklarınızı hatırla, uygun bir anda kısaca değin ve aynı şeyleri baştan anlatma.`);
+  if (m.devam) lines.push(`Geçen sefer yarım kalan: ${m.devam} Uygun bir anda "Geçen sefer orada kalmıştık, devam edelim mi?" diye sorabilirsin.`);
   return `
 
 HAFIZAN (${isAdult() ? "" : cn() + " HAKKINDA "}ÖNCEKİ SOHBETLERİNİZDEN HATIRLADIKLARIN)
-${m.notlar.map(n => "- " + n).join("\n")}` + (m.devam ? `
-Geçen sefer yarım kalan: ${m.devam} Uygun bir anda "Geçen sefer orada kalmıştık, devam edelim mi?" diye sorabilirsin.` : "") + `
+${lines.join("\n")}
 Bunları doğal bir şekilde, arada bir kullan; hepsini birden sayma, "kaydettim" ya da "not aldım" deme. ${cn()} bir şeyin değiştiğini söylerse yeni halini kabul et. Burada yazmayan bir şeyi hatırlıyormuş gibi yapma.` + storyRules();
+}
+
+// General knowledge. The toys kept coming back to the same few famous facts: each one only knew what it had
+// told itself, and the example in the instructions became everyone's favourite. So the facts told are written
+// down after each talk on one list for all of the child's toys, and each talk suggests other topics.
+const FACTS_KEPT = 80, FACTS_SHOWN = 50;
+const TOPICS = ["hayvanların ilginç yetenekleri", "uzay, gezegenler ve yıldızlar", "insan vücudu", "bitkiler, ağaçlar ve çiçekler",
+  "denizler ve deniz canlıları", "dinozorlar ve eski canlılar", "hava olayları (yağmur, şimşek, gökkuşağı, kar)", "dünyanın ülkeleri ve oradaki çocuklar",
+  "buluşlar ve mucitler", "eski zamanlarda insanların yaşayışı", "Türkiye'nin şehirleri, dağları ve gölleri", "böcekler ve minik canlılar",
+  "kuşlar", "yemeklerin ve meyvelerin nereden geldiği", "müzik ve çalgılar", "resim ve sanat", "sporlar ve oyunlar",
+  "araçlar ve makineler (tren, uçak, gemi)", "renkler ve ışık", "su, buz ve buhar", "volkanlar, dağlar ve mağaralar", "çöller ve kutuplar",
+  "meslekler", "kelimelerin ve dillerin hikayesi", "beş duyumuz", "evdeki eşyaların bilimi (mıknatıs, ayna, buzdolabı)",
+  "mevsimler, günler ve zaman", "taşlar, kum ve toprak", "dünyanın ünlü yapıları", "uyku ve rüyalar"];
+function factRules() {
+  const facts = loadJSON("facts", []), k = parseInt(load("factTurn", "0"), 10) || 0;
+  store("factTurn", String(k + 1));   // built once per talk: the next talk gets the next three topics
+  const topics = [0, 1, 2].map(i => TOPICS[(k * 3 + i) % TOPICS.length]);
+  return `
+
+GENEL KÜLTÜR
+Bu sohbette bir bilgi anlatacaksan önce şu konulara bak: ${topics.join("; ")}. ${cn()} başka bir şey sorarsa ya da başka bir konuyu severse onu anlat.` + (facts.length ? `
+${cn()} şu bilgileri daha önce duydu (senden ya da öbür oyuncak arkadaşlarından). Bunları ve bunlara çok benzeyenleri tekrar anlatma, hep yeni bir bilgi bul:
+${facts.slice(-FACTS_SHOWN).map(f => "- " + f).join("\n")}` : "");
 }
 
 // the panel shows the current toy's notes, one per line, and keeps what the parent changes
 let memShown = "";
 function showMemory() {
   const m = loadJSON("mem-" + look.id, emptyMemory());
-  memShown = (m.devam ? "Yarım kalan: " + m.devam + "\n" : "") + m.notlar.join("\n");
+  memShown = (m.son ? "Geçen sohbet: " + m.son + "\n" : "") + (m.devam ? "Yarım kalan: " + m.devam + "\n" : "") + m.notlar.join("\n");
   $("memView").value = memShown;
 }
 function saveMemoryEdits() {
   if ($("memView").value === memShown) return;
   const m = emptyMemory();
   for (const line of $("memView").value.split("\n").map(l => l.trim()).filter(Boolean)) {
-    if (/^yarım kalan:/i.test(line)) m.devam = line.replace(/^yarım kalan:\s*/i, ""); else m.notlar.push(line);
+    if (/^geçen sohbet:/i.test(line)) m.son = line.replace(/^geçen sohbet:\s*/i, "");
+    else if (/^yarım kalan:/i.test(line)) m.devam = line.replace(/^yarım kalan:\s*/i, ""); else m.notlar.push(line);
   }
   store("mem-" + look.id, JSON.stringify(m)); memShown = $("memView").value;
 }
@@ -2936,6 +2913,8 @@ async function summarizeTalk(t) {
 2) devam: Yarım kalan bir konu varsa bir cümleyle yaz; yoksa boş bırak.
 3) ozet: Bu sohbetin 1-2 cümlelik özeti.
 4) masal: baslik ve metin boş kalsın.
+5) son: Bu sohbette neler konuşulduğunu ve en son nerede kalındığını 1-2 kısa cümleyle yaz; ${t.d.ad} bir sonraki sohbette kaldığı yerden devam edebilsin.
+6) bilgiler: boş bırak.
 
 Eski notlar:
 ${old.notlar.map(n => "- " + n).join("\n") || "(yok)"}
@@ -2946,11 +2925,13 @@ ${talk}` : `Aşağıda ${t.age} yaşındaki ${t.child} ile oyuncak arkadaşı ${
     (t.seen && t.seen.length ? ` Sohbetin başında kamerada ${t.child} ile birlikte şunlar da vardı: ${t.seen.join(", ")}. Onların söyledikleri de "${t.child}:" diye yazılmış olabilir; notlara sadece ${t.child} hakkında olduğundan emin olduklarını yaz.` : "") + `
 
 1) notlar: Oyuncağın bir sonraki sohbette hatırlaması gereken kısa notlar. Eski notlarla birleştir: hâlâ geçerli olanları koru, değişenleri güncelle, tekrarları birleştir. En fazla 10 not, her biri tek kısa cümle, "${t.child}" diye başlayabilir.
-Sadece şunları not et: sevdiği ve sevmediği şeyler (renk, hayvan, yemek, oyuncak, oyun), oyuncaklarının ve evcil hayvanının adı, ilgi alanları, gurur duyduğu şeyler, oynadıkları oyunlardan hangilerini sevdiği, oyuncağın ona anlattığı ilginç bilgiler (tek notta kısaca, tekrar anlatılmasın diye: "Ahtapotun üç kalbi olduğunu öğrendi").
+Sadece şunları not et: sevdiği ve sevmediği şeyler (renk, hayvan, yemek, oyuncak, oyun), oyuncaklarının ve evcil hayvanının adı, ilgi alanları, gurur duyduğu şeyler, oynadıkları oyunlardan hangilerini sevdiği. Oyuncağın anlattığı bilgileri buraya yazma (onlar 6. maddeye); eski notlarda böyle bir bilgi varsa onu notlardan çıkarıp bilgiler'e taşı.
 ASLA not etme: adres, okul ya da kreş adı, telefon, soyadı, sağlık ve hastalık bilgisi, aile içi sorunlar, korkutucu ya da endişe verici şeyler. Ses tanıma hatası gibi görünen, emin olmadığın şeyleri yazma.
 2) devam: Yarım kalan bir masal, oyun ya da söz verilen bir şey varsa bir cümleyle yaz; yoksa boş bırak.
 3) ozet: Ebeveyn için bu sohbetin 1-2 cümlelik özeti: ne yaptılar, çocuğun keyfi nasıldı. Çocuk canının yandığını, çok korktuğunu, birinin ona kötü davrandığını ya da endişe verici başka bir şey söylediyse ozet'in başına "Dikkat:" yazıp bunu açıkça belirt.
 4) masal: Bu sohbette bir masal ya da hikaye anlatıldıysa veya birlikte uydurulduysa baslik (kısa, çocukça) ve metin (bir ebeveynin akşam yüksek sesle okuyabileceği 6-12 cümlelik akıcı yazılı hali; çocuğun katkıları da içinde olsun, korkutucu bir şey eklemeden). Masal yoksa ikisini de boş bırak.
+5) son: Bu sohbette neler konuştuğunuzu ve en son ne yaptığınızı, oyuncağın ağzından 1-2 kısa cümleyle yaz ("... konuştuk, en son ... yapıyorduk" gibi); oyuncak bir sonraki sohbette kaldığı yerden devam edebilsin.
+6) bilgiler: Oyuncağın bu sohbette anlattığı genel kültür bilgileri (hayvanlar, uzay, doğa, bilim, tarih gibi), her biri tek kısa cümle. Bilgi anlatılmadıysa boş bırak.
 
 Eski notlar:
 ${old.notlar.map(n => "- " + n).join("\n") || "(yok)"}
@@ -2959,12 +2940,23 @@ Eski yarım kalan: ${old.devam || "(yok)"}
 Sohbet:
 ${talk}`, { type: "OBJECT",
     properties: { notlar: { type: "ARRAY", items: { type: "STRING" } }, devam: { type: "STRING" }, ozet: { type: "STRING" },
-      masal: { type: "OBJECT", properties: { baslik: { type: "STRING" }, metin: { type: "STRING" } }, required: ["baslik", "metin"] } },
-    required: ["notlar", "devam", "ozet", "masal"] });
+      masal: { type: "OBJECT", properties: { baslik: { type: "STRING" }, metin: { type: "STRING" } }, required: ["baslik", "metin"] },
+      son: { type: "STRING" }, bilgiler: { type: "ARRAY", items: { type: "STRING" } } },
+    required: ["notlar", "devam", "ozet", "masal", "son", "bilgiler"] });
   if (!r) return;
   // as many notes as were asked for: 12 for the grown-ups, 10 for a child
-  const m = { notlar: (r.notlar || []).map(n => String(n).trim().slice(0, 160)).filter(Boolean).slice(0, t.adult ? 12 : 10), devam: String(r.devam || "").trim().slice(0, 240) };
+  const m = { notlar: (r.notlar || []).map(n => String(n).trim().slice(0, 160)).filter(Boolean).slice(0, t.adult ? 12 : 10), devam: String(r.devam || "").trim().slice(0, 240),
+    son: String(r.son || "").trim().slice(0, 320) };
   storeFor(t.pid, "mem-" + t.d.id, JSON.stringify(m));
+  // the facts told go on the child's list, shared by all the toys (factRules)
+  if (!t.adult && Array.isArray(r.bilgiler)) {
+    const facts = loadJSON2(t.pid, "facts", []), seen = new Set(facts.map(f => f.toLocaleLowerCase("tr")));
+    for (const b of r.bilgiler) {
+      const f = String(b).trim().slice(0, 140), low = f.toLocaleLowerCase("tr");
+      if (f && !seen.has(low)) { facts.push(f); seen.add(low); }
+    }
+    storeFor(t.pid, "facts", JSON.stringify(facts.slice(-FACTS_KEPT)));
+  }
   if (r.ozet) {
     // the day's summaries are shared by the children, so each says whose it is
     const k = "sum-" + dayKey(), sums = loadJSON(k, []);
@@ -3198,7 +3190,7 @@ $("kidDel").onclick = () => {
 };
 
 // ---------- school: what the child learns at school, played with (homework: hints, never answers) ----------
-const GRADE_FOR_AGE = { 3: "kres", 4: "kres", 5: "ana", 6: "1", 7: "2", 8: "3", 9: "4", 10: "4" };
+const GRADE_FOR_AGE = { 3: "kres", 4: "kres", 5: "ana", 6: "1", 7: "2", 8: "3" };
 // broad topics only (the 2024 Maarif programme changed the order of some): the toy asks what was taught
 const SCHOOL = {
   1: { tr: "harfleri ve seslerini tanımak, sesleri birleştirip hece ve kısa kelime okumak, kısa cümleler.",
@@ -3210,12 +3202,6 @@ const SCHOOL = {
   3: { tr: "okuduğunu anlama, olayın sırası ve ana fikir, eş-zıt ve eş sesli kelimeler, kısa yazılar yazma.",
        mat: "üç basamaklı sayılar, çarpım tablosu, bölme, basit kesirler, uzunluk ve zaman ölçme.",
        diger: "Fen Bilimleri başlar: beş duyu, canlılar, madde, kuvvet ve hareket, ışık ve ses; Hayat Bilgisi devam eder." },
-  4: { tr: "farklı metin türlerini okuma, deyim ve atasözleri, kendi düşüncesini yazma, yazım kuralları.",
-       mat: "büyük sayılar, çarpma ve bölme işlemleri, kesirler, alan ve çevre, zaman ölçme.",
-       diger: "Fen Bilimleri (yer kabuğu, besinler, madde, kuvvet, aydınlatma) ve Sosyal Bilgiler başlar." },
-  5: { tr: "anlam ilişkileri, paragraf, yazım ve noktalama kuralları, kendi metnini oluşturma.",
-       mat: "doğal sayılar, kesirler ve ondalık gösterim, yüzdeler, geometri ve ölçme.",
-       diger: "ortaokul başlar: Fen Bilimleri (Güneş, Dünya ve Ay, canlılar, kuvvet, madde) ve Sosyal Bilgiler." },
 };
 function schoolRules() {
   const g = settings.grade || GRADE_FOR_AGE[settings.childAge];
@@ -3228,7 +3214,7 @@ ${cn()} ${g === "ana" ? "anasınıfına" : "kreşe"} gidiyor. Arada orada bugün
   return `
 
 OKUL (${g}. SINIF)
-${cn()} ${g === "5" ? "ortaokul" : "ilkokul"} ${g}. sınıfta. Arada "Bugün okulda ne öğrendin?" diye merakla sor; isterse öğrendiklerini konuşun, merak ettiğini anlat ya da küçük sorularla pekiştirin. Konuları ondan öğren: okulda hangi harfleri, sayıları, konuları işlediklerini sor ve onlarla oyna; henüz öğrenmediği bir şeyi sınav gibi sorma.
+${cn()} ilkokul ${g}. sınıfta. Arada "Bugün okulda ne öğrendin?" diye merakla sor; isterse öğrendiklerini konuşun, merak ettiğini anlat ya da küçük sorularla pekiştirin. Konuları ondan öğren: okulda hangi harfleri, sayıları, konuları işlediklerini sor ve onlarla oyna; henüz öğrenmediği bir şeyi sınav gibi sorma.
 Bu sınıfta genelde işlenen konular (okulunda sıra farklı olabilir):
 - Türkçe: ${s.tr}
 - Matematik: ${s.mat}
@@ -3309,11 +3295,31 @@ setInterval(() => {
   }
 }, 1000);
 
-// Conversation log, kept only on this phone for 7 days, so a parent can see what was talked about.
+// Conversation log, kept only on this phone for 30 days, so a parent can see what was talked about.
 let logDay = dayKey(), logLines = [];
 try { logLines = JSON.parse(load("log-" + logDay, "[]")); } catch {}
 let logSaveTimer = 0;
-function saveLog() { clearTimeout(logSaveTimer); store("log-" + logDay, JSON.stringify(logLines)); }
+function saveLog() {
+  clearTimeout(logSaveTimer);
+  const v = JSON.stringify(logLines);
+  // the phone's storage is full: the oldest days make room, so today's talk is kept
+  for (let tries = 0; tries < 30; tries++) {
+    try { localStorage.setItem(keyFor(profile, "log-" + logDay), v); return; } catch {}
+    if (!dropOldestDay()) return;
+  }
+}
+// Deletes the talks and summaries of the oldest day before today; false if there is none (or no storage).
+function dropOldestDay() {
+  const day = /^pofi\.(?:c\d+\.)?(?:log|sum)-(\d{4}-\d\d-\d\d)$/;
+  try {
+    const days = [];
+    for (let i = 0; i < localStorage.length; i++) { const m = day.exec(localStorage.key(i) || ""); if (m && m[1] < logDay) days.push(m[1]); }
+    if (!days.length) return false;
+    const oldest = days.sort()[0];
+    for (let i = localStorage.length - 1; i >= 0; i--) { const m = day.exec(localStorage.key(i) || ""); if (m && m[1] === oldest) localStorage.removeItem(localStorage.key(i)); }
+    return true;
+  } catch { return false; }
+}
 function logAppend(who, text) {
   if (logDay !== dayKey()) { saveLog(); logDay = dayKey(); logLines = []; }
   // each line keeps the name of who said it, since siblings share the log
@@ -3322,13 +3328,16 @@ function logAppend(who, text) {
   else logLines.push({ w: who, n, at: now, x: text.trimStart() });
   clearTimeout(logSaveTimer); logSaveTimer = setTimeout(saveLog, 2000);
 }
+// Today and the 29 days before it stay. Also drops what the toys that are no longer offered remembered.
 function pruneLogs() {
-  const oldest = dayKey(new Date(Date.now() - 6 * 86400000));
+  const oldest = dayKey(new Date(Date.now() - 29 * 86400000));
   try {
     for (let i = localStorage.length - 1; i >= 0; i--) {
       const k = localStorage.key(i);
       const m = k && /^pofi\.(?:c\d+\.)?(log|used|bonus|sum)-(\d{4}-\d\d-\d\d)$/.exec(k);
       if (m && m[2] < oldest) localStorage.removeItem(k);
+      const toy = k && /^pofi\.(?:c\d+\.)?(?:mem|meets|met|games|played)-(.+)$/.exec(k);
+      if (toy && !LOOKS.some(d => d.id === toy[1])) localStorage.removeItem(k);
     }
   } catch {}
 }
@@ -3337,7 +3346,7 @@ pruneLogs();
 function fillLogDays() {
   saveLog();
   const sel = $("logDay"); sel.innerHTML = "";
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 30; i++) {
     const d = new Date(Date.now() - i * 86400000), k = dayKey(d);
     const o = document.createElement("option");
     o.value = k; o.textContent = i === 0 ? "Bugün" : i === 1 ? "Dün" : d.toLocaleDateString("tr-TR", { weekday: "long", day: "numeric", month: "long" });
@@ -3385,7 +3394,7 @@ $("historyClear").onclick = () => {
   try {
     for (let i = localStorage.length - 1; i >= 0; i--) {
       const k = localStorage.key(i);
-      if (k && /^pofi\.(c\d+\.)?(alert|(log|sum|mem|meets|met|games|played)-.+)$/.test(k)) localStorage.removeItem(k);
+      if (k && /^pofi\.(c\d+\.)?(alert|facts|factTurn|(log|sum|mem|meets|met|games|played)-.+)$/.test(k)) localStorage.removeItem(k);
     }
   } catch {}
   memShown = ""; showMemory(); showAlert(); fillLogDays(); $("reportView").textContent = "";
@@ -3410,8 +3419,7 @@ $("backupSave").onclick = async () => {
   let file;
   try { file = backupFile(); } catch { $("backupMsg").textContent = "Bu tarayıcıda kayıtlara ulaşılamıyor."; return; }
   // iPhone and iPad save it through the share sheet ("Dosyalara Kaydet"); elsewhere it is an ordinary download
-  const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-  if (ios && navigator.canShare && navigator.canShare({ files: [file] })) {
+  if (IOS && navigator.canShare && navigator.canShare({ files: [file] })) {
     try { await navigator.share({ files: [file] }); $("backupMsg").textContent = "Yedek hazır: " + file.name; }
     catch (e) { if (e.name !== "AbortError") $("backupMsg").textContent = "Kaydedilemedi: " + e.message; }
     return;
